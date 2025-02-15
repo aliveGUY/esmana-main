@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useDeleteUserMutation } from "../../state/asynchronous/users";
 
 const UserListItem = ({ user }) => {
+  const [deleteUser, { isLoading }] = useDeleteUserMutation();
+
+  const handleDelete = useCallback(() => deleteUser(user.id), [user]);
+
   return (
     <tr>
       <td>
@@ -11,7 +16,13 @@ const UserListItem = ({ user }) => {
       </td>
       <td>
         <div className="user-list-item action-cell">
-          <button className="button outlined small red">Delete</button>
+          <button
+            className="button outlined small red"
+            onClick={handleDelete}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Delete"}
+          </button>
         </div>
       </td>
     </tr>

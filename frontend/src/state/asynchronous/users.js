@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setUsers } from "../reducers/users";
 
 const usersApi = createApi({
   reducerPath: "usersApi",
@@ -16,10 +15,22 @@ const usersApi = createApi({
         body: userData,
       }),
     }),
+
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: "/users",
+        method: "DELETE",
+        body: { id },
+      }),
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery, useRegisterUserMutation } = usersApi;
+export const {
+  useGetAllUsersQuery,
+  useRegisterUserMutation,
+  useDeleteUserMutation,
+} = usersApi;
 
 export const usersMiddleware = usersApi.middleware;
 

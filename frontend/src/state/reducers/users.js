@@ -15,8 +15,17 @@ const usersSlice = createSlice({
     builder.addMatcher(
       usersEndpoints.registerUser.matchFulfilled,
       (state, action) => {
-        console.log({ action });
         state.collection = [action.payload, ...state.collection];
+      }
+    );
+
+    builder.addMatcher(
+      usersEndpoints.deleteUser.matchFulfilled,
+      (state, action) => {
+        console.log({ id: action.payload.id });
+        state.collection = state.collection.filter(
+          (user) => user.id !== action.payload.id
+        );
       }
     );
   },
