@@ -1,0 +1,34 @@
+.top-bar-navigation {
+  background-color: white;
+  padding: 16px 24px 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  .back-button-container {
+    position: relative;
+
+    .back-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      padding-left: 8px;
+      transition: opacity 0.2s ease, transform 0.3s ease;
+
+      & .material-symbols-outlined {
+        height: 16px;
+        display: flex;
+        align-items: center;
+        padding-right: 4px;
+      }
+    }
+
+    &.hidden {
+      .back-button {
+        opacity: 0;
+        transform: none;
+      }
+    }
+  }
+}

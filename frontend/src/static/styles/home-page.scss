@@ -1,0 +1,40 @@
+.home-page {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px 16px 5px 24px;
+  background-color: white;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+  }
+
+  table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+
+    .column-title {
+      font-weight: 600;
+    }
+
+    .user-list-item {
+      padding: 10px 0px;
+    }
+
+    .action-cell {
+      width: fit-content;
+      margin-left: auto;
+    }
+
+    tr {
+      border-bottom: 1px solid #ccc;
+    }
+
+    tr:last-of-type {
+      border-bottom: none;
+    }
+  }
+}
