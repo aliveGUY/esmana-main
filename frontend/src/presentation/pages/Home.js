@@ -2,9 +2,11 @@ import UserListItem from "../components/UserListItem";
 import { useGetAllUsersQuery } from "../../state/asynchronous/users";
 import { useNavigate } from "react-router";
 import React, { useCallback } from "react";
+import { useSelector } from "react-redux";
 
 function Home() {
-  const { data, isLoading } = useGetAllUsersQuery();
+  const { isLoading } = useGetAllUsersQuery();
+  const users = useSelector((state) => state.users.collection);
   const navigate = useNavigate();
 
   const redirect = useCallback(() => navigate("/register"), []);
@@ -34,7 +36,7 @@ function Home() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((user, index) => (
+          {users?.map((user, index) => (
             <UserListItem key={index} user={user} />
           ))}
         </tbody>

@@ -1,9 +1,9 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { BASE_QUERY } from "../../constants/queries";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { setUsers } from "../reducers/users";
 
 const usersApi = createApi({
   reducerPath: "usersApi",
-  baseQuery: BASE_QUERY,
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       query: () => "/users",
@@ -22,5 +22,7 @@ const usersApi = createApi({
 export const { useGetAllUsersQuery, useRegisterUserMutation } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;
+
+export const usersEndpoints = usersApi.endpoints;
 
 export default usersApi.reducer;
