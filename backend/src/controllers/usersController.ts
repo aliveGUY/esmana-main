@@ -18,7 +18,7 @@ export class UsersController {
   }
 
   @Delete()
-  deleteUser(@Body() id: number): number {
+  deleteUser(@Body('id') id: number): number {
     return this.usersService.deleteUser(id)
   }
 }

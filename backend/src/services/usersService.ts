@@ -36,7 +36,7 @@ export class UsersService {
       updatedAt: new Date(),
     }
     this.users = [newUser, ...this.users];
-    return user;
+    return newUser;
   }
 
   deleteUser(id: number): number {
