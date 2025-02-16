@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://api.esmana-main.org";
+
 const usersApi = createApi({
   reducerPath: "usersApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       query: () => "/users",
