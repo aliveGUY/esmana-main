@@ -1,13 +1,21 @@
-# <center>Esmana Project</center>
+# <p align="center">Esmana Project</p>
+
+<div align="center">
+
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
+
+</div>
 
 **Start dev environment**
 
 ```
-cd backend
+docker-compose up --build
+```
 
-yarn start:dev
+**Stop dev environment**
 
-cd frontend
-
-yarn start
+```
+docker-compose down
 ```
