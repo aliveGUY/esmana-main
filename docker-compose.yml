@@ -28,11 +28,12 @@ services:
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: myapp
+      DB_USER: localhost_user
+      DB_PASSWORD: localhost_password
+      DB_NAME: localhost_db
       CHOKIDAR_USEPOLLING: true
       CHOKIDAR_INTERVAL: 100
+      NODE_ENV: development
     ports:
       - "8080:8080"
     volumes:
@@ -45,14 +46,14 @@ services:
 
   # MySQL Database
   mysql:
-    image: mysql:9.0
+    image: mysql:9.2
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_DATABASE: "db"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "password"
-      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "localhost_db"
+      MYSQL_USER: "localhost_user"
+      MYSQL_PASSWORD: "localhost_password"
+      MYSQL_ROOT_PASSWORD: "localhost_password"
     ports:
       - "3306:3306"
     expose:
