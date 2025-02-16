@@ -33,6 +33,7 @@ jobs:
         run: |
           cd backend
           npm install --omit=dev
+          npm install -g @nestjs/cli
           npm run build
           tar -czf ../backend.tar.gz -C dist package.json package-lock.json node_modules .
 
