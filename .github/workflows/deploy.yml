@@ -24,7 +24,7 @@ jobs:
       - name: Build Frontend
         run: |
           cd frontend
-          npm install --production
+          npm install --omit=dev
           npm run build
           tar -czf ../frontend.tar.gz -C build .
 
@@ -32,7 +32,7 @@ jobs:
       - name: Build Backend
         run: |
           cd backend
-          npm install --production
+          npm install --omit=dev
           npm run build
           tar -czf ../backend.tar.gz -C dist package.json package-lock.json node_modules .
 

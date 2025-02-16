@@ -19,9 +19,9 @@ const Register = () => {
     },
   });
 
-  const onSubmit = useCallback((data) => register(data), []);
+  const onSubmit = useCallback((data) => register(data), [register]);
 
-  const redirect = useCallback(() => navigate("/"), []);
+  const redirect = useCallback(() => navigate("/"), [navigate]);
 
   const handleLabel = useCallback((e) => {
     const value = e.target.value;
@@ -34,7 +34,7 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccess) redirect();
-  }, [isSuccess]);
+  }, [isSuccess, redirect]);
 
   return (
     <div className="register-page">

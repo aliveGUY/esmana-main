@@ -9,7 +9,7 @@ function Home() {
   const users = useSelector((state) => state.users.collection);
   const navigate = useNavigate();
 
-  const redirect = useCallback(() => navigate("/register"), []);
+  const redirect = useCallback(() => navigate("/register"), [navigate]);
 
   if (isLoading) return "Loading...";
 

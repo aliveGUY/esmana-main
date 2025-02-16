@@ -4,7 +4,10 @@ import { useDeleteUserMutation } from "../../state/asynchronous/users";
 const UserListItem = ({ user }) => {
   const [deleteUser, { isLoading }] = useDeleteUserMutation();
 
-  const handleDelete = useCallback(() => deleteUser(user.id), [user]);
+  const handleDelete = useCallback(
+    () => deleteUser(user.id),
+    [user, deleteUser]
+  );
 
   return (
     <tr>

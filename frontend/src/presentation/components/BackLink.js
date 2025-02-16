@@ -5,7 +5,7 @@ const BackLink = () => {
   const navigate = useNavigate();
   const isHome = useMatch("/") !== null;
 
-  const redirect = useCallback(() => navigate("/"), []);
+  const redirect = useCallback(() => navigate("/"), [navigate]);
 
   return (
     <div className={`back-button-container ${isHome && "hidden"}`}>
