@@ -1,4 +1,4 @@
-name: Run TypeORM Migrations on Remote Database
+name: Run Migrations
 
 on:
   workflow_dispatch:
