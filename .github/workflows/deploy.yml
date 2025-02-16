@@ -18,13 +18,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       # Build Frontend
       - name: Build Frontend
         run: |
           cd frontend
-          npm ci --production
+          npm install --production
           npm run build
           tar -czf ../frontend.tar.gz -C build .
 
@@ -32,7 +32,7 @@ jobs:
       - name: Build Backend
         run: |
           cd backend
-          npm ci --production
+          npm install --production
           npm run build
           tar -czf ../backend.tar.gz -C dist package.json package-lock.json node_modules .
 
