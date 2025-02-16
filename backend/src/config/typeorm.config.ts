@@ -1,5 +1,7 @@
-import { User } from 'src/models/User';
 import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+
+config()
 
 export const typeOrmConfig = new DataSource({
   type: 'mysql',
@@ -8,7 +10,8 @@ export const typeOrmConfig = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User],
-  synchronize: process.env.NODE_ENV === 'development',
+  entities: [__dirname + '/../models/*.js'],
+  migrations: [__dirname + '/../migrations/*.js'],
+  synchronize: false,
   logging: true
 });

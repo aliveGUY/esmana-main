@@ -1,19 +1,19 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "user" })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column({ type: "varchar", length: 100, nullable: false })
   username: string;
 
-  @Column({ select: false })
-  password: string
+  @Column({ type: "varchar", nullable: false, select: false })
+  password: string;
 
-  @CreateDateColumn()
-  createdAt: Date
+  @CreateDateColumn({ type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date
+  @UpdateDateColumn({ type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  updatedAt: Date;
 }
