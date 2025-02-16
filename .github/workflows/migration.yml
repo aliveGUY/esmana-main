@@ -22,12 +22,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: "yarn"
 
-      - name: Install dependencies in backend folder
+      - name: Install dependencies in backend folder (skip lockfile)
         run: |
           cd backend
-          yarn install --frozen-lockfile
+          yarn install
 
       - name: Run Migrations in backend folder
         run: |
