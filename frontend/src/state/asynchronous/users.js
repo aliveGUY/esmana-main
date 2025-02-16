@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : "https://api.esmana-main.org";
+    : "https://api.esmana-main.org:5000";
 
 const usersApi = createApi({
   reducerPath: "usersApi",
