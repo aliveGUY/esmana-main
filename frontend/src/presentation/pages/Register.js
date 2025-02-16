@@ -88,7 +88,11 @@ const Register = () => {
         </div>
 
         <div className="actions">
-          <button className="button black medium outlined" onClick={redirect}>
+          <button
+            type="button"
+            className="button black medium outlined"
+            onClick={redirect}
+          >
             Cancel
           </button>
           <button
