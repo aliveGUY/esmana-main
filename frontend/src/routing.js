@@ -12,11 +12,13 @@ const routing = [
       {
         index: true,
         title: "Esmana",
+        description: "Metadata for esmana main page",
         element: <Home />,
       },
       {
         path: "register",
-        title: "Esmana > Register",
+        title: "Esmana - Register",
+        description: "Metadata for esmana registration",
         element: <Register />,
       },
     ],

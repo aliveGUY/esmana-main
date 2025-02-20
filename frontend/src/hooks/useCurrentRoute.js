@@ -8,7 +8,7 @@ const getRoutes = (routes) => {
     const p = route.path ? path + route.path : path;
     const rs = Array.isArray(route) ? route : route.children;
     if (rs && rs.length > 0) rs.forEach((r) => walkTree(r, p));
-    else paths.add({ path: p, name: route.name, title: route.title });
+    else paths.add({ path: p, description: route.description, title: route.title });
   };
   walkTree(routes);
   return Array.from(paths).reverse();
