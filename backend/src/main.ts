@@ -6,7 +6,7 @@ import * as passport from 'passport'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isDevelop = process.env.NODE_ENV === 'development'
-  const allowedOrigins = isDevelop ? ['http://localhost:3000'] : ['https://esmana-main.org']
+  const allowedOrigins = isDevelop ? 'http://localhost:3000' : 'https://esmana-main.org'
 
   if (!process.env.SESSION_SECRET) throw new Error()
   const expressApp = app.getHttpAdapter().getInstance();
@@ -19,7 +19,8 @@ async function bootstrap() {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      secure: true,
+      httpOnly: true,
+      secure: !isDevelop,
     }
   }));
 
