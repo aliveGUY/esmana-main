@@ -17,9 +17,9 @@ async function bootstrap() {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      // httpOnly: true,
+      // secure: true,
+      // sameSite: 'none',
       domain: '.esmana-main.org',
     }
   }));
