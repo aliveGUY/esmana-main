@@ -7,7 +7,10 @@ const BASE_URL =
 
 const usersApi = createApi({
   reducerPath: "usersApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    credentials: "include",
+  }),
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       query: () => "/users",
@@ -28,6 +31,14 @@ const usersApi = createApi({
         body: { id },
       }),
     }),
+
+    login: builder.mutation({
+      query: (userData) => ({
+        url: "/auth",
+        method: "POST",
+        body: userData,
+      }),
+    }),
   }),
 });
 
@@ -35,6 +46,7 @@ export const {
   useGetAllUsersQuery,
   useRegisterUserMutation,
   useDeleteUserMutation,
+  useLoginMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

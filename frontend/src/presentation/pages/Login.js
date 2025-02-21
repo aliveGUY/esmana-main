@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { useRegisterUserMutation } from "../../state/asynchronous/users";
 import Textfield from "../components/Inputs/Textfield";
+import { useLoginMutation } from "../../state/asynchronous/users";
 
-const Register = () => {
+const Login = () => {
   const navigate = useNavigate();
-  const [register, { isLoading, isSuccess }] = useRegisterUserMutation();
+  const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
 
   const methods = useForm({
     mode: "onTouched",
@@ -16,13 +16,15 @@ const Register = () => {
     },
   });
 
-  const onSubmit = useCallback(register, [register]);
+  const onSubmit = useCallback(login, [login]);
 
-  const redirect = useCallback(() => navigate("/"), [navigate]);
+  const redirect = useCallback(() => navigate("/register"), [navigate]);
 
   useEffect(() => {
-    if (isSuccess) redirect();
-  }, [isSuccess, redirect]);
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [isSuccess]);
 
   return (
     <div className="register-page">
@@ -35,18 +37,6 @@ const Register = () => {
           />
 
           <Textfield
-            inputId="phone"
-            label="Phone number"
-            requiredMessage="* Phone number is required"
-          />
-
-          <Textfield
-            inputId="email"
-            label="Email"
-            requiredMessage="* Email is required"
-          />
-
-          <Textfield
             inputId="password"
             label="Password"
             requiredMessage="* Password is required"
@@ -55,13 +45,15 @@ const Register = () => {
             }}
           />
 
+          {isError && <p className="error">Incorrect username or password</p>}
+
           <div className="actions">
             <button
               type="button"
               className="button black medium outlined"
               onClick={redirect}
             >
-              Cancel
+              Register
             </button>
             <button
               type="submit"
@@ -70,7 +62,7 @@ const Register = () => {
                 Object.keys(methods.formState.errors).length > 0 || isLoading
               }
             >
-              {isLoading ? "Loading..." : "Submit"}
+              {isLoading ? "Loading..." : "Login"}
             </button>
           </div>
         </form>
@@ -79,4 +71,4 @@ const Register = () => {
   );
 };
 
-export default React.memo(Register);
+export default React.memo(Login);
