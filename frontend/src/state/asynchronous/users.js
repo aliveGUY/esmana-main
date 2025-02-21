@@ -39,6 +39,10 @@ const usersApi = createApi({
         body: userData,
       }),
     }),
+
+    getSession: builder.mutation({
+      query: () => "/auth",
+    }),
   }),
 });
 
@@ -47,6 +51,7 @@ export const {
   useRegisterUserMutation,
   useDeleteUserMutation,
   useLoginMutation,
+  useGetSessionMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

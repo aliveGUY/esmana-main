@@ -2,6 +2,7 @@ import { PassportSerializer } from "@nestjs/passport";
 import { Injectable } from "@nestjs/common";
 import { AuthService } from "src/services/authService";
 import { User } from "src/models/User";
+import { isEmpty } from "lodash";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
@@ -9,16 +10,15 @@ export class SessionSerializer extends PassportSerializer {
     super();
   }
 
-  serializeUser(user: User, done: (err: any, id?: any) => void) {
-    if (!user || !user.id) {
-      return done(new Error("User ID is missing"), null);
-    }
-    done(null, user.id);
+  serializeUser(user: User, done: (err: any, user: User | null) => void) {
+    done(null, user);
   }
 
 
-  async deserializeUser(id: number, done: (err: any, user?: User | null) => void) {
-    const user = await this.authService.findUserById(id);
-    return user ? done(null, user) : done(null, null);
+  async deserializeUser(user: User, done: (err: any, user: User | null) => void) {
+    const foundUser = await this.authService.findUserById(user.id);
+
+    if (isEmpty(foundUser)) return done(null, null);
+    return done(null, foundUser)
   }
 }

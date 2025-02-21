@@ -11,6 +11,13 @@ const authSlice = createSlice({
         state.user = payload;
       }
     );
+
+    builder.addMatcher(
+      usersEndpoints.getSession.matchFulfilled,
+      (state, { payload }) => {
+        state.user = payload;
+      }
+    );
   },
 });
 
