@@ -34,7 +34,7 @@ const MasterPage = () => {
         <meta name="description" content="Esmana main proof of concept" />
       </Helmet>
       <Navigation />
-      <div className="layout">{outlet}</div>;
+      <div className="layout">{outlet}</div>
     </div>
   );
 };
