@@ -24,7 +24,7 @@ const Login = () => {
     if (isSuccess) {
       navigate("/");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   return (
     <div className="register-page">
