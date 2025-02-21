@@ -9,6 +9,8 @@ async function bootstrap() {
   const allowedOrigins = isDevelop ? ['http://localhost:3000'] : ['https://esmana-main.org']
 
   if (!process.env.SESSION_SECRET) throw new Error()
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 1);
 
   app.use(session({
     name: 'sh',
@@ -17,10 +19,7 @@ async function bootstrap() {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      // httpOnly: true,
       secure: true,
-      // sameSite: 'none',
-      // domain: '.esmana-main.org',
     }
   }));
 
