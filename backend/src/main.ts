@@ -20,7 +20,7 @@ async function bootstrap() {
       // httpOnly: true,
       // secure: true,
       // sameSite: 'none',
-      domain: '.esmana-main.org',
+      // domain: '.esmana-main.org',
     }
   }));
 
