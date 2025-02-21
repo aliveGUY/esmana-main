@@ -11,7 +11,7 @@ const ProtectedRoutes = () => {
 
   useEffect(() => {
     getSession();
-  }, []);
+  }, [getSession]);
 
   if (isUninitialized || isLoading) {
     return "Loading...";
