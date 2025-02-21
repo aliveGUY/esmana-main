@@ -5,6 +5,8 @@ import * as passport from 'passport'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const isDevelop = process.env.NODE_ENV === 'development'
+  const allowedOrigins = isDevelop ? ['http://localhost:3000'] : ['https://esmana-main.org']
 
   if (!process.env.SESSION_SECRET) throw new Error()
 
@@ -16,13 +18,13 @@ async function bootstrap() {
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      secure: !isDevelop,
+      sameSite: isDevelop ? 'strict' : 'none',
     }
   }));
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://esmana-main.org'],
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
