@@ -18,7 +18,7 @@ async function bootstrap() {
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
       // httpOnly: true,
-      // secure: true,
+      secure: true,
       // sameSite: 'none',
       // domain: '.esmana-main.org',
     }
