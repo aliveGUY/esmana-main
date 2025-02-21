@@ -40,8 +40,15 @@ const usersApi = createApi({
       }),
     }),
 
-    getSession: builder.mutation({
+    getSession: builder.query({
       query: () => "/auth",
+    }),
+
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
     }),
   }),
 });
@@ -51,7 +58,8 @@ export const {
   useRegisterUserMutation,
   useDeleteUserMutation,
   useLoginMutation,
-  useGetSessionMutation,
+  useGetSessionQuery,
+  useLogoutMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

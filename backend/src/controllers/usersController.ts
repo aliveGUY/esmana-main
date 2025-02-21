@@ -15,7 +15,7 @@ export class UsersController {
   }
 
   @Post()
-  // @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   registerUser(@Body() user: CreateUserDto): Promise<GetUserDto> {
     return this.usersService.registerUser(user)
   }

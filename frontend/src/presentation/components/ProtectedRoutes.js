@@ -1,17 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import { Navigate, Outlet } from "react-router-dom";
-import { useGetSessionMutation } from "../../state/asynchronous/users";
+import { useGetSessionQuery } from "../../state/asynchronous/users";
 
 const ProtectedRoutes = () => {
-  const [getSession, { isLoading, isError, isUninitialized }] =
-    useGetSessionMutation();
+  const { isLoading, isError, isUninitialized } = useGetSessionQuery();
   const user = useSelector((state) => state.auth.user);
-
-  useEffect(() => {
-    getSession();
-  }, [getSession]);
 
   if (isUninitialized || isLoading) {
     return "Loading...";
