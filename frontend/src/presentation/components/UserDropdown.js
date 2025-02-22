@@ -9,10 +9,7 @@ const UserDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = useCallback(logout, [logout]);
-  const handleOpen = useCallback(
-    () => setOpen((prev) => !prev),
-    [open, setOpen]
-  );
+  const handleOpen = useCallback(() => setOpen((prev) => !prev), [setOpen]);
 
   useEffect(() => {
     if (isSuccess) {

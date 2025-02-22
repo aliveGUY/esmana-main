@@ -8,16 +8,15 @@ import { UsersService } from 'src/services/usersService';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Post()
+  registerUser(@Body() user: CreateUserDto): Promise<GetUserDto> {
+    return this.usersService.registerUser(user)
+  }
+
   @Get()
   @UseGuards(AuthenticatedGuard)
   getAllUsers(): Promise<GetUserDto[]> {
     return this.usersService.getAllUsers()
-  }
-
-  @Post()
-  @UseGuards(AuthenticatedGuard)
-  registerUser(@Body() user: CreateUserDto): Promise<GetUserDto> {
-    return this.usersService.registerUser(user)
   }
 
   @Delete()

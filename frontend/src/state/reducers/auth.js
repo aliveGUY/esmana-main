@@ -18,6 +18,10 @@ const authSlice = createSlice({
         state.user = payload;
       }
     );
+
+    builder.addMatcher(usersEndpoints.logout.matchFulfilled, (state) => {
+      state.user = {};
+    });
   },
 });
 
