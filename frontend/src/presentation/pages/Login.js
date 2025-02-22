@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import Textfield from "../components/Inputs/Textfield";
+import Textfield from "../common/Inputs/Textfield";
 import { useLoginMutation } from "../../state/asynchronous/users";
+import Password from "../common/Inputs/Password";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,20 +31,8 @@ const Login = () => {
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <Textfield
-            inputId="username"
-            label="User name"
-            requiredMessage="* Username is required"
-          />
-
-          <Textfield
-            inputId="password"
-            label="Password"
-            requiredMessage="* Password is required"
-            inputProperties={{
-              type: "password",
-            }}
-          />
+          <Textfield inputId="phoneOrEmail" label="Phone or email" />
+          <Password inputId="password" label="Password" required />
 
           {isError && <p className="error">Incorrect username or password</p>}
 

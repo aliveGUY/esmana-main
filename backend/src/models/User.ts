@@ -1,15 +1,43 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  Index,
+  OneToOne,
+  JoinColumn
+} from "typeorm";
+import { Identity } from "./Identity";
 
 @Entity({ name: "user" })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
-  username: string;
+  @Column({ name: 'first_name', type: "varchar", length: 100, nullable: false })
+  firstName: string;
 
-  @Column({ type: "varchar", nullable: false, select: false })
+  @Column({ name: 'middle_name', type: "varchar", length: 100, nullable: true })
+  middleName: string;
+
+  @Column({ name: 'last_name', type: "varchar", length: 100, nullable: false })
+  lastName: string;
+
+  @Index({ unique: true })
+  @Column({ name: 'email', type: "varchar", length: 255, nullable: false })
+  email: string;
+
+  @Index()
+  @Column({ name: 'phone', type: "varchar", length: 20, nullable: false })
+  phone: string;
+
+  @Column({ type: "varchar", length: 255, nullable: false, select: false })
   password: string;
+
+  @OneToOne(() => Identity, (identity) => identity.user, { cascade: ["remove"], onDelete: "CASCADE" })
+  @JoinColumn({ name: "identity_id" })
+  identity: Identity;
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;

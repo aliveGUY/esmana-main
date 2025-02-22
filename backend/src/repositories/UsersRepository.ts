@@ -25,8 +25,8 @@ export class UsersRepository {
 
   async getUser(user: LoginUserDto): Promise<User | null> {
     return this.users.findOne({
-      where: { username: user.username },
-      select: ["id", "username", "password"]
+      where: { email: user.email, phone: user.phone },
+      select: ["id", "phone", "firstName", "lastName", "middleName", "email", "password"]
     })
   }
 

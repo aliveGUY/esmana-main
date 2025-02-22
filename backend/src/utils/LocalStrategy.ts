@@ -7,12 +7,13 @@ import { LoginUserDto } from 'src/models/dto/LoginUserDto';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super({ usernameField: 'username', passwordField: 'password' });
+    super({ phoneField: 'phone', emailField: 'email', passwordField: 'password' });
   }
 
-  async validate(username: string, password: string): Promise<any> {
+  async validate(phone: string, email: string, password: string): Promise<any> {
     const loginDto = new LoginUserDto();
-    loginDto.username = username;
+    loginDto.phone = phone;
+    loginDto.email = email;
     loginDto.password = password;
 
     return await this.authService.validateUser(loginDto);

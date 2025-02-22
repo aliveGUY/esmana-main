@@ -11,44 +11,6 @@
     max-width: 500px;
     margin: 0 auto;
 
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-
-      .input {
-        border-style: solid;
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 14px;
-      }
-
-      .input:focus + .label,
-      .input.has-value + .label {
-        top: -5px;
-        font-size: 13px;
-      }
-
-      .label {
-        pointer-events: none;
-        background-color: white;
-        padding: 0 5px;
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        transition: top 0.2s ease, font-size 0.2s ease;
-      }
-
-      &.error {
-        color: #d32f2f;
-
-        input {
-          border-color: #d32f2f;
-          outline-color: #d32f2f;
-        }
-      }
-    }
-
     & .actions {
       display: flex;
       align-items: center;

@@ -2,21 +2,35 @@ import React, { useCallback, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useRegisterUserMutation } from "../../state/asynchronous/users";
-import Textfield from "../components/Inputs/Textfield";
+import Textfield from "../common/Inputs/Textfield";
+import Password from "../common/Inputs/Password";
+import DatePicker from "../common/Inputs/DatePicker";
 
 const Register = () => {
   const navigate = useNavigate();
   const [register, { isLoading, isSuccess }] = useRegisterUserMutation();
 
   const methods = useForm({
-    mode: "onTouched",
+    mode: "onChange",
     defaultValues: {
-      username: "",
+      email: "",
+      phone: "",
       password: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      birthDate: "",
+      city: "",
+      workplace: "",
+      position: "",
+      education: "",
+      fieldOfWork: "",
+      diplomaNumber: "",
+      personalDataCollectionConsent: "",
     },
   });
 
-  const onSubmit = useCallback(register, [register]);
+  const onSubmit = useCallback((data) => console.log({ data }), [register]);
 
   const redirect = useCallback(() => navigate("/"), [navigate]);
 
@@ -28,31 +42,26 @@ const Register = () => {
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <Textfield
-            inputId="username"
-            label="User name"
-            requiredMessage="* Username is required"
-          />
+          <Textfield required inputId="email" label="Email" />
+          <Textfield required inputId="phone" label="Phone number" />
+          <Password required inputId="password" label="Password" />
 
-          <Textfield
-            inputId="phone"
-            label="Phone number"
-            requiredMessage="* Phone number is required"
-          />
+          <hr />
 
+          <Textfield required inputId="firstName" label="First name" />
+          <Textfield inputId="middleName" label="Middle name" />
+          <Textfield required inputId="lastName" label="Last name" />
+          <DatePicker required inputId="birthDate" label="Birth date" />
+          <Textfield required inputId="city" label="City" />
+          <Textfield required inputId="workplace" label="Workplace" />
+          <Textfield required inputId="position" label="Position" />
+          <Textfield required inputId="education" label="Education" />
+          <Textfield required inputId="fieldOfWork" label="Field of work" />
+          <Textfield required inputId="diplomaNumber" label="Diploma number" />
           <Textfield
-            inputId="email"
-            label="Email"
-            requiredMessage="* Email is required"
-          />
-
-          <Textfield
-            inputId="password"
-            label="Password"
-            requiredMessage="* Password is required"
-            inputProperties={{
-              type: "password",
-            }}
+            required
+            inputId="personalDataCollectionConsent"
+            label="concent"
           />
 
           <div className="actions">
