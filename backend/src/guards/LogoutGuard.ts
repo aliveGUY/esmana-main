@@ -10,14 +10,12 @@ export class LogoutGuard implements CanActivate {
     return new Promise((resolve) => {
       request.logout((err) => {
         if (err) {
-          console.error("Logout failed:", err);
           response.status(500).json({ message: "Logout failed" });
           return resolve(false);
         }
 
         request.session.destroy((err) => {
           if (err) {
-            console.error("Session destruction failed:", err);
             response.status(500).json({ message: "Failed to destroy session" });
             return resolve(false);
           }

@@ -19,7 +19,9 @@ const Login = () => {
 
   const onSubmit = useCallback(login, [login]);
 
-  const redirect = useCallback(() => navigate("/register"), [navigate]);
+  const redirect = useCallback(() => {
+    navigate("/register");
+  }, [navigate]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -31,7 +33,11 @@ const Login = () => {
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <OutlineTextfield required inputId="phoneOrEmail" label="Phone or email" />
+          <OutlineTextfield
+            required
+            inputId="phoneOrEmail"
+            label="Phone or email"
+          />
           <Password required inputId="password" label="Password" />
 
           {isError && <p className="error">Incorrect username or password</p>}

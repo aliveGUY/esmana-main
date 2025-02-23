@@ -5,22 +5,17 @@ import UserIcon from "../../static/images/user-icon.svg";
 import Popup from "../common/Popup";
 
 const UserDropdown = () => {
-  const [logout, { isSuccess }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const ref = useRef();
 
   const handleLogout = useCallback(() => {
-    logout();
     ref.current?.close();
+    logout();
+    navigate("login");
   }, [logout]);
 
   const togglePopup = useCallback(() => ref.current?.toggle(), []);
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("login");
-    }
-  }, [isSuccess, navigate]);
 
   return (
     <div className="user-icon-wrapper">

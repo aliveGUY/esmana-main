@@ -16,29 +16,31 @@ const Register = () => {
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
-      email: "123",
-      phone: "123",
-      password: "123",
-      firstName: "123",
-      middleName: "123",
-      lastName: "123",
-      birthDate: "2025-02-14",
-      city: "123",
-      workplace: "123",
-      position: "123",
-      education: ["other: 123"],
-      fieldOfWork: "123",
-      diplomaNumber: "123",
+      email: "",
+      phone: "",
+      password: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      birthDate: "",
+      city: "",
+      workplace: "",
+      position: "",
+      education: [],
+      fieldOfWork: "",
+      diplomaNumber: "",
       personalDataCollectionConsent: true,
     },
   });
 
   const onSubmit = useCallback(register, [register]);
 
-  const redirect = useCallback(() => navigate("/"), [navigate]);
+  const redirect = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
-    // if (isSuccess) redirect();
+    if (isSuccess) redirect();
   }, [isSuccess, redirect]);
 
   return (
