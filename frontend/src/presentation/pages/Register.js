@@ -5,6 +5,8 @@ import { useRegisterUserMutation } from "../../state/asynchronous/users";
 import Textfield from "../common/Inputs/Textfield";
 import Password from "../common/Inputs/Password";
 import DatePicker from "../common/Inputs/DatePicker";
+import AutoSelect from "../common/Inputs/AutoSelect";
+import Checkbox from "../common/Inputs/Checkbox";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const Register = () => {
     },
   });
 
-  const onSubmit = useCallback((data) => console.log({ data }), [register]);
+  const onSubmit = useCallback(register, [register]);
 
   const redirect = useCallback(() => navigate("/"), [navigate]);
 
@@ -55,14 +57,38 @@ const Register = () => {
           <Textfield required inputId="city" label="City" />
           <Textfield required inputId="workplace" label="Workplace" />
           <Textfield required inputId="position" label="Position" />
-          <Textfield required inputId="education" label="Education" />
-          <Textfield required inputId="fieldOfWork" label="Field of work" />
+          <Checkbox
+            required
+            inputId="education"
+            label="Education"
+            options={[
+              "Higher medical",
+              "Higher non-medical",
+              "Vocational/technical",
+              "Student/Postgraduate/Intern",
+            ]}
+          />
+          <AutoSelect
+            required
+            inputId="fieldOfWork"
+            label="Field of work"
+            options={[
+              "Doctor",
+              "Pharmacist",
+              "Junior specialist with medical education",
+              "Professional with higher non-medical education working in the healthcare system",
+              "Healthcare professional in healthcare institutions",
+              "Specialists in the field of corrective pedagogy",
+            ]}
+          />
           <Textfield required inputId="diplomaNumber" label="Diploma number" />
           <Textfield
             required
             inputId="personalDataCollectionConsent"
             label="concent"
           />
+
+          <Checkbox  options={["Accept all Terms of Usage"]}/>
 
           <div className="actions">
             <button

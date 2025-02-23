@@ -1,0 +1,22 @@
+.popup-anchor {
+  position: relative;
+
+  .popup {
+    position: absolute;
+    top: 100%;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 12px 8px;
+    border-radius: 12px;
+    display: none;
+    min-width: min-content;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &.opened {
+      display: block;
+    }
+  }
+}

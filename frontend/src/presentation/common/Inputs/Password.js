@@ -23,6 +23,7 @@ const Password = (props) => {
           <img
             src={shown ? OpenEyeIcon : ClosedEyeIcon}
             className="password-icon"
+            alt="hide password icon"
           />
         </button>
       }

@@ -7,9 +7,12 @@ const DatePicker = (props) => {
   const { inputId, label, required = false } = props;
   const { setValue } = useFormContext();
 
-  const handleChange = useCallback((e) => {
-    setValue(inputId, e.target.value, { shouldValidate: true });
-  }, []);
+  const handleChange = useCallback(
+    (e) => {
+      setValue(inputId, e.target.value, { shouldValidate: true });
+    },
+    [setValue, inputId]
+  );
 
   return (
     <div className="datepicker">
@@ -19,11 +22,11 @@ const DatePicker = (props) => {
         required={required}
         endIcon={
           <button className="icon-button small white" type="button">
-            <img src={CalendarIcon} className="password-icon" />
+            <img src={CalendarIcon} className="password-icon" alt="date picker icon" />
           </button>
         }
       />
-      <input type="date" class="datepicker-input" onChange={handleChange} />
+      <input type="date" className="datepicker-input" onChange={handleChange} />
     </div>
   );
 };

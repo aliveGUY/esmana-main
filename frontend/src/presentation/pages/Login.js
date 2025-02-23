@@ -31,8 +31,8 @@ const Login = () => {
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <Textfield inputId="phoneOrEmail" label="Phone or email" />
-          <Password inputId="password" label="Password" required />
+          <Textfield required inputId="phoneOrEmail" label="Phone or email" />
+          <Password required inputId="password" label="Password" />
 
           {isError && <p className="error">Incorrect username or password</p>}
 

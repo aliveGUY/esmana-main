@@ -48,10 +48,9 @@
   }
 }
 
-
-.datepicker{
+.datepicker {
   position: relative;
- 
+
   .datepicker-input {
     position: absolute;
     left: 0;
@@ -72,4 +71,9 @@
     padding: 0;
     cursor: pointer;
   }
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
 }

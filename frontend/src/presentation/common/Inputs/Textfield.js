@@ -24,7 +24,7 @@ const Textfield = (props) => {
 
   useEffect(() => {
     toggleLabel(defaultValues[inputId]);
-  }, [defaultValues]);
+  }, [defaultValues, inputId]);
 
   return (
     <div
