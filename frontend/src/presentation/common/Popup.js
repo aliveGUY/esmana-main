@@ -28,6 +28,7 @@ const Popup = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     open: () => setOpened(true),
     close: () => setOpened(false),
+    toggle: () => setOpened((prev) => !prev),
   }));
 
   return (

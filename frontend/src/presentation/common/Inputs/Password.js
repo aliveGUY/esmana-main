@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
-import Textfield from "./Textfield";
+import OutlineTextfield from "./OutlineTextfield";
 import ClosedEyeIcon from "../../../static/images/eye-closed.svg";
 import OpenEyeIcon from "../../../static/images/eye-opened.svg";
+import PropTypes from "prop-types";
 
 const Password = (props) => {
   const { inputId, label, required = false } = props;
@@ -10,7 +11,7 @@ const Password = (props) => {
   const toggleShown = useCallback(() => setShown((prev) => !prev), [setShown]);
 
   return (
-    <Textfield
+    <OutlineTextfield
       inputId={inputId}
       label={label}
       required={required}
@@ -32,6 +33,12 @@ const Password = (props) => {
       }}
     />
   );
+};
+
+Password.propTypes = {
+  inputId: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 };
 
 export default React.memo(Password);

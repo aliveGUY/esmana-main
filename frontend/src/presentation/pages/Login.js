@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import Textfield from "../common/Inputs/Textfield";
+import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import { useLoginMutation } from "../../state/asynchronous/users";
 import Password from "../common/Inputs/Password";
 
@@ -12,7 +12,7 @@ const Login = () => {
   const methods = useForm({
     mode: "onTouched",
     defaultValues: {
-      username: "",
+      phoneOrEmail: "",
       password: "",
     },
   });
@@ -31,7 +31,7 @@ const Login = () => {
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <Textfield required inputId="phoneOrEmail" label="Phone or email" />
+          <OutlineTextfield required inputId="phoneOrEmail" label="Phone or email" />
           <Password required inputId="password" label="Password" />
 
           {isError && <p className="error">Incorrect username or password</p>}

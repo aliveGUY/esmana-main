@@ -1,25 +1,34 @@
 import React, { useCallback, useRef } from "react";
 import { map } from "lodash";
-import Textfield from "./Textfield";
+import OutlineTextfield from "./OutlineTextfield";
 import Popup from "../Popup";
+import PropTypes from "prop-types";
+import { useFormContext } from "react-hook-form";
 
 const AutoSelect = (props) => {
   const { inputId, label, required = false, options = [] } = props;
   const ref = useRef();
+  const { setValue } = useFormContext();
 
   const openPopup = useCallback(() => ref.current?.open(), []);
+
   const closePopup = () => ref.current?.close();
+
+  const handleSelect = useCallback((e) => {
+    closePopup();
+    setValue(inputId, e.target.value, { shouldValidate: true });
+  }, []);
 
   return (
     <Popup
       ref={ref}
-      content={map(options, (option, index) => (
-        <div className="select-option-wrapper">
+      content={map(options, (option) => (
+        <div className="select-option-wrapper" key={option}>
           <button
             className="select-option"
             type="button"
-            key={index}
-            onClick={closePopup}
+            value={option}
+            onClick={handleSelect}
           >
             {option}
           </button>
@@ -27,10 +36,17 @@ const AutoSelect = (props) => {
       ))}
     >
       <div onClick={openPopup}>
-        <Textfield inputId={inputId} label={label} required={required} />
+        <OutlineTextfield inputId={inputId} label={label} required={required} />
       </div>
     </Popup>
   );
+};
+
+AutoSelect.propTypes = {
+  inputId: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  required: PropTypes.bool,
+  option: PropTypes.array.isRequired,
 };
 
 export default React.memo(AutoSelect);

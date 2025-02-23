@@ -1,5 +1,5 @@
-.textfield-wrapper {
-  .textfield {
+.outline-textfield-wrapper {
+  .outline-textfield {
     position: relative;
     display: flex;
     border: 1px solid black;
@@ -7,7 +7,7 @@
     align-items: center;
     padding: 0 12px;
 
-    .textfield-container {
+    .outline-textfield-container {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -16,13 +16,13 @@
         border: none;
         outline: none;
         padding: 12px 0;
-        font-size: 14px;
+        font-size: 16px;
         border-radius: 8px;
       }
 
       .input:focus + .label,
       .input.has-value + .label {
-        top: -5px;
+        top: -6px;
         font-size: 13px;
       }
 
@@ -41,10 +41,24 @@
   &.error {
     color: #d32f2f;
 
-    .textfield {
+    .outline-textfield {
       border-color: #d32f2f;
       outline-color: #d32f2f;
     }
+  }
+}
+
+.filled-textfield {
+  font-size: 16px;
+  padding: 12px;
+  outline: none;
+  border: none;
+  border-left: 1px solid black;
+  border-radius: 0 12px 12px 0;
+  background-color: #f5f5f5;
+
+  &::placeholder {
+    color: #5d5d5d;
   }
 }
 
@@ -73,7 +87,53 @@
   }
 }
 
-.checkbox-list {
+.checkbox-group {
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 12px;
+  }
+
+  .label {
+    padding-bottom: 8px;
+  }
+}
+
+.checkbox-wrapper {
   display: flex;
-  flex-direction: column;
+  align-items: start;
+
+  .checkbox {
+    cursor: pointer;
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    min-width: 18px;
+    min-height: 18px;
+    border: 1px solid currentColor;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    position: relative;
+    margin-top: 4px;
+  }
+
+  .checkbox:checked::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 0.15em;
+    background-color: black;
+  }
+
+  .label {
+    cursor: pointer;
+    padding-left: 8px;
+  }
 }

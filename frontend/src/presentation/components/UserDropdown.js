@@ -13,7 +13,8 @@ const UserDropdown = () => {
     logout();
     ref.current?.close();
   }, [logout]);
-  const openPopup = useCallback(() => ref.current?.open(), []);
+
+  const togglePopup = useCallback(() => ref.current?.toggle(), []);
 
   useEffect(() => {
     if (isSuccess) {
@@ -34,7 +35,7 @@ const UserDropdown = () => {
           </div>
         }
       >
-        <div className="user-icon-background" onClick={openPopup}>
+        <div className="user-icon-background" onClick={togglePopup}>
           <img src={UserIcon} alt="User Icon" className="user-icon" />
         </div>
       </Popup>

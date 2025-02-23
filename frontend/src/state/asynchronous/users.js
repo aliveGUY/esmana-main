@@ -18,7 +18,7 @@ const usersApi = createApi({
 
     registerUser: builder.mutation({
       query: (userData) => ({
-        url: "/users",
+        url: "/users/student",
         method: "POST",
         body: userData,
       }),

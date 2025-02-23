@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isEmpty } from "lodash";
+import PropTypes from "prop-types";
 
-const Textfield = (props) => {
+const OutlineTextfield = (props) => {
   const { inputId, label, required = false, inputProperties, endIcon } = props;
   const ref = useRef();
 
@@ -28,18 +29,18 @@ const Textfield = (props) => {
 
   return (
     <div
-      className={`textfield-wrapper ${!isEmpty(errors[inputId]) && "error"}`}
+      className={`outline-textfield-wrapper ${!isEmpty(errors[inputId]) && "error"}`}
     >
       <Controller
         name={inputId}
         value={value}
         rules={{
-          required: required ? "* Input is required" : false,
+          required: required ? "* Field is required" : false,
           validate,
         }}
         render={({ field }) => (
-          <div className="textfield">
-            <div className="textfield-container">
+          <div className="outline-textfield">
+            <div className="outline-textfield-container">
               <input
                 {...field}
                 {...inputProperties}
@@ -60,4 +61,12 @@ const Textfield = (props) => {
   );
 };
 
-export default React.memo(Textfield);
+OutlineTextfield.propTypes = {
+  inputId: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  required: PropTypes.bool,
+  inputProperties: PropTypes.object,
+  endIcon: PropTypes.element,
+};
+
+export default React.memo(OutlineTextfield);

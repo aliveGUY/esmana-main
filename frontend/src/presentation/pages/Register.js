@@ -2,11 +2,12 @@ import React, { useCallback, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useRegisterUserMutation } from "../../state/asynchronous/users";
-import Textfield from "../common/Inputs/Textfield";
+import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import Password from "../common/Inputs/Password";
 import DatePicker from "../common/Inputs/DatePicker";
 import AutoSelect from "../common/Inputs/AutoSelect";
 import Checkbox from "../common/Inputs/Checkbox";
+import CheckboxGroup from "../common/Inputs/CheckboxGroup";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,20 +16,20 @@ const Register = () => {
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
-      email: "",
-      phone: "",
-      password: "",
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      birthDate: "",
-      city: "",
-      workplace: "",
-      position: "",
-      education: "",
-      fieldOfWork: "",
-      diplomaNumber: "",
-      personalDataCollectionConsent: "",
+      email: "123",
+      phone: "123",
+      password: "123",
+      firstName: "123",
+      middleName: "123",
+      lastName: "123",
+      birthDate: "2025-02-14",
+      city: "123",
+      workplace: "123",
+      position: "123",
+      education: ["other: 123"],
+      fieldOfWork: "123",
+      diplomaNumber: "123",
+      personalDataCollectionConsent: true,
     },
   });
 
@@ -37,27 +38,25 @@ const Register = () => {
   const redirect = useCallback(() => navigate("/"), [navigate]);
 
   useEffect(() => {
-    if (isSuccess) redirect();
+    // if (isSuccess) redirect();
   }, [isSuccess, redirect]);
 
   return (
     <div className="register-page">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <Textfield required inputId="email" label="Email" />
-          <Textfield required inputId="phone" label="Phone number" />
+          <OutlineTextfield required inputId="email" label="Email" />
+          <OutlineTextfield required inputId="phone" label="Phone number" />
           <Password required inputId="password" label="Password" />
 
           <hr />
 
-          <Textfield required inputId="firstName" label="First name" />
-          <Textfield inputId="middleName" label="Middle name" />
-          <Textfield required inputId="lastName" label="Last name" />
+          <OutlineTextfield required inputId="firstName" label="First name" />
+          <OutlineTextfield inputId="middleName" label="Middle name" />
+          <OutlineTextfield required inputId="lastName" label="Last name" />
           <DatePicker required inputId="birthDate" label="Birth date" />
-          <Textfield required inputId="city" label="City" />
-          <Textfield required inputId="workplace" label="Workplace" />
-          <Textfield required inputId="position" label="Position" />
-          <Checkbox
+
+          <CheckboxGroup
             required
             inputId="education"
             label="Education"
@@ -68,6 +67,14 @@ const Register = () => {
               "Student/Postgraduate/Intern",
             ]}
           />
+          <OutlineTextfield
+            required
+            inputId="diplomaNumber"
+            label="Diploma number"
+          />
+
+          <OutlineTextfield required inputId="city" label="City" />
+          <OutlineTextfield required inputId="workplace" label="Workplace" />
           <AutoSelect
             required
             inputId="fieldOfWork"
@@ -81,14 +88,17 @@ const Register = () => {
               "Specialists in the field of corrective pedagogy",
             ]}
           />
-          <Textfield required inputId="diplomaNumber" label="Diploma number" />
-          <Textfield
+          <OutlineTextfield required inputId="position" label="Position" />
+
+          <Checkbox
             required
             inputId="personalDataCollectionConsent"
-            label="concent"
+            label={`In accordance with the requirements of the Law of Ukraine "On Personal Data Protection," I give my 
+              consent and allow the processing of my personal data (full name, mobile phone number, email, place of 
+              work, position, etc.), including the collection, systematization, accumulation, storage, clarification, 
+              use, anonymization, and destruction of personal data.`}
+            value={true}
           />
-
-          <Checkbox  options={["Accept all Terms of Usage"]}/>
 
           <div className="actions">
             <button

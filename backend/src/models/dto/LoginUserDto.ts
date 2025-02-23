@@ -1,5 +1,4 @@
 export class LoginUserDto {
-  email: string
-  phone: string
+  phoneOrEmail: string
   password: string
 }

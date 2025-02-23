@@ -14,7 +14,7 @@ export class AuthService {
     const validationResult = await this.usersRepository.getUser(user);
 
     if (isEmpty(validationResult)) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException({ message: "TEST TEST" })
     }
 
     const { password, ...foundUser } = validationResult

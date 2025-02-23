@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
-import { CreateUserDto } from 'src/models/dto/CreateUserDto';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
+import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
 import { UsersService } from 'src/services/usersService';
 
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Post()
-  registerUser(@Body() user: CreateUserDto): Promise<GetUserDto> {
-    return this.usersService.registerUser(user)
+  @Post('student')
+  registerStudent(@Body() user: StudentRegistrationDto): Promise<GetUserDto> {
+    return this.usersService.registerStudent(user)
   }
 
   @Get()
