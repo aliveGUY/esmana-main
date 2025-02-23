@@ -60,6 +60,19 @@
     }
   }
 
+  &.outlined.lightblue {
+    outline: 2px solid #90D5FF;
+    color: #90D5FF;
+    background-color: white;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+    &:active {
+      background-color: #e0e0e0;
+    }
+  }
+
   &.medium {
     padding: 10px 24px;
   }

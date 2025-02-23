@@ -1,0 +1,39 @@
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 48px 24px;
+  background-color: white;
+}
+
+.cta-placeholder-card {
+  border: 3px dashed #90d5ff;
+  color: #90d5ff;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+
+  .title {
+    font-size: 22px;
+  }
+}
+
+.login-widget {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(240, 240, 240, 0.5);
+  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+  display: none;
+
+  &.open {
+    display: flex;
+  }
+}

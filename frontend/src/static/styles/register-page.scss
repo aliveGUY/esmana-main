@@ -1,21 +1,40 @@
-.register-page {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  padding: 48px 24px;
-  background-color: white;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 500px;
+  margin: 0 auto;
 
-  .form {
+  & .actions {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: end;
     gap: 16px;
-    max-width: 500px;
-    margin: 0 auto;
+  }
 
-    & .actions {
+  .recognized-banner {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 16px 14px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .description {
+      font-size: 14px;
+    }
+
+    .recognize-login-container {
       display: flex;
+      width: 100%;
       align-items: center;
-      justify-content: end;
-      gap: 16px;
+      justify-content: space-between;
     }
   }
 }

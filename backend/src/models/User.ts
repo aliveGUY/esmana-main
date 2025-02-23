@@ -9,6 +9,7 @@ import {
   JoinColumn
 } from "typeorm";
 import { Identity } from "./Identity";
+import { ERoles } from "./enums/ERoles";
 
 @Entity({ name: "user" })
 export class User {
@@ -35,6 +36,14 @@ export class User {
   @Column({ type: "varchar", length: 255, nullable: false, select: false })
   password: string;
 
+  @Column({
+    type: "enum",
+    enum: ERoles,
+    default: ERoles.USER,
+    nullable: false,
+  })
+  role: ERoles;
+
   @OneToOne(() => Identity, (identity) => identity.user, { cascade: ["remove"], onDelete: "CASCADE" })
   @JoinColumn({ name: "identity_id" })
   identity: Identity;
@@ -42,6 +51,6 @@ export class User {
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at',type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  @UpdateDateColumn({ name: 'updated_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
   updatedAt: Date;
 }

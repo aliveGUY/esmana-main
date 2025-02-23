@@ -4,9 +4,11 @@ import { Helmet } from "react-helmet";
 import { useCurrentRoute } from "../../hooks/useCurrentRoute";
 import Navigation from "../components/Navigation";
 import ThumbnailImage from "../../static/images/thumbnail.jpg";
+import { useGetSessionQuery } from "../../state/asynchronous/users";
 
 const MasterPage = () => {
   const outlet = useOutlet();
+  useGetSessionQuery();
 
   const currentRoute = useCurrentRoute();
 

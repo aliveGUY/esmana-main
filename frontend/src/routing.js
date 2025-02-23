@@ -1,10 +1,13 @@
-import * as React from "react";
+import React from "react";
 
 import Home from "./presentation/pages/Home";
 import Master from "./presentation/pages/Master";
-import Register from "./presentation/pages/Register";
+import RegisterStudent from "./presentation/pages/RegisterStudent";
 import Login from "./presentation/pages/Login";
 import ProtectedRoutes from "./presentation/components/ProtectedRoutes";
+import Cabinet from "./presentation/pages/Cabinet";
+import CabinetRoutes from "./presentation/components/CabinetRoutes";
+import RegisterMember from "./presentation/pages/RegisterMember";
 
 const routing = [
   {
@@ -12,10 +15,16 @@ const routing = [
     element: <Master />,
     children: [
       {
-        path: "register",
-        title: "Esmana - Register",
+        path: "student-registration",
+        title: "Esmana - Apply to school",
         description: "Metadata for esmana registration",
-        element: <Register />,
+        element: <RegisterStudent />,
+      },
+      {
+        path: "member-registration",
+        title: "Esmana - Join ESMANA",
+        description: "Metadata for esmana registration",
+        element: <RegisterMember />,
       },
       {
         path: "login",
@@ -32,6 +41,17 @@ const routing = [
             title: "Esmana",
             description: "Metadata for esmana main page",
             element: <Home />,
+          },
+          {
+            path: "cabinet",
+            title: "Esmana - Cabinet",
+            element: <CabinetRoutes />,
+            children: [
+              {
+                path: ":id",
+                element: <Cabinet />,
+              },
+            ],
           },
         ],
       },

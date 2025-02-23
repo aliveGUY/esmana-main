@@ -1,18 +1,21 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { isEmpty } from "lodash";
 import { Navigate, Outlet } from "react-router-dom";
-import { useGetSessionQuery } from "../../state/asynchronous/users";
+import { useAuth } from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 
 const ProtectedRoutes = () => {
-  const { isLoading, isError, isUninitialized } = useGetSessionQuery();
-  const user = useSelector((state) => state.auth.user);
+  const { isUnauthorized } = useAuth();
+  const { isUninitialized, isLoading, isError } = useSelector(
+    (state) => state.asyncStatus.getSession
+  );
+
+  console.log({ isLoading, isError, isUninitialized });
 
   if (isUninitialized || isLoading) {
     return "Loading...";
   }
 
-  if (isEmpty(user) || isError) {
+  if (isUnauthorized || isError) {
     return <Navigate to="/login" replace />;
   }
 

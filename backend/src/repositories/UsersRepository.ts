@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isEmpty } from 'lodash';
+import { CheckIfUserExistDto } from 'src/models/dto/CheckIfUserExistDto';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { LoginUserDto } from 'src/models/dto/LoginUserDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
@@ -82,11 +84,25 @@ export class UsersRepository {
       .where("user.email = :phoneOrEmail OR user.phone = :phoneOrEmail", {
         phoneOrEmail: user.phoneOrEmail,
       })
-      .select(["user.id", "user.phone", "user.firstName", "user.lastName", "user.middleName", "user.email", "user.password"])
+      .select(["user.id", "user.phone", "user.firstName", "user.lastName", "user.middleName", "user.email", "user.password", "user.role"])
       .getOne();
   }
 
   async findUserById(id: number): Promise<User | null> {
     return this.users.findOne({ where: { id } })
+  }
+
+  async checkIfUserExists(user: CheckIfUserExistDto): Promise<boolean> {
+    const matchingUser = await this.users
+      .createQueryBuilder("user")
+      .where("user.email = :email OR user.phone = :phone", {
+        email: user.email,
+        phone: user.phone
+      })
+      .getOne();
+
+    console.log({ matchingUser })
+
+    return !isEmpty(matchingUser)
   }
 }

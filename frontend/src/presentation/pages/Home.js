@@ -7,14 +7,25 @@ function Home() {
   const { isLoading } = useGetAllUsersQuery();
   const navigate = useNavigate();
 
-  const redirect = useCallback(() => navigate("/register"), [navigate]);
+  const redirectStudent = useCallback(
+    () => navigate("/student-registration"),
+    [navigate]
+  );
+
+  const redirectMember = useCallback(
+    () => navigate("/member-registration"),
+    [navigate]
+  );
 
   return (
-    <div className="home-page">
+    <div className="card">
       <div className="header">
         <h1>User Management</h1>
-        <button className="button black medium" onClick={redirect}>
-          Add User
+        <button className="button black medium" onClick={redirectMember}>
+          Register new Member
+        </button>
+        <button className="button black medium" onClick={redirectStudent}>
+          Register new Student
         </button>
       </div>
       {isLoading ? "Loading..." : <UsersTable />}

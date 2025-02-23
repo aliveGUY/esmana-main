@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useLogoutMutation } from "../../state/asynchronous/users";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "../../static/images/user-icon.svg";
 import Popup from "../common/Popup";
+import { useAuth } from "../../hooks/useAuth";
 
 const UserDropdown = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const ref = useRef();
+  const { isUnauthorized } = useAuth();
 
   const handleLogout = useCallback(() => {
     ref.current?.close();
@@ -16,6 +18,8 @@ const UserDropdown = () => {
   }, [logout]);
 
   const togglePopup = useCallback(() => ref.current?.toggle(), []);
+
+  if (isUnauthorized) return;
 
   return (
     <div className="user-icon-wrapper">

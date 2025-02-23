@@ -50,6 +50,14 @@ const usersApi = createApi({
         method: "POST",
       }),
     }),
+
+    checkIfUserExists: builder.mutation({
+      query: (user) => ({
+        url: "/auth/check",
+        method: "POST",
+        body: user,
+      }),
+    }),
   }),
 });
 
@@ -60,6 +68,7 @@ export const {
   useLoginMutation,
   useGetSessionQuery,
   useLogoutMutation,
+  useCheckIfUserExistsMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

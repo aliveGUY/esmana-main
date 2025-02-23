@@ -9,7 +9,7 @@ import AutoSelect from "../common/Inputs/AutoSelect";
 import Checkbox from "../common/Inputs/Checkbox";
 import CheckboxGroup from "../common/Inputs/CheckboxGroup";
 
-const Register = () => {
+const RegisterStudent = () => {
   const navigate = useNavigate();
   const [register, { isLoading, isSuccess }] = useRegisterUserMutation();
 
@@ -44,7 +44,7 @@ const Register = () => {
   }, [isSuccess, redirect]);
 
   return (
-    <div className="register-page">
+    <div className="card">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
           <OutlineTextfield required inputId="email" label="Email" />
@@ -126,4 +126,4 @@ const Register = () => {
   );
 };
 
-export default React.memo(Register);
+export default React.memo(RegisterStudent);

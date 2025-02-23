@@ -19,9 +19,14 @@ const Login = () => {
 
   const onSubmit = useCallback(login, [login]);
 
-  const redirect = useCallback(() => {
-    navigate("/register");
-  }, [navigate]);
+  const redirectStudent = useCallback(
+    () => navigate("/student-registration"),
+    [navigate]
+  );
+  const redirectMember = useCallback(
+    () => navigate("/member-registration"),
+    [navigate]
+  );
 
   useEffect(() => {
     if (isSuccess) {
@@ -30,7 +35,7 @@ const Login = () => {
   }, [isSuccess, navigate]);
 
   return (
-    <div className="register-page">
+    <div className="card">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
           <OutlineTextfield
@@ -46,9 +51,16 @@ const Login = () => {
             <button
               type="button"
               className="button black medium outlined"
-              onClick={redirect}
+              onClick={redirectMember}
             >
-              Register
+              Join organization
+            </button>
+            <button
+              type="button"
+              className="button black medium outlined"
+              onClick={redirectStudent}
+            >
+              Apply to school
             </button>
             <button
               type="submit"

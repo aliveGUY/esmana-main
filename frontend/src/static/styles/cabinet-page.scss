@@ -1,0 +1,20 @@
+.cabinet-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .section,
+  .change-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .change-password-form {
+    .actions {
+      margin-left: auto;
+      display: flex;
+      gap: 16px;
+    }
+  }
+}

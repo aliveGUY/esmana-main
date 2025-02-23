@@ -1,16 +1,15 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, useMatch } from "react-router";
-import { isEmpty } from "lodash";
+import { useAuth } from "../../hooks/useAuth";
 
 const BackLink = () => {
   const navigate = useNavigate();
   const isHome = useMatch("/") !== null;
-  const user = useSelector((state) => state.auth.user);
+  const { isUnauthorized } = useAuth();
 
   const redirect = useCallback(() => navigate("/"), [navigate]);
 
-  if (isEmpty(user)) return;
+  if (isUnauthorized) return;
 
   return (
     <div className={`back-button-container ${isHome && "hidden"}`}>

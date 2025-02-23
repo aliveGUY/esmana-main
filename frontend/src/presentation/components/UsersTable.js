@@ -26,6 +26,12 @@ const UsersTable = () => {
             <p className="column-title">Name</p>
           </td>
           <td>
+            <p className="column-title">Email</p>
+          </td>
+          <td>
+            <p className="column-title">Phone</p>
+          </td>
+          <td>
             <p className="column-title">Role</p>
           </td>
           <td>

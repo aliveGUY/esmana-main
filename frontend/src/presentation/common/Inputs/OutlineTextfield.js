@@ -4,7 +4,14 @@ import { isEmpty } from "lodash";
 import PropTypes from "prop-types";
 
 const OutlineTextfield = (props) => {
-  const { inputId, label, required = false, inputProperties, endIcon } = props;
+  const {
+    inputId,
+    label,
+    required = false,
+    inputProperties,
+    endIcon,
+    onBlur,
+  } = props;
   const ref = useRef();
 
   const {
@@ -29,7 +36,9 @@ const OutlineTextfield = (props) => {
 
   return (
     <div
-      className={`outline-textfield-wrapper ${!isEmpty(errors[inputId]) && "error"}`}
+      className={`outline-textfield-wrapper ${
+        !isEmpty(errors[inputId]) && "error"
+      }`}
     >
       <Controller
         name={inputId}
@@ -47,6 +56,7 @@ const OutlineTextfield = (props) => {
                 ref={ref}
                 id={inputId}
                 className="input"
+                onBlur={onBlur}
               />
               <label htmlFor={inputId} className="label">
                 {label}
@@ -67,6 +77,7 @@ OutlineTextfield.propTypes = {
   required: PropTypes.bool,
   inputProperties: PropTypes.object,
   endIcon: PropTypes.element,
+  onBlur: PropTypes.func,
 };
 
 export default React.memo(OutlineTextfield);
