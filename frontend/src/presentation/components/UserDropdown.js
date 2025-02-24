@@ -9,7 +9,37 @@ const UserDropdown = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const ref = useRef();
-  const { isUnauthorized } = useAuth();
+  const { isUnauthorized, user } = useAuth();
+
+  const redirectCabinet = useCallback(
+    () => navigate(`/cabinet/${user.id}`),
+    [navigate]
+  );
+
+  const redirectStudent = useCallback(
+    () => navigate("/student-registration"),
+    [navigate]
+  );
+
+  const redirectClients = useCallback(
+    () => navigate("/clients"),
+    [navigate]
+  );
+
+  const redirectMember = useCallback(
+    () => navigate("/member-registration?sync=no"),
+    [navigate]
+  );
+
+  const redirectCourse = useCallback(
+    () => navigate("/courses/new"),
+    [navigate]
+  );
+
+  const redirectCoursesList = useCallback(
+    () => navigate("/courses"),
+    [navigate]
+  );
 
   const handleLogout = useCallback(() => {
     ref.current?.close();
@@ -28,6 +58,24 @@ const UserDropdown = () => {
         isToggle
         content={
           <div className="select-option-wrapper">
+            <button onClick={redirectCabinet} className="select-option">
+              Cabinet
+            </button>
+            <button onClick={redirectCoursesList} className="select-option">
+              Courses
+            </button>
+            <button onClick={redirectClients} className="select-option">
+              Clients
+            </button>
+            <button onClick={redirectCourse} className="select-option">
+              Create new Course
+            </button>
+            <button onClick={redirectStudent} className="select-option">
+              Register new Student
+            </button>
+            <button onClick={redirectMember} className="select-option">
+              Register new Member
+            </button>
             <button onClick={handleLogout} className="select-option">
               Logout
             </button>

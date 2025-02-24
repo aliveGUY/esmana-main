@@ -3,6 +3,12 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 24px;
+
+  .header-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
 }
 
 table {

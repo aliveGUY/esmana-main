@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { isEmpty, isEqual } from "lodash";
+import { isEqual } from "lodash";
 import { Identity } from "src/models/Identity";
 import { EntityMetadata, Repository, DataSource } from "typeorm";
 

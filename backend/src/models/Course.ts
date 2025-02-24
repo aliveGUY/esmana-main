@@ -36,18 +36,21 @@ export class Course {
   beginningDate: Date;
 
   @Index()
-  @Column({ name: 'finish_date', type: "timestamp", nullable: false })
+  @Column({ name: 'finish_date', type: "timestamp", nullable: true })
   finishDate: Date;
 
   @Column({ name: 'availability_time', type: "timestamp", nullable: false })
   availabilityTime: Date;
 
-  @Column({ name: 'certificate', type: "varchar", length: 500, nullable: true })
+  @Column({ name: 'active', type: 'bool', nullable: false, default: false })
+  active: boolean;
+
+  @Column({ name: 'certificate', type: "varchar", length: 500, nullable: false })
   certificate: string;
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at',type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  @UpdateDateColumn({ name: 'updated_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
   updatedAt: Date;
 }

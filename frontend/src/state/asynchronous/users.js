@@ -78,6 +78,22 @@ const usersApi = createApi({
     checkIfIdentityComplete: builder.mutation({
       query: (userId) => `/users/check-complete/${userId}`,
     }),
+
+    createCourse: builder.mutation({
+      query: (course) => ({
+        url: "/course",
+        method: "POST",
+        body: course,
+      }),
+    }),
+
+    getAllCourses: builder.mutation({
+      query: () => "/course/all",
+    }),
+
+    getAllActiveCourses: builder.mutation({
+      query: () => "/course/active",
+    }),
   }),
 });
 
@@ -91,7 +107,10 @@ export const {
   useCheckIfUserExistsMutation,
   useRegisterMemberMutation,
   useExtendStudentToMemberMutation,
-  useCheckIfIdentityCompleteMutation
+  useCheckIfIdentityCompleteMutation,
+  useCreateCourseMutation,
+  useGetAllCoursesMutation,
+  useGetAllActiveCoursesMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

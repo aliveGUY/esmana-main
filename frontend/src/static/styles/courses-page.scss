@@ -1,0 +1,102 @@
+.courses-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+
+  &.open {
+    box-shadow: 0px 14px 30px 0px rgba(0, 0, 0, 0.25);
+    padding: 24px;
+    border-radius: 12px;
+
+    .details-frame {
+      display: block;
+    }
+  }
+
+  .grid-title {
+    padding-bottom: 16px;
+    font-weight: 700;
+  }
+
+  .status-column {
+    width: 80px;
+
+    .status-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      .course-status-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 99%;
+
+        &.active {
+          background-color: #9aef9a;
+        }
+
+        &.inactive {
+          background-color: #ef9a9a;
+        }
+      }
+    }
+  }
+
+  .action-cell {
+    display: flex;
+    gap: 16px;
+  }
+
+  .course-item {
+    padding: 12px 0;
+  }
+
+  .details-frame {
+    border-top: 1px solid black;
+    grid-column: 1/-1;
+    padding: 16px 0 0 24px;
+    display: none;
+
+    .details-frame-section {
+      .lectures-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .lecture-item {
+          background-color: #f5f5f5;
+          padding: 8px 12px;
+          border-radius: 12px;
+
+          .title {
+            padding-bottom: 8px;
+          }
+
+          .lecture-details {
+            display: flex;
+            gap: 16px;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .details-frame-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: end;
+        padding: 12px 0;
+      }
+
+      .lecture-creation-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .actions {
+          display: flex;
+          gap: 16px;
+        }
+      }
+    }
+  }
+}

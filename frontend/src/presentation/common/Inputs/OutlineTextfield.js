@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isEmpty } from "lodash";
 import PropTypes from "prop-types";
@@ -12,27 +12,27 @@ const OutlineTextfield = (props) => {
     endIcon,
     onBlur,
   } = props;
-  const ref = useRef();
+  const [hasValue] = useState(true);
 
   const {
-    formState: { errors, value, defaultValues },
+    formState: { errors, value },
   } = useFormContext();
 
-  const toggleLabel = (value) => {
-    if (isEmpty(value)) {
-      ref.current.classList.remove("has-value");
-    } else {
-      ref.current.classList.add("has-value");
-    }
-  };
+  // const toggleLabel = (value) => {
+  //   if (isEmpty(value)) {
+  //     setHasValue(false);
+  //   } else {
+  //     setHasValue(true);
+  //   }
+  // };
 
-  const validate = useCallback((value) => {
-    toggleLabel(value);
-  }, []);
+  // const validate = useCallback((value) => {
+  //   toggleLabel(value);
+  // }, []);
 
-  useEffect(() => {
-    toggleLabel(defaultValues[inputId]);
-  }, [defaultValues, inputId]);
+  // useEffect(() => {
+  //   toggleLabel(defaultValues[inputId]);
+  // }, [defaultValues, inputId]);
 
   return (
     <div
@@ -45,7 +45,6 @@ const OutlineTextfield = (props) => {
         value={value}
         rules={{
           required: required ? "* Field is required" : false,
-          validate,
         }}
         render={({ field }) => (
           <div className="outline-textfield">
@@ -53,9 +52,8 @@ const OutlineTextfield = (props) => {
               <input
                 {...field}
                 {...inputProperties}
-                ref={ref}
                 id={inputId}
-                className="input"
+                className={`input ${hasValue && "has-value"}`}
                 onBlur={onBlur}
               />
               <label htmlFor={inputId} className="label">

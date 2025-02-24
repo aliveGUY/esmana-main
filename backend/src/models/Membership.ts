@@ -19,10 +19,10 @@ export class Membership {
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @Column({ name: 'payment_date', type: "date", nullable: false })
+  @Column({ name: 'payment_date', type: "date", nullable: true })
   paymentDate: Date;
 
-  @Column({ name: 'activation_date', type: "date", nullable: false })
+  @Column({ name: 'activation_date', type: "date", nullable: true })
   activationDate: Date;
 
   @Column({ name: 'expires_at', type: "date", nullable: true })

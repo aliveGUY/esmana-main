@@ -19,9 +19,6 @@ export class UsersRepository {
     private readonly dataSource: DataSource
   ) { }
 
-
-
-
   async getAllUsers(): Promise<GetUserDto[]> {
     return this.users.find()
   }
@@ -55,10 +52,6 @@ export class UsersRepository {
 
     return !isEmpty(matchingUser)
   }
-
-
-
-
 
   async registerMember(dto: MemberRegistrationDto): Promise<GetUserDto> {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -103,7 +96,6 @@ export class UsersRepository {
         existingIdentity = await queryRunner.manager.save(Identity, existingIdentity);
       }
 
-      // ✅ Step 1: Create and save the User first
       const newUser = queryRunner.manager.create(User, {
         email: dto.email,
         phone: dto.phone,
@@ -115,11 +107,9 @@ export class UsersRepository {
 
       const savedUser = await queryRunner.manager.save(User, newUser);
 
-      // ✅ Step 2: Assign the User to Identity and update Identity
       existingIdentity.user = savedUser;
       await queryRunner.manager.save(Identity, existingIdentity);
 
-      // ✅ Step 3: Commit the transaction
       await queryRunner.commitTransaction();
 
       return {
@@ -137,7 +127,6 @@ export class UsersRepository {
       await queryRunner.release();
     }
   }
-
 
   async registerStudent(dto: StudentRegistrationDto): Promise<GetUserDto> {
     const queryRunner = this.dataSource.createQueryRunner();

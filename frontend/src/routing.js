@@ -1,6 +1,6 @@
 import React from "react";
 
-import Home from "./presentation/pages/Home";
+import Clients from "./presentation/pages/Clients";
 import Master from "./presentation/pages/Master";
 import RegisterStudent from "./presentation/pages/RegisterStudent";
 import Login from "./presentation/pages/Login";
@@ -11,6 +11,8 @@ import RegisterMember from "./presentation/pages/RegisterMember";
 import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
 import Memberships from "./presentation/pages/Memberships";
+import { element } from "prop-types";
+import Home from "./presentation/pages/Home";
 
 const routing = [
   {
@@ -36,6 +38,12 @@ const routing = [
         element: <Login />,
       },
       {
+        path: "courses",
+        title: "Esmana - Courses",
+        description: "Metadata for esmana login",
+        element: <Courses />,
+      },
+      {
         path: "/",
         element: <ProtectedRoutes />,
         children: [
@@ -44,6 +52,12 @@ const routing = [
             title: "Esmana",
             description: "Metadata for esmana main page",
             element: <Home />,
+          },
+          {
+            path: "clients",
+            title: "Esmana - Clients",
+            description: "Metadata for esmana main page",
+            element: <Clients />,
           },
           {
             path: "cabinet",
@@ -57,17 +71,8 @@ const routing = [
             ],
           },
           {
-            path: "courses",
-            children: [
-              {
-                index: true,
-                element: <Courses />,
-              },
-              {
-                path: "new",
-                element: <CreateCourse />,
-              },
-            ],
+            path: "courses/new",
+            element: <CreateCourse />,
           },
           {
             path: "memberships",
