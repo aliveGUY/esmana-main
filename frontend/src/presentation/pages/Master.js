@@ -21,7 +21,7 @@ const MasterPage = () => {
     if (user.id) {
       checkIfIdentityComplete(user.id);
     }
-  }, [user]);
+  }, [user, checkIfIdentityComplete]);
 
   const currentRoute = useCurrentRoute();
 

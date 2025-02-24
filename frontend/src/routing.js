@@ -8,7 +8,6 @@ import ProtectedRoutes from "./presentation/components/ProtectedRoutes";
 import Cabinet from "./presentation/pages/Cabinet";
 import CabinetRoutes from "./presentation/components/CabinetRoutes";
 import RegisterMember from "./presentation/pages/RegisterMember";
-import { element } from "prop-types";
 import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
 import Memberships from "./presentation/pages/Memberships";

@@ -65,7 +65,7 @@ const RegisterMember = () => {
     if (isEmpty(email) && isEmpty(phone)) return;
 
     checkIfUserExists({ email, phone });
-  }, []);
+  }, [checkIfUserExists, isSync, methods]);
 
   const redirect = useCallback(() => {
     navigate("/");
@@ -93,7 +93,7 @@ const RegisterMember = () => {
         relevantTopics: data.relevantTopics,
       });
     },
-    [isUnauthorized, user]
+    [isUnauthorized, user, extendStudentToMember, registerMember]
   );
 
   return (

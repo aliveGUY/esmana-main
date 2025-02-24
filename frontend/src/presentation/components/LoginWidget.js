@@ -39,7 +39,7 @@ const LoginWidget = forwardRef((_, ref) => {
 
   useEffect(() => {
     if (isSuccess) close();
-  }, [isSuccess]);
+  }, [isSuccess, close]);
 
   return (
     <div className={`login-widget ${isOpen && "open"}`}>

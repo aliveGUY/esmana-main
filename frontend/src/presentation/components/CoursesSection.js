@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const CoursesSection = () => {
   const navigate = useNavigate();
 
-  const redirect = useCallback(() => navigate("/courses"), []);
+  const redirect = useCallback(() => navigate("/courses"), [navigate]);
 
   return (
     <div className="cta-placeholder-card">

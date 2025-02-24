@@ -11,7 +11,10 @@ const UserListItem = ({ user }) => {
     [user, deleteUser]
   );
 
-  const redirect = useCallback(() => navigate(`cabinet/${user.id}`), []);
+  const redirect = useCallback(
+    () => navigate(`cabinet/${user.id}`),
+    [navigate, user.id]
+  );
 
   const name = [user.firstName, user.middleName, user.lastName].join(" ");
 

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
 import Password from "../common/Inputs/Password";
@@ -8,7 +7,6 @@ import MembershipSection from "../components/MembershipSection";
 import CoursesSection from "../components/CoursesSection";
 
 const Cabinet = () => {
-  const { id } = useParams();
   const methods = useForm({
     defaultValues: {
       oldPassword: "",
@@ -26,11 +24,15 @@ const Cabinet = () => {
 
   const handleChangePassword = useCallback((data) => {
     console.log({ data });
-  });
+  }, []);
 
   if (isEmpty(auth.user)) return;
 
-  const name = [auth.user.firstName, auth.user.middleName, auth.user.lastName].join(" ");
+  const name = [
+    auth.user.firstName,
+    auth.user.middleName,
+    auth.user.lastName,
+  ].join(" ");
 
   return (
     <div className="card cabinet-page">

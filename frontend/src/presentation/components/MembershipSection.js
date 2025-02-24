@@ -14,7 +14,7 @@ const MembershipSection = () => {
       return;
     }
     navigate("/member-registration?sync=yes");
-  }, [isIdentityComplete]);
+  }, [isIdentityComplete, navigate]);
 
   return (
     <div className="cta-placeholder-card">
