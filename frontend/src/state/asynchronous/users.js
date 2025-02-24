@@ -24,6 +24,22 @@ const usersApi = createApi({
       }),
     }),
 
+    registerMember: builder.mutation({
+      query: (userData) => ({
+        url: "/users/member",
+        method: "POST",
+        body: userData,
+      }),
+    }),
+
+    extendStudentToMember: builder.mutation({
+      query: (userData) => ({
+        url: "/users/student-to-member",
+        method: "PUT",
+        body: userData,
+      }),
+    }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
         url: "/users",
@@ -69,6 +85,8 @@ export const {
   useGetSessionQuery,
   useLogoutMutation,
   useCheckIfUserExistsMutation,
+  useRegisterMemberMutation,
+  useExtendStudentToMemberMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

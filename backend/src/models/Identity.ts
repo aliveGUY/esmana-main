@@ -5,7 +5,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Index,
-  OneToOne
+  OneToOne,
+  JoinColumn
 } from "typeorm";
 import { User } from "./User";
 
@@ -26,7 +27,7 @@ export class Identity {
   @Column({ name: 'position', type: "varchar", length: 255, nullable: false })
   position: string;
 
-  @Column({ name: "education", type: "text", nullable: false })
+  @Column({ name: "education", type: "json", nullable: false })
   education: string[];
 
   @Column({ name: 'field_of_work', type: "varchar", length: 255, nullable: false })
@@ -69,7 +70,8 @@ export class Identity {
   @Column({ name: 'relevant_topics', nullable: true })
   relevantTopics: string;
 
-  @OneToOne(() => User, (user) => user.identity)
+  @OneToOne(() => User, (user) => user.identity, { cascade: ["remove"], onDelete: "CASCADE" })
+  @JoinColumn({ name: "user_id" })
   user: User;
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })

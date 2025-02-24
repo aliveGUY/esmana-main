@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { UsersRepository } from "src/repositories/UsersRepository";
+import { UsersRepository } from "src/repositories/usersRepository";
 import { compare } from 'bcryptjs';
 import { isEmpty } from "lodash";
 import { LoginUserDto } from "src/models/dto/LoginUserDto";

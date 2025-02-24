@@ -44,7 +44,7 @@ export class User {
   })
   role: ERoles;
 
-  @OneToOne(() => Identity, (identity) => identity.user, { cascade: ["remove"], onDelete: "CASCADE" })
+  @OneToOne(() => Identity, (identity) => identity.user)
   @JoinColumn({ name: "identity_id" })
   identity: Identity;
 

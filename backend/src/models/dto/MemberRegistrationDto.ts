@@ -5,7 +5,7 @@ export class MemberRegistrationDto {
   firstName: string
   middleName: string
   lastName: string
-  birthDate: string
+  birthDate: Date
   city: string
   workplace: string
   position: string

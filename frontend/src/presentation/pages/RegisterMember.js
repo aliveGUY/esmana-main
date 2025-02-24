@@ -9,16 +9,23 @@ import CheckboxGroup from "../common/Inputs/CheckboxGroup";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import ShieldIcon from "../../static/images/shield-check.svg";
-import { useCheckIfUserExistsMutation } from "../../state/asynchronous/users";
+import {
+  useCheckIfUserExistsMutation,
+  useExtendStudentToMemberMutation,
+  useRegisterMemberMutation,
+} from "../../state/asynchronous/users";
 import { isEmpty } from "lodash";
 import LoginWidget from "../components/LoginWidget";
 
 const RegisterMember = () => {
   const navigate = useNavigate();
   const { isUnauthorized, user } = useAuth();
+  const loginWidgetRef = useRef(null);
+
   const [checkIfUserExists, { data: isUserExist }] =
     useCheckIfUserExistsMutation();
-  const loginWidgetRef = useRef(null);
+  const [registerMember] = useRegisterMemberMutation();
+  const [extendStudentToMember] = useExtendStudentToMemberMutation();
 
   const methods = useForm({
     mode: "onChange",
@@ -63,9 +70,28 @@ const RegisterMember = () => {
 
   const openLoginWidget = useCallback(() => loginWidgetRef.current?.open(), []);
 
-  const onSubmit = useCallback((data) => {
-    console.log({ data });
-  }, []);
+  const onSubmit = useCallback(
+    (data) => {
+      if (isUnauthorized) {
+        registerMember(data);
+        return;
+      }
+
+      extendStudentToMember({
+        userId: user.id,
+        residenceAddress: data.residenceAddress,
+        country: data.country,
+        region: data.region,
+        taxpayerId: data.taxpayerId,
+        passportId: data.passportId,
+        passportIssuedBy: data.passportIssuedBy,
+        educationInstitution: data.educationInstitution,
+        workExperience: data.workExperience,
+        relevantTopics: data.relevantTopics,
+      });
+    },
+    [isUnauthorized, user]
+  );
 
   return (
     <div className="card">

@@ -1,14 +1,19 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
 import { StudentToMemberDto } from 'src/models/dto/StudentToMemberDto';
+import { IdentityService } from 'src/services/identityService';
 import { UsersService } from 'src/services/usersService';
 
 @Controller('/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly identityService: IdentityService,
+
+  ) { }
 
   @Post('student')
   registerStudent(@Body() user: StudentRegistrationDto): Promise<GetUserDto> {
@@ -16,13 +21,14 @@ export class UsersController {
   }
 
   @Post('member')
-  registerMember(@Body() user: MemberRegistrationDto) {
-
+  registerMember(@Body() user: MemberRegistrationDto): Promise<GetUserDto> {
+    return this.usersService.registerMember(user)
   }
 
-  @Post('student-to-member')
-  extendUser(@Body() user: StudentToMemberDto) {
-
+  @Put('student-to-member')
+  @UseGuards(AuthenticatedGuard)
+  extendStudentToMember(@Body() user: StudentToMemberDto): Promise<void> {
+    return this.identityService.extendStudentToMember(user)
   }
 
   @Get()

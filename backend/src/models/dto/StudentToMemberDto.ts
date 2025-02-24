@@ -1,4 +1,5 @@
 export class StudentToMemberDto {
+  userId: number
   residenceAddress: string
   country: string
   region: string

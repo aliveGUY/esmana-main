@@ -1,6 +1,7 @@
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useState,
 } from "react";
@@ -10,7 +11,7 @@ import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import { useLoginMutation } from "../../state/asynchronous/users";
 
 const LoginWidget = forwardRef((_, ref) => {
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
   const [isOpen, setOpen] = useState(false);
   const methods = useForm({
     mode: "onTouched",
@@ -35,6 +36,10 @@ const LoginWidget = forwardRef((_, ref) => {
   useImperativeHandle(ref, () => ({
     open,
   }));
+
+  useEffect(() => {
+    if (isSuccess) close();
+  }, [isSuccess]);
 
   return (
     <div className={`login-widget ${isOpen && "open"}`}>
