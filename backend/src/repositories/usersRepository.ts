@@ -6,7 +6,6 @@ import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { LoginUserDto } from 'src/models/dto/LoginUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
-import { StudentToMemberDto } from 'src/models/dto/StudentToMemberDto';
 import { Identity } from 'src/models/Identity';
 import { User } from 'src/models/User';
 import { Repository } from 'typeorm';
@@ -104,6 +103,7 @@ export class UsersRepository {
         existingIdentity = await queryRunner.manager.save(Identity, existingIdentity);
       }
 
+      // ✅ Step 1: Create and save the User first
       const newUser = queryRunner.manager.create(User, {
         email: dto.email,
         phone: dto.phone,
@@ -111,14 +111,15 @@ export class UsersRepository {
         firstName: dto.firstName,
         middleName: dto.middleName,
         lastName: dto.lastName,
-        identity: existingIdentity,
       });
-
-      existingIdentity.user = newUser;
-      await queryRunner.manager.save(Identity, existingIdentity);
 
       const savedUser = await queryRunner.manager.save(User, newUser);
 
+      // ✅ Step 2: Assign the User to Identity and update Identity
+      existingIdentity.user = savedUser;
+      await queryRunner.manager.save(Identity, existingIdentity);
+
+      // ✅ Step 3: Commit the transaction
       await queryRunner.commitTransaction();
 
       return {
@@ -203,5 +204,4 @@ export class UsersRepository {
       await queryRunner.release();
     }
   }
-
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
@@ -12,7 +12,6 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly identityService: IdentityService,
-
   ) { }
 
   @Post('student')
@@ -41,5 +40,12 @@ export class UsersController {
   @UseGuards(AuthenticatedGuard)
   deleteUser(@Body('id') id: number): Promise<number> {
     return this.usersService.deleteUser(id)
+  }
+
+
+  @Get('check-complete/:id')
+  @UseGuards(AuthenticatedGuard)
+  checkIsIdentityComplete(@Param('id') userId: string): Promise<boolean> {
+    return this.identityService.checkIsIdentityComplete(Number(userId));
   }
 }

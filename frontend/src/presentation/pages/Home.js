@@ -13,7 +13,12 @@ function Home() {
   );
 
   const redirectMember = useCallback(
-    () => navigate("/member-registration"),
+    () => navigate("/member-registration?sync=no"),
+    [navigate]
+  );
+
+  const redirectCourse = useCallback(
+    () => navigate("/courses/new"),
     [navigate]
   );
 
@@ -21,12 +26,18 @@ function Home() {
     <div className="card">
       <div className="header">
         <h1>User Management</h1>
-        <button className="button black medium" onClick={redirectMember}>
-          Register new Member
-        </button>
-        <button className="button black medium" onClick={redirectStudent}>
-          Register new Student
-        </button>
+
+        <div>
+          <button className="button black medium" onClick={redirectMember}>
+            Register new Member
+          </button>
+          <button className="button black medium" onClick={redirectStudent}>
+            Register new Student
+          </button>
+          <button className="button black medium" onClick={redirectCourse}>
+            Create new Course
+          </button>
+        </div>
       </div>
       {isLoading ? "Loading..." : <UsersTable />}
     </div>

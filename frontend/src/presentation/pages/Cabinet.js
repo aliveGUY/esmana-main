@@ -17,7 +17,7 @@ const Cabinet = () => {
     },
   });
 
-  const user = useSelector((state) => state.auth.user);
+  const auth = useSelector((state) => state.auth);
   const [showChangePassword, setShowChangePassword] = useState(false);
 
   const togglePassword = useCallback(() => {
@@ -28,16 +28,16 @@ const Cabinet = () => {
     console.log({ data });
   });
 
-  if (isEmpty(user)) return;
+  if (isEmpty(auth.user)) return;
 
-  const name = [user.firstName, user.middleName, user.lastName].join(" ");
+  const name = [auth.user.firstName, auth.user.middleName, auth.user.lastName].join(" ");
 
   return (
     <div className="card cabinet-page">
       <div className="section">
         <div>Name: {name}</div>
-        <div>Phone: {user.phone}</div>
-        <div>Email: {user.email}</div>
+        <div>Phone: {auth.user.phone}</div>
+        <div>Email: {auth.user.email}</div>
       </div>
 
       <hr />

@@ -9,8 +9,6 @@ const ProtectedRoutes = () => {
     (state) => state.asyncStatus.getSession
   );
 
-  console.log({ isLoading, isError, isUninitialized });
-
   if (isUninitialized || isLoading) {
     return "Loading...";
   }

@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useOutlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useCurrentRoute } from "../../hooks/useCurrentRoute";
 import Navigation from "../components/Navigation";
 import ThumbnailImage from "../../static/images/thumbnail.jpg";
-import { useGetSessionQuery } from "../../state/asynchronous/users";
+import {
+  useCheckIfIdentityCompleteMutation,
+  useGetSessionQuery,
+} from "../../state/asynchronous/users";
+import { useAuth } from "../../hooks/useAuth";
 
 const MasterPage = () => {
   const outlet = useOutlet();
+  const { user } = useAuth();
+
   useGetSessionQuery();
+  const [checkIfIdentityComplete] = useCheckIfIdentityCompleteMutation();
+
+  useEffect(() => {
+    if (user.id) {
+      checkIfIdentityComplete(user.id);
+    }
+  }, [user]);
 
   const currentRoute = useCurrentRoute();
 

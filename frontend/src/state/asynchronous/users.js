@@ -74,6 +74,10 @@ const usersApi = createApi({
         body: user,
       }),
     }),
+
+    checkIfIdentityComplete: builder.mutation({
+      query: (userId) => `/users/check-complete/${userId}`,
+    }),
   }),
 });
 
@@ -87,6 +91,7 @@ export const {
   useCheckIfUserExistsMutation,
   useRegisterMemberMutation,
   useExtendStudentToMemberMutation,
+  useCheckIfIdentityCompleteMutation
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

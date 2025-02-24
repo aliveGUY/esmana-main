@@ -10,4 +10,8 @@ export class IdentityService {
     const { userId, ...identity } = user
     return await this.identityRepository.extendStudentToMember(userId, identity)
   }
+
+  async checkIsIdentityComplete(userId: number): Promise<boolean> {
+    return await this.identityRepository.isIdentityComplete(userId)
+  }
 }

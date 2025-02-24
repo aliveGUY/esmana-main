@@ -3,7 +3,7 @@ import { usersEndpoints } from "../asynchronous/users";
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { user: {} },
+  initialState: { user: {}, isIdentityComplete: false },
   extraReducers: (builder) => {
     builder.addMatcher(
       usersEndpoints.login.matchFulfilled,
@@ -36,6 +36,13 @@ const authSlice = createSlice({
     builder.addMatcher(usersEndpoints.logout.matchFulfilled, (state) => {
       state.user = {};
     });
+
+    builder.addMatcher(
+      usersEndpoints.checkIfIdentityComplete.matchFulfilled,
+      (state, { payload }) => {
+        state.isIdentityComplete = payload;
+      }
+    );
   },
 });
 
