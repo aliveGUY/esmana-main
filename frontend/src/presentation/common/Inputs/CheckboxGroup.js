@@ -16,32 +16,38 @@ const CheckboxGroup = (props) => {
     return filter(options, (option) => !startsWith(option, "other: "));
   };
 
-  const handleOtherChange = useCallback((e) => {
-    const newValue = e.target.value;
-    const currentValue = `other: ${newValue}`;
-    const allPreviousValues = getValues(inputId) || [];
-    const previousCheckboxValues = removeOtherOption(allPreviousValues);
+  const handleOtherChange = useCallback(
+    (e) => {
+      const newValue = e.target.value;
+      const currentValue = `other: ${newValue}`;
+      const allPreviousValues = getValues(inputId) || [];
+      const previousCheckboxValues = removeOtherOption(allPreviousValues);
 
-    if (isEmpty(newValue)) {
-      setValue(inputId, previousCheckboxValues, { shouldValidate: true });
-      return;
-    }
+      if (isEmpty(newValue)) {
+        setValue(inputId, previousCheckboxValues, { shouldValidate: true });
+        return;
+      }
 
-    setValue(inputId, [...previousCheckboxValues, currentValue], {
-      shouldValidate: true,
-    });
-  }, []);
+      setValue(inputId, [...previousCheckboxValues, currentValue], {
+        shouldValidate: true,
+      });
+    },
+    [getValues, inputId, setValue]
+  );
 
-  const handleCheckboxChange = useCallback((e) => {
-    const newValue = e.target.value;
-    const previousValues = getValues(inputId) || [];
-    let currentValues = previousValues;
+  const handleCheckboxChange = useCallback(
+    (e) => {
+      const newValue = e.target.value;
+      const previousValues = getValues(inputId) || [];
+      let currentValues = previousValues;
 
-    if (e.target.checked) currentValues = [...previousValues, newValue];
-    else currentValues = previousValues.filter((v) => v !== newValue);
+      if (e.target.checked) currentValues = [...previousValues, newValue];
+      else currentValues = previousValues.filter((v) => v !== newValue);
 
-    setValue(inputId, currentValues, { shouldValidate: true });
-  }, []);
+      setValue(inputId, currentValues, { shouldValidate: true });
+    },
+    [getValues, inputId, setValue]
+  );
 
   return (
     <div className="checkbox-group">

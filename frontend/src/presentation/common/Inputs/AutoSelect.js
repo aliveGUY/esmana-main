@@ -14,10 +14,13 @@ const AutoSelect = (props) => {
 
   const closePopup = () => ref.current?.close();
 
-  const handleSelect = useCallback((e) => {
-    closePopup();
-    setValue(inputId, e.target.value, { shouldValidate: true });
-  }, []);
+  const handleSelect = useCallback(
+    (e) => {
+      closePopup();
+      setValue(inputId, e.target.value, { shouldValidate: true });
+    },
+    [inputId, setValue]
+  );
 
   return (
     <Popup
