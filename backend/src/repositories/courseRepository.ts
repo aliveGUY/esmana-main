@@ -15,10 +15,10 @@ export class CourseRepository {
   }
 
   async getAllCourses(): Promise<Course[]> {
-    return this.course.find()
+    return this.course.find({ relations: ['lectures', 'lectures.speakers'] })
   }
 
   async getAllActiveCourses(): Promise<Course[]> {
-    return this.course.find({ where: { active: true } })
+    return this.course.find({ where: { active: true }, relations: ['lectures', 'lectures.speakers'] })
   }
 }

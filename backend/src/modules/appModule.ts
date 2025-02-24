@@ -7,6 +7,7 @@ import { typeOrmConfig } from 'src/config/typeorm.config';
 import { IdentityModule } from './identityModule';
 import { NotificationModule } from './notificationModule';
 import { CourseModule } from './courseModule';
+import { LectureModule } from './lectureModule';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { CourseModule } from './courseModule';
     AuthModule,
     IdentityModule,
     NotificationModule,
-    CourseModule
+    CourseModule,
+    LectureModule
   ],
 })
 

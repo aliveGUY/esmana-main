@@ -94,6 +94,14 @@ const usersApi = createApi({
     getAllActiveCourses: builder.mutation({
       query: () => "/course/active",
     }),
+
+    createLecture: builder.mutation({
+      query: (lecture) => ({
+        url: "/lecture",
+        method: "POST",
+        body: lecture,
+      }),
+    }),
   }),
 });
 
@@ -111,6 +119,7 @@ export const {
   useCreateCourseMutation,
   useGetAllCoursesMutation,
   useGetAllActiveCoursesMutation,
+  useCreateLectureMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

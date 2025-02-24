@@ -23,15 +23,11 @@ export class Lecture {
   @Column({ name: 'title', type: "varchar", length: 255, nullable: false })
   title: string;
 
-  @Index()
   @Column({ name: 'start_time', type: "datetime", nullable: false })
   startTime: Date;
 
   @Column({ name: 'end_time', type: "datetime", nullable: false })
   endTime: Date;
-
-  @Column({ name: 'duration', type: "time", nullable: false })
-  duration: string;
 
   @Column({ name: 'video_link', type: "varchar", length: 500, nullable: true })
   videoLink: string;
@@ -45,6 +41,7 @@ export class Lecture {
   speakers: User[];
 
   @ManyToOne(() => Course, (course) => course.lectures, { nullable: false, onDelete: "CASCADE" })
+  @JoinColumn({ name: "course_id" })
   course: Course;
 
   @OneToOne(() => TempLectureResources, (tempResources) => tempResources.lecture, { cascade: true, onDelete: "CASCADE" })

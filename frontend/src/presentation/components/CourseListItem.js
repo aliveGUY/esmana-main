@@ -1,12 +1,12 @@
 import { isEmpty, map } from "lodash";
-import React, { Fragment, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import CrossIcon from "../../static/images/cross.svg";
 import CheckMarkIcon from "../../static/images/check-mark.svg";
 import { format } from "date-fns";
 import LectureFormWidget from "./LectureFormWidget";
 
 const CourseListItem = ({ course }) => {
-  const { active, beginningDate, finishDate, title } = course;
+  const { active, beginningDate, finishDate, lectures, title } = course;
   const date = new Date(beginningDate);
   const formattedDate = format(date, "yyyy-MM-dd");
   const [open, setOpen] = useState(false);
@@ -23,21 +23,6 @@ const CourseListItem = ({ course }) => {
     () => setLectureFormOpened(false),
     [setLectureFormOpened]
   );
-
-  const dummyData = [
-    {
-      speakers: ["John Doe", "Jane Doe"],
-      startsAt: "12:00",
-      duration: "2h",
-      title: "Dummy lecture",
-    },
-    {
-      speakers: ["Jane Doe"],
-      startsAt: "12:00",
-      duration: "2h",
-      title: "Dummy lecture",
-    },
-  ];
 
   return (
     <div className={`courses-grid  ${open && "open"}`}>
@@ -82,18 +67,21 @@ const CourseListItem = ({ course }) => {
       <div className="details-frame">
         <div className="details-frame-section">
           <div className="lectures-list">
-            {map(dummyData, (lecture, index) => (
-              <div className="lecture-item">
+            {map(lectures, (lecture, index) => (
+              <div className="lecture-item" key={index}>
                 <h4 className="title">{lecture.title}</h4>
                 <div className="lecture-details">
                   <p>Speaker: {lecture.speakers.join(", ")}</p>
-                  <p>Starts at: {lecture.startsAt}</p>
-                  <p>Duration: {lecture.duration}</p>
+                  <p>Starts at: {format(lecture.startTime, "yyyy-MM-dd")}</p>
+                  <p>Ends at: {format(lecture.endTime, "yyyy-MM-dd")}</p>
                 </div>
               </div>
             ))}
             {lectureFormOpened ? (
-              <LectureFormWidget onCancel={closeLectureCreationWidget} />
+              <LectureFormWidget
+                onCancel={closeLectureCreationWidget}
+                courseId={course.id}
+              />
             ) : (
               <button
                 className="button black small outlined"

@@ -1,22 +1,30 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import { FormProvider, useForm } from "react-hook-form";
 import DatePicker from "../common/Inputs/DatePicker";
+import { useCreateLectureMutation } from "../../state/asynchronous/users";
+import PropTypes from "prop-types";
 
 const LectureFormWidget = (props) => {
-  const { onCancel } = props;
+  const { onCancel, courseId } = props;
 
+  const [createLecture, { isSuccess }] = useCreateLectureMutation();
   const methods = useForm({
     mode: "onTouched",
     defaultValues: {
       title: "",
       speakers: "",
-      startsAt: "",
-      duration: "",
+      startTime: "",
+      endTime: "",
+      course: { id: courseId },
     },
   });
 
-  const onSubmit = useCallback((data) => console.log({ data }), []);
+  const onSubmit = useCallback(createLecture, [createLecture]);
+
+  useEffect(() => {
+    if (isSuccess) onCancel();
+  }, [isSuccess]);
 
   return (
     <div>
@@ -27,8 +35,8 @@ const LectureFormWidget = (props) => {
         >
           <OutlineTextfield required inputId="title" label="Title" />
           <OutlineTextfield required inputId="speakers" label="Speakers" />
-          <DatePicker required inputId="startsAt" label="Start at" />
-          <DatePicker required inputId="duration" label="Duration" />
+          <DatePicker required inputId="startTime" label="Start at" />
+          <DatePicker required inputId="endTime" label="Ends at" />
           <div className="actions">
             <button
               type="button"
@@ -43,6 +51,10 @@ const LectureFormWidget = (props) => {
       </FormProvider>
     </div>
   );
+};
+
+LectureFormWidget.propTypes = {
+  courseId: PropTypes.number.isRequired,
 };
 
 export default React.memo(LectureFormWidget);

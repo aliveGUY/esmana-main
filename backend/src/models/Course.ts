@@ -7,7 +7,8 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  Index
+  Index,
+  JoinColumn
 } from "typeorm";
 import { User } from "./User";
 import { Lecture } from "./Lecture";
@@ -29,6 +30,7 @@ export class Course {
   students: User[];
 
   @OneToMany(() => Lecture, (lecture) => lecture.course, { cascade: true })
+  @JoinColumn({ name: "lecture_id" })
   lectures: Lecture[];
 
   @Index()

@@ -44,7 +44,7 @@ export class User {
   })
   role: ERoles;
 
-  @OneToOne(() => Identity, (identity) => identity.user)
+  @OneToOne(() => Identity, (identity) => identity.user, { cascade: true })
   @JoinColumn({ name: "identity_id" })
   identity: Identity;
 

@@ -70,7 +70,7 @@ export class Identity {
   @Column({ name: 'relevant_topics', nullable: true })
   relevantTopics: string;
 
-  @OneToOne(() => User, (user) => user.identity, { cascade: ["remove"], onDelete: "CASCADE" })
+  @OneToOne(() => User, (user) => user.identity, { nullable: false, onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user: User;
 

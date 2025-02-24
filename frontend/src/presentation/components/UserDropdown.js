@@ -11,35 +11,35 @@ const UserDropdown = () => {
   const ref = useRef();
   const { isUnauthorized, user } = useAuth();
 
-  const redirectCabinet = useCallback(
-    () => navigate(`/cabinet/${user.id}`),
-    [navigate]
-  );
+  const redirectCabinet = useCallback(() => {
+    navigate(`/cabinet/${user.id}`);
+    ref.current?.close();
+  }, [navigate]);
 
-  const redirectStudent = useCallback(
-    () => navigate("/student-registration"),
-    [navigate]
-  );
+  const redirectStudent = useCallback(() => {
+    navigate("/student-registration");
+    ref.current?.close();
+  }, [navigate]);
 
-  const redirectClients = useCallback(
-    () => navigate("/clients"),
-    [navigate]
-  );
+  const redirectClients = useCallback(() => {
+    navigate("/clients");
+    ref.current?.close();
+  }, [navigate]);
 
-  const redirectMember = useCallback(
-    () => navigate("/member-registration?sync=no"),
-    [navigate]
-  );
+  const redirectMember = useCallback(() => {
+    navigate("/member-registration?sync=no");
+    ref.current?.close();
+  }, [navigate]);
 
-  const redirectCourse = useCallback(
-    () => navigate("/courses/new"),
-    [navigate]
-  );
+  const redirectCourse = useCallback(() => {
+    navigate("/courses/new");
+    ref.current?.close();
+  }, [navigate]);
 
-  const redirectCoursesList = useCallback(
-    () => navigate("/courses"),
-    [navigate]
-  );
+  const redirectCoursesList = useCallback(() => {
+    navigate("/courses");
+    ref.current?.close();
+  }, [navigate]);
 
   const handleLogout = useCallback(() => {
     ref.current?.close();
