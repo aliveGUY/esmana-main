@@ -61,8 +61,8 @@
   }
 
   &.outlined.lightblue {
-    outline: 2px solid #90D5FF;
-    color: #90D5FF;
+    outline: 2px solid #90d5ff;
+    color: #90d5ff;
     background-color: white;
 
     &:hover {
@@ -135,6 +135,11 @@
     }
     &:active {
       background-color: #e0e0e0;
+    }
+
+    &.selected {
+      background-color: #E3F2FD;
+      cursor: auto;
     }
   }
 }

@@ -48,4 +48,9 @@ export class UsersController {
   checkIsIdentityComplete(@Param('id') userId: string): Promise<boolean> {
     return this.identityService.checkIsIdentityComplete(Number(userId));
   }
+
+  @Get('mail-search/:partialEmail')
+  searchForUserByEmail(@Param('partialEmail') partialEmail: string): Promise<GetUserDto[]> {
+    return this.usersService.searchForUserByEmail(partialEmail)
+  }
 }

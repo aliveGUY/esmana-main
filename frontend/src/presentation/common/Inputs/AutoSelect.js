@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useFormContext } from "react-hook-form";
 
 const AutoSelect = (props) => {
-  const { inputId, label, required = false, options = [] } = props;
+  const { inputId, label, required = false, options = [], onChange } = props;
   const ref = useRef();
   const { setValue } = useFormContext();
 
@@ -39,7 +39,7 @@ const AutoSelect = (props) => {
       ))}
     >
       <div onClick={openPopup}>
-        <OutlineTextfield inputId={inputId} label={label} required={required} />
+        <OutlineTextfield inputId={inputId} label={label} required={required} onChange={onChange} />
       </div>
     </Popup>
   );
@@ -50,6 +50,7 @@ AutoSelect.propTypes = {
   label: PropTypes.string.isRequired,
   required: PropTypes.bool,
   option: PropTypes.array.isRequired,
+  onChange: PropTypes.func,
 };
 
 export default React.memo(AutoSelect);

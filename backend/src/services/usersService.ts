@@ -5,7 +5,6 @@ import { hash } from 'bcryptjs';
 import { User } from "src/models/User";
 import { StudentRegistrationDto } from "src/models/dto/StudentRegistrationDto";
 import { MemberRegistrationDto } from "src/models/dto/MemberRegistrationDto";
-import { StudentToMemberDto } from "src/models/dto/StudentToMemberDto";
 
 @Injectable()
 export class UsersService {
@@ -32,5 +31,9 @@ export class UsersService {
 
   async findUserById(id: number): Promise<User | null> {
     return await this.usersRepository.findUserById(id)
+  }
+
+  async searchForUserByEmail(partialEmail: string): Promise<GetUserDto[]> {
+    return await this.usersRepository.searchForUserByEmail(partialEmail)
   }
 }

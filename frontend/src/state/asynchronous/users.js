@@ -102,6 +102,13 @@ const usersApi = createApi({
         body: lecture,
       }),
     }),
+
+    searchForUser: builder.mutation({
+      query: (partialEmail) => ({
+        url: `/users/mail-search/${partialEmail}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -120,6 +127,7 @@ export const {
   useGetAllCoursesMutation,
   useGetAllActiveCoursesMutation,
   useCreateLectureMutation,
+  useSearchForUserMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

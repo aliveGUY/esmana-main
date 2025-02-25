@@ -6,11 +6,19 @@ import { format } from "date-fns";
 import LectureFormWidget from "./LectureFormWidget";
 
 const CourseListItem = ({ course }) => {
-  const { active, beginningDate, finishDate, lectures, title } = course;
+  const { active, beginningDate, finishDate, lectures, title, students } =
+    course;
   const date = new Date(beginningDate);
   const formattedDate = format(date, "yyyy-MM-dd");
   const [open, setOpen] = useState(false);
   const [lectureFormOpened, setLectureFormOpened] = useState(false);
+
+  const parseSpeakerNames = (speakers) => {
+    const namesArray = map(speakers, (speaker) =>
+      [speaker.firstName, speaker.middleName, speaker.lastName].join(" ")
+    );
+    return namesArray.join(", ");
+  };
 
   const openFrame = useCallback(() => setOpen(true), [setOpen]);
   const closeFrame = useCallback(() => setOpen(false), [setOpen]);
@@ -48,7 +56,7 @@ const CourseListItem = ({ course }) => {
         <p>{isEmpty(finishDate) ? "N/A" : finishDate}</p>
       </div>
       <div className="course-item">
-        <p>N/A</p>
+        <p>{students.length}</p>
       </div>
       <div className="course-item">
         {!open && (
@@ -71,7 +79,7 @@ const CourseListItem = ({ course }) => {
               <div className="lecture-item" key={index}>
                 <h4 className="title">{lecture.title}</h4>
                 <div className="lecture-details">
-                  <p>Speaker: {lecture.speakers.join(", ")}</p>
+                  <p>Speaker: {parseSpeakerNames(lecture.speakers)}</p>
                   <p>Starts at: {format(lecture.startTime, "yyyy-MM-dd")}</p>
                   <p>Ends at: {format(lecture.endTime, "yyyy-MM-dd")}</p>
                 </div>

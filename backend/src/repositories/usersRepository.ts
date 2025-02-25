@@ -8,7 +8,7 @@ import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
 import { Identity } from 'src/models/Identity';
 import { User } from 'src/models/User';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { DataSource } from "typeorm";
 
 
@@ -51,6 +51,15 @@ export class UsersRepository {
       .getOne();
 
     return !isEmpty(matchingUser)
+  }
+
+  async searchForUserByEmail(partialEmail: string): Promise<GetUserDto[]> {
+    return await this.users.find({
+      select: ['email', 'id'],
+      where: {
+        email: Like(`${partialEmail}%`)
+      }
+    })
   }
 
   async registerMember(dto: MemberRegistrationDto): Promise<GetUserDto> {
