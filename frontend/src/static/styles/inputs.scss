@@ -196,3 +196,38 @@
     outline: none;
   }
 }
+
+.switch {
+  cursor: pointer;
+  appearance: none;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  min-width: 36px;
+  min-height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  position: relative;
+  background-color: #ef9a9a;
+
+  &::after {
+    content: "";
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    border-radius: 99%;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 2px;
+    background-color: black;
+  }
+
+  &:checked {
+    background-color: #9aef9a;
+
+    &::after {
+      right: auto;
+      left: 2px;
+    }
+  }
+}

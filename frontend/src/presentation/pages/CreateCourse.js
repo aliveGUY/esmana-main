@@ -2,12 +2,18 @@ import React, { useCallback, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import DatePicker from "../common/Inputs/DatePicker";
-import { useCreateCourseMutation } from "../../state/asynchronous/users";
+import {
+  useCreateCourseMutation,
+  useSearchForUserMutation,
+} from "../../state/asynchronous/users";
 import { useNavigate } from "react-router-dom";
+import { isEmpty } from "lodash";
+import MultiValueAutoSelect from "../common/Inputs/MultiValueAutoSelect";
 
 const CreateCourse = () => {
   const navigate = useNavigate();
   const [createCourse, { isLoading, isSuccess }] = useCreateCourseMutation();
+  const [searchForUser, { data }] = useSearchForUserMutation();
 
   const methods = useForm({
     mode: "onChange",
@@ -20,12 +26,19 @@ const CreateCourse = () => {
     },
   });
 
+  const parseValue = (option) => option.email;
+
   const onSubmit = useCallback(
     (data) => {
       createCourse(data);
     },
     [createCourse]
   );
+
+  const handleSearch = useCallback((e) => {
+    const value = e.target.value;
+    if (!isEmpty(value)) searchForUser(value);
+  }, []);
 
   useEffect(() => {
     if (isSuccess) {
@@ -38,7 +51,14 @@ const CreateCourse = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
           <OutlineTextfield required inputId="title" label="Title" />
-          <OutlineTextfield inputId="students" label="Students" />
+          <MultiValueAutoSelect
+            required
+            inputId="students"
+            label="Students"
+            onChange={handleSearch}
+            options={data}
+            parseValue={parseValue}
+          />
           <DatePicker required inputId="beginningDate" label="Beginning Date" />
           <DatePicker
             required

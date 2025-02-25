@@ -109,6 +109,14 @@ const usersApi = createApi({
         method: "GET",
       }),
     }),
+
+    setCourseStatus: builder.mutation({
+      query: (course) => ({
+        url: "/course/set-status",
+        method: "PUT",
+        body: course,
+      }),
+    }),
   }),
 });
 
@@ -128,6 +136,7 @@ export const {
   useGetAllActiveCoursesMutation,
   useCreateLectureMutation,
   useSearchForUserMutation,
+  useSetCourseStatusMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

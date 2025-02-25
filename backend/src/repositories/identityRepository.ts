@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { isEqual } from "lodash";
+import { CreateMemberIdentityDto } from "src/models/dto/CreateMemberIdentityDto";
+import { CreateStudentIdentityDto } from "src/models/dto/CreateStudentIdentityDto";
 import { Identity } from "src/models/Identity";
 import { EntityMetadata, Repository, DataSource } from "typeorm";
 
@@ -10,6 +12,14 @@ export class IdentityRepository {
     @InjectRepository(Identity) private readonly identity: Repository<Identity>,
     private readonly dataSource: DataSource
   ) { }
+
+  createStudentIdentity(identity: CreateStudentIdentityDto): Promise<Identity> {
+    return this.identity.save(identity)
+  }
+
+  createMemberIdentity(identity: CreateMemberIdentityDto): Promise<Identity> {
+    return this.identity.save(identity)
+  }
 
   async extendStudentToMember(userId: number, identity: Partial<Identity>): Promise<void> {
     const existingIdentity = await this.identity.findOne({ where: { user: { id: userId } } });

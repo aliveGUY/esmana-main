@@ -8,6 +8,6 @@ import { IdentityService } from 'src/services/identityService';
   imports: [TypeOrmModule.forFeature([Identity])],
   controllers: [],
   providers: [IdentityRepository, IdentityService],
-  exports: [IdentityService],
+  exports: [IdentityService, IdentityRepository],
 })
 export class IdentityModule { }

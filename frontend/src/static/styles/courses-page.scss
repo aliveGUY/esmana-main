@@ -61,22 +61,36 @@
       .lectures-list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
 
         .lecture-item {
-          background-color: #f5f5f5;
           padding: 8px 12px;
-          border-radius: 12px;
+          display: flex;
+          border-bottom: 2px solid #e0e0e0;
+
+          &:last-of-type {
+            border: none;
+          }
+
+          .index {
+            font-weight: 700;
+            font-size: 24px;
+            padding: 12px;
+          }
 
           .title {
-            padding-bottom: 8px;
+            padding-bottom: 4px;
           }
 
           .lecture-details {
-            display: flex;
             gap: 16px;
-            text-decoration: underline;
           }
+        }
+
+        .add-lecture-button {
+          padding-top: 12px;
+          padding-bottom: 24px;
+          display: flex;
+          flex-direction: column;
         }
       }
 
@@ -91,10 +105,45 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
+        padding-top: 24px;
 
         .actions {
           display: flex;
           gap: 16px;
+          justify-content: center;
+        }
+      }
+    }
+
+    .admin-only {
+      border: 1px solid black;
+      border-radius: 12px;
+      padding: 24px 12px;
+
+      .settings-group {
+        padding: 12px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .settings-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+
+          .settings-label {
+            font-weight: 500;
+          }
+        }
+      }
+
+      .students-list {
+        display: flex;
+        flex-direction: column;
+        .student-lit-item {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr max-content;
+          padding: 24px 0;
         }
       }
     }

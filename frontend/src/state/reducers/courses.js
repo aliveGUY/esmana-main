@@ -2,6 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 import { usersEndpoints } from "../asynchronous/users";
 import { map } from "lodash";
 
+const mapCourses = (callback) => {
+  return (state, { payload }) => {
+    const newCollection = map(
+      JSON.parse(JSON.stringify(state.collection)),
+      (course) => callback(course, payload)
+    );
+
+    state.collection = newCollection;
+  };
+};
+
 const coursesSlice = createSlice({
   name: "courses",
   initialState: { collection: [] },
@@ -22,17 +33,18 @@ const coursesSlice = createSlice({
 
     builder.addMatcher(
       usersEndpoints.createLecture.matchFulfilled,
-      (state, { payload }) => {
-        const newCollection = map(
-          JSON.parse(JSON.stringify(state.collection)),
-          (course) => {
-            if (course.id === payload.course.id) course.lectures.push(payload);
-            return course;
-          }
-        );
+      mapCourses((course, payload) => {
+        if (course.id === payload.course.id) course.lectures.push(payload);
+        return course;
+      })
+    );
 
-        state.collection = newCollection;
-      }
+    builder.addMatcher(
+      usersEndpoints.setCourseStatus.matchFulfilled,
+      mapCourses((course, payload) => {
+        if (course.id === payload.id) course.active = payload.active;
+        return course;
+      })
     );
   },
 });

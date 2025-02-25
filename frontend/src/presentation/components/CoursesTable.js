@@ -22,7 +22,7 @@ const CoursesTable = () => {
           <p className="grid-title">Ends at</p>
         </div>
         <div>
-          <p className="grid-title">Applied</p>
+          <p className="grid-title">Students</p>
         </div>
         <div>
           <p className="grid-title action-cell">Actions</p>

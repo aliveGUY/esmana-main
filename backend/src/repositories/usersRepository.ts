@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEmpty } from 'lodash';
 import { CheckIfUserExistDto } from 'src/models/dto/CheckIfUserExistDto';
+import { CreateMemberIdentityDto } from 'src/models/dto/CreateMemberIdentityDto';
+import { CreateStudentIdentityDto } from 'src/models/dto/CreateStudentIdentityDto';
+import { CreateUserDto } from 'src/models/dto/CreateUserDto';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { LoginUserDto } from 'src/models/dto/LoginUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
@@ -9,14 +12,14 @@ import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
 import { Identity } from 'src/models/Identity';
 import { User } from 'src/models/User';
 import { Like, Repository } from 'typeorm';
-import { DataSource } from "typeorm";
+import { IdentityRepository } from './identityRepository';
 
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
-    private readonly dataSource: DataSource
+    private readonly identityRepository: IdentityRepository,
   ) { }
 
   async getAllUsers(): Promise<GetUserDto[]> {
@@ -63,143 +66,73 @@ export class UsersRepository {
   }
 
   async registerMember(dto: MemberRegistrationDto): Promise<GetUserDto> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const existingUser = await queryRunner.manager.findOne(User, {
-        where: [{ email: dto.email }, { phone: dto.phone }],
-        relations: ["identity"],
-      });
-
-      if (existingUser) {
-        throw new Error("User with this email or phone already exists");
-      }
-
-      let existingIdentity = await queryRunner.manager.findOne(Identity, {
-        where: { workplace: dto.workplace, birthDate: dto.birthDate },
-      });
-
-      if (!existingIdentity) {
-        existingIdentity = queryRunner.manager.create(Identity, {
-          city: dto.city,
-          birthDate: dto.birthDate,
-          workplace: dto.workplace,
-          position: dto.position,
-          education: dto.education,
-          fieldOfWork: dto.fieldOfWork,
-          diplomaNumber: dto.diplomaNumber,
-          personalDataCollectionConsent: dto.personalDataCollectionConsent,
-          residenceAddress: dto.residenceAddress,
-          country: dto.country,
-          region: dto.region,
-          taxpayerId: dto.taxpayerId,
-          passportId: dto.passportId,
-          passportIssuedBy: dto.passportIssuedBy,
-          educationInstitution: dto.educationInstitution,
-          workExperience: dto.workExperience,
-          relevantTopics: dto.relevantTopics,
-        });
-
-        existingIdentity = await queryRunner.manager.save(Identity, existingIdentity);
-      }
-
-      const newUser = queryRunner.manager.create(User, {
-        email: dto.email,
-        phone: dto.phone,
-        password: dto.password,
-        firstName: dto.firstName,
-        middleName: dto.middleName,
-        lastName: dto.lastName,
-      });
-
-      const savedUser = await queryRunner.manager.save(User, newUser);
-
-      existingIdentity.user = savedUser;
-      await queryRunner.manager.save(Identity, existingIdentity);
-
-      await queryRunner.commitTransaction();
-
-      return {
-        id: savedUser.id,
-        email: savedUser.email,
-        phone: savedUser.phone,
-        firstName: savedUser.firstName,
-        middleName: savedUser.middleName,
-        lastName: savedUser.lastName,
-      };
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
+    const newUser: CreateUserDto = {
+      email: dto.email,
+      phone: dto.phone,
+      password: dto.password,
+      firstName: dto.firstName,
+      middleName: dto.middleName,
+      lastName: dto.lastName
     }
+
+    const createdUser: User = await this.users.save(newUser)
+
+    const newIdentity: CreateMemberIdentityDto = {
+      city: dto.city,
+      birthDate: dto.birthDate,
+      workplace: dto.workplace,
+      position: dto.position,
+      education: dto.education,
+      fieldOfWork: dto.fieldOfWork,
+      diplomaNumber: dto.diplomaNumber,
+      personalDataCollectionConsent: dto.personalDataCollectionConsent,
+      residenceAddress: dto.residenceAddress,
+      country: dto.country,
+      region: dto.region,
+      taxpayerId: dto.taxpayerId,
+      passportId: dto.passportId,
+      passportIssuedBy: dto.passportIssuedBy,
+      educationInstitution: dto.educationInstitution,
+      workExperience: dto.workExperience,
+      relevantTopics: dto.relevantTopics,
+      user: createdUser
+    }
+
+    const createdIdentity: Identity = await this.identityRepository.createMemberIdentity(newIdentity)
+
+    await this.users.update(createdUser.id, { identity: createdIdentity })
+
+    return this.users.findOneOrFail({ where: { id: createdUser.id } });
   }
 
   async registerStudent(dto: StudentRegistrationDto): Promise<GetUserDto> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const existingUser = await queryRunner.manager.findOne(User, {
-        where: [{ email: dto.email }, { phone: dto.phone }],
-        relations: ["identity"],
-      });
-
-      if (existingUser) {
-        throw new Error("User with this email or phone already exists");
-      }
-
-      let existingIdentity = await queryRunner.manager.findOne(Identity, {
-        where: { workplace: dto.workplace, birthDate: dto.birthDate },
-      });
-
-      if (!existingIdentity) {
-        existingIdentity = queryRunner.manager.create(Identity, {
-          city: dto.city,
-          birthDate: dto.birthDate,
-          workplace: dto.workplace,
-          position: dto.position,
-          education: dto.education,
-          fieldOfWork: dto.fieldOfWork,
-          diplomaNumber: dto.diplomaNumber,
-          personalDataCollectionConsent: dto.personalDataCollectionConsent,
-        });
-
-        existingIdentity = await queryRunner.manager.save(Identity, existingIdentity);
-      }
-
-      const newUser = queryRunner.manager.create(User, {
-        email: dto.email,
-        phone: dto.phone,
-        password: dto.password,
-        firstName: dto.firstName,
-        middleName: dto.middleName,
-        lastName: dto.lastName,
-      });
-
-      const savedUser = await queryRunner.manager.save(User, newUser);
-
-      existingIdentity.user = savedUser;
-      await queryRunner.manager.save(Identity, existingIdentity);
-
-      await queryRunner.commitTransaction();
-
-      return {
-        id: savedUser.id,
-        email: savedUser.email,
-        phone: savedUser.phone,
-        firstName: savedUser.firstName,
-        middleName: savedUser.middleName,
-        lastName: savedUser.lastName,
-      };
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
+    const newUser: CreateUserDto = {
+      email: dto.email,
+      phone: dto.phone,
+      password: dto.password,
+      firstName: dto.firstName,
+      middleName: dto.middleName,
+      lastName: dto.lastName
     }
+
+    const createdUser: User = await this.users.save(newUser)
+
+    const newIdentity: CreateStudentIdentityDto = {
+      city: dto.city,
+      birthDate: dto.birthDate,
+      workplace: dto.workplace,
+      position: dto.position,
+      education: dto.education,
+      fieldOfWork: dto.fieldOfWork,
+      diplomaNumber: dto.diplomaNumber,
+      personalDataCollectionConsent: dto.personalDataCollectionConsent,
+      user: createdUser
+    }
+
+    const createdIdentity: Identity = await this.identityRepository.createStudentIdentity(newIdentity)
+
+    await this.users.update(createdUser.id, { identity: createdIdentity })
+
+    return this.users.findOneOrFail({ where: { id: createdUser.id } });
   }
 }

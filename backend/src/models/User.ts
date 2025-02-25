@@ -10,6 +10,8 @@ import {
 } from "typeorm";
 import { Identity } from "./Identity";
 import { ERoles } from "./enums/ERoles";
+import { Exclude } from 'class-transformer';
+
 
 @Entity({ name: "user" })
 export class User {
@@ -33,6 +35,7 @@ export class User {
   @Column({ name: 'phone', type: "varchar", length: 20, nullable: false })
   phone: string;
 
+  @Exclude()
   @Column({ type: "varchar", length: 255, nullable: false, select: false })
   password: string;
 

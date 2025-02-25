@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Course } from "src/models/Course";
 import { CreateCourseDto } from "src/models/dto/CreateCourseDto";
+import { SetCourseStatusDto } from "src/models/dto/SetCourseStatusDto";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -15,10 +16,22 @@ export class CourseRepository {
   }
 
   async getAllCourses(): Promise<Course[]> {
-    return this.course.find({ relations: ['lectures', 'lectures.speakers', 'students'] })
+    return this.course.find({
+      relations: ['lectures', 'lectures.speakers', 'students'],
+      order: { lectures: { startTime: "ASC" } }
+    })
   }
 
   async getAllActiveCourses(): Promise<Course[]> {
-    return this.course.find({ where: { active: true }, relations: ['lectures', 'lectures.speakers', 'students'] })
+    return this.course.find({
+      where: { active: true },
+      relations: ['lectures', 'lectures.speakers', 'students'],
+      order: { lectures: { startTime: "ASC" } }
+    })
+  }
+
+  async setCourseStatus(course: SetCourseStatusDto): Promise<Course> {
+    await this.course.update(course.id, { active: course.active })
+    return this.course.findOneOrFail({ where: { id: course.id } });
   }
 }

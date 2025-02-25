@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Course } from "src/models/Course";
 import { CreateCourseDto } from "src/models/dto/CreateCourseDto";
+import { SetCourseStatusDto } from "src/models/dto/SetCourseStatusDto";
 import { CourseRepository } from "src/repositories/courseRepository";
 
 @Injectable()
@@ -17,5 +18,9 @@ export class CourseService {
 
   async getAllActiveCourses(): Promise<Course[]> {
     return this.courseRepository.getAllActiveCourses()
+  }
+
+  async setCourseStatus(course: SetCourseStatusDto): Promise<Course> {
+    return this.courseRepository.setCourseStatus(course)
   }
 }

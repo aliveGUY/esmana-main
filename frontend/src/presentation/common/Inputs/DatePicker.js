@@ -5,7 +5,7 @@ import CalendarIcon from "../../../static/images/calendar.svg";
 import PropTypes from "prop-types";
 
 const DatePicker = (props) => {
-  const { inputId, label, required = false } = props;
+  const { inputId, label, required = false, isHourly = false } = props;
   const { setValue } = useFormContext();
 
   const handleChange = useCallback(
@@ -31,7 +31,11 @@ const DatePicker = (props) => {
           </button>
         }
       />
-      <input type="date" className="datepicker-input" onChange={handleChange} />
+      <input
+        type={isHourly ? "datetime-local" : "date"}
+        className="datepicker-input"
+        onChange={handleChange}
+      />
     </div>
   );
 };

@@ -55,8 +55,8 @@ const LectureFormWidget = (props) => {
             options={data}
             parseValue={parseValue}
           />
-          <DatePicker required inputId="startTime" label="Start at" />
-          <DatePicker required inputId="endTime" label="Ends at" />
+          <DatePicker isHourly required inputId="startTime" label="Start at" />
+          <DatePicker isHourly required inputId="endTime" label="Ends at" />
           <div className="actions">
             <button
               type="button"

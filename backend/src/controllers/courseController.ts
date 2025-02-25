@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
 import { Course } from 'src/models/Course';
 import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
+import { SetCourseStatusDto } from 'src/models/dto/SetCourseStatusDto';
 import { CourseService } from 'src/services/courseService';
 
 @Controller('/course')
@@ -23,5 +24,10 @@ export class CourseController {
   @Get('active')
   getAllActiveCourses(): Promise<Course[]> {
     return this.courseService.getAllActiveCourses()
+  }
+
+  @Put('set-status')
+  setCourseStatus(@Body() course: SetCourseStatusDto): Promise<Course> {
+    return this.courseService.setCourseStatus(course)
   }
 }
