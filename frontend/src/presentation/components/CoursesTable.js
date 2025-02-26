@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import CourseListItem from "./CourseListItem";
 
 const CoursesTable = () => {
-  const courses = useSelector((state) => state.courses.collection);
+  const courses = useSelector((state) => state.courses.availableCourses);
 
   return (
     <div>

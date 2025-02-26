@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useRegisterUserMutation } from "../../state/asynchronous/users";
 import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import Password from "../common/Inputs/Password";
@@ -12,6 +12,8 @@ import CheckboxGroup from "../common/Inputs/CheckboxGroup";
 const RegisterStudent = () => {
   const navigate = useNavigate();
   const [register, { isLoading, isSuccess }] = useRegisterUserMutation();
+  const [searchParams] = useSearchParams();
+  const cid = searchParams.get("cid");
 
   const methods = useForm({
     mode: "onChange",
@@ -30,10 +32,11 @@ const RegisterStudent = () => {
       fieldOfWork: "",
       diplomaNumber: "",
       personalDataCollectionConsent: true,
+      course: { id: cid },
     },
   });
 
-  const onSubmit = useCallback(register, [register]);
+  const onSubmit = useCallback((data) => register(data), [register]);
 
   const redirect = useCallback(() => {
     navigate("/");

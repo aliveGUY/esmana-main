@@ -17,4 +17,33 @@
       gap: 16px;
     }
   }
+
+  .courses-list-wrapper {
+    .title {
+      padding-bottom: 12px;
+    }
+
+    .courses-list {
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+
+      .course-item {
+        background-color: #f5f5f5;
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .time-badge {
+          background-color: #90d5ff;
+          border-radius: 99px;
+          outline: 1px solid #90d5ff;
+          padding: 0 2px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
 }

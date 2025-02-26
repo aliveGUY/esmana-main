@@ -33,4 +33,10 @@ export class NotificationController {
   getNotificationById(@Request() req, @Param('id') id: string): Promise<Notification> {
     return this.notificationService.getNotificationById(Number(id), req.user)
   }
+
+  @Get('pending-courses/:userId')
+  @UseGuards(AuthenticatedGuard)
+  getPendingCoursesByUserId(@Param('userId') userId: string): Promise<Notification[]> {
+    return this.notificationService.getPendingCoursesByUserId(Number(userId))
+  }
 }

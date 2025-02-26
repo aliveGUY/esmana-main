@@ -48,4 +48,8 @@ export class CourseService {
     await this.notificationRepository.removeNotification(notification.id)
     return this.courseRepository.addStudentsToCourse(notification.course.id, [notification.user.id])
   }
+
+  async getCoursesByStudentId(studentId: number): Promise<Course[]> {
+    return this.courseRepository.getCoursesByStudentId(studentId)
+  }
 }

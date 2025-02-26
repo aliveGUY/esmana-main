@@ -68,4 +68,8 @@ export class NotificationService {
     if (user.role === ERoles.USER) return await this.notificationRepository.getNotificationByUserAndId(id, user)
     return await this.notificationRepository.getNotificationById(id)
   }
+
+  async getPendingCoursesByUserId(studentId: number): Promise<Notification[]> {
+    return this.notificationRepository.getPendingCoursesByUserId(studentId)
+  }
 }

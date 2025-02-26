@@ -1,10 +1,13 @@
-import React, { useCallback, useState } from "react";
-import { isEmpty } from "lodash";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
 import Password from "../common/Inputs/Password";
 import { FormProvider, useForm } from "react-hook-form";
 import MembershipSection from "../components/MembershipSection";
 import CoursesSection from "../components/CoursesSection";
+import { useAuth } from "../../hooks/useAuth";
+import {
+  useGetCoursesByStudentMutation,
+  useGetPendingCoursesByStudentMutation,
+} from "../../state/asynchronous/users";
 
 const Cabinet = () => {
   const methods = useForm({
@@ -15,8 +18,11 @@ const Cabinet = () => {
     },
   });
 
-  const auth = useSelector((state) => state.auth);
+  const { isUnauthorized, isAuthorized, user } = useAuth();
   const [showChangePassword, setShowChangePassword] = useState(false);
+
+  const [getCoursesByStudent] = useGetCoursesByStudentMutation();
+  const [getPendingCoursesByStudent] = useGetPendingCoursesByStudentMutation();
 
   const togglePassword = useCallback(() => {
     setShowChangePassword((prev) => !prev);
@@ -26,20 +32,23 @@ const Cabinet = () => {
     console.log({ data });
   }, []);
 
-  if (isEmpty(auth.user)) return;
+  useEffect(() => {
+    if (isAuthorized) {
+      getCoursesByStudent(user.id);
+      getPendingCoursesByStudent(user.id);
+    }
+  }, [isAuthorized, user]);
 
-  const name = [
-    auth.user.firstName,
-    auth.user.middleName,
-    auth.user.lastName,
-  ].join(" ");
+  if (isUnauthorized) return;
+
+  const name = [user.firstName, user.middleName, user.lastName].join(" ");
 
   return (
     <div className="card cabinet-page">
       <div className="section">
         <div>Name: {name}</div>
-        <div>Phone: {auth.user.phone}</div>
-        <div>Email: {auth.user.email}</div>
+        <div>Phone: {user.phone}</div>
+        <div>Email: {user.email}</div>
       </div>
 
       <hr />

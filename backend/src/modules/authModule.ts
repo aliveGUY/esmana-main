@@ -10,12 +10,13 @@ import { LocalStrategy } from 'src/utils/LocalStrategy';
 import { SessionSerializer } from 'src/utils/SessionSerializer';
 import { IdentityModule } from './identityModule';
 import { UsersModule } from './usersModule';
+import { NotificationModule } from './notificationModule';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ session: true }),
-    UsersModule, IdentityModule
+    UsersModule, IdentityModule, NotificationModule
   ],
   controllers: [AuthController],
   providers: [

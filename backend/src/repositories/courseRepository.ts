@@ -66,4 +66,12 @@ export class CourseRepository {
       relations: ['students'],
     })
   }
+
+  async getCoursesByStudentId(studentId: number): Promise<Course[]> {
+    return this.course
+      .createQueryBuilder("course")
+      .innerJoin("course.students", "student")
+      .where("student.id = :studentId", { studentId })
+      .getMany();
+  }
 }

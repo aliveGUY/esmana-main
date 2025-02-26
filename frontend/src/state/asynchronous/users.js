@@ -164,11 +164,23 @@ const usersApi = createApi({
     getNotificationById: builder.query({
       query: (id) => `/notification/${id}`,
     }),
+
     approveCourseRequest: builder.mutation({
       query: (notification) => ({
         url: "/course/approve-request",
         method: "POST",
         body: notification,
+      }),
+    }),
+
+    getCoursesByStudent: builder.mutation({
+      query: (studentId) => `/course/student/${studentId}`,
+    }),
+
+    getPendingCoursesByStudent: builder.mutation({
+      query: (studentId) => ({
+        url: `/notification/pending-courses/${studentId}`,
+        method: "GET",
       }),
     }),
   }),
@@ -198,6 +210,8 @@ export const {
   useGetAllNotificationsQuery,
   useGetNotificationByIdQuery,
   useApproveCourseRequestMutation,
+  useGetCoursesByStudentMutation,
+  useGetPendingCoursesByStudentMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

@@ -4,30 +4,34 @@ import { filter, map } from "lodash";
 
 const mapCourses = (callback) => {
   return (state, { payload }) => {
-    const newCollection = map(
-      JSON.parse(JSON.stringify(state.collection)),
+    const newAvailableCourses = map(
+      JSON.parse(JSON.stringify(state.availableCourses)),
       (course) => callback(course, payload)
     );
 
-    state.collection = newCollection;
+    state.availableCourses = newAvailableCourses;
   };
 };
 
 const coursesSlice = createSlice({
   name: "courses",
-  initialState: { collection: [] },
+  initialState: {
+    availableCourses: [],
+    studentActiveCourses: [],
+    studentPendingCourses: [],
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       usersEndpoints.getAllCourses.matchFulfilled,
       (state, { payload }) => {
-        state.collection = payload;
+        state.availableCourses = payload;
       }
     );
 
     builder.addMatcher(
       usersEndpoints.getAllActiveCourses.matchFulfilled,
       (state, { payload }) => {
-        state.collection = payload;
+        state.availableCourses = payload;
       }
     );
 
@@ -50,12 +54,12 @@ const coursesSlice = createSlice({
     builder.addMatcher(
       usersEndpoints.deleteCourse.matchFulfilled,
       (state, { payload }) => {
-        const newCollection = filter(
-          JSON.parse(JSON.stringify(state.collection)),
+        const newAvailableCourses = filter(
+          JSON.parse(JSON.stringify(state.availableCourses)),
           (course) => course.id !== payload
         );
 
-        state.collection = newCollection;
+        state.availableCourses = newAvailableCourses;
       }
     );
 
@@ -73,6 +77,21 @@ const coursesSlice = createSlice({
         if (course.id === payload.id) course.students = payload.students;
         return course;
       })
+    );
+
+    builder.addMatcher(
+      usersEndpoints.getCoursesByStudent.matchFulfilled,
+      (state, { payload }) => {
+        state.studentActiveCourses = payload;
+      }
+    );
+
+    builder.addMatcher(
+      usersEndpoints.getPendingCoursesByStudent.matchFulfilled,
+      (state, { payload }) => {
+        const courses = map(payload, (notification) => notification.course);
+        state.studentPendingCourses = courses;
+      }
     );
   },
 });

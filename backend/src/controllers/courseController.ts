@@ -48,15 +48,21 @@ export class CourseController {
     return this.courseService.addStudentsToCourse(courseStudent)
   }
 
-  @Delete(':id')
-  @UseGuards(AuthenticatedGuard)
-  deleteCourse(@Param('id') courseId: string): Promise<number> {
-    return this.courseService.deleteCourse(courseId)
-  }
-
   @Post('approve-request')
   @UseGuards(AuthenticatedGuard)
   approveJoinRequest(@Body() notification: ApproveCourseNotificationDto) {
     return this.courseService.approveRequest(notification)
+  }
+
+  @Get('student/:id')
+  @UseGuards(AuthenticatedGuard)
+  getCoursesByStudentId(@Param('id') studentId: string): Promise<Course[]> {
+    return this.courseService.getCoursesByStudentId(Number(studentId))
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthenticatedGuard)
+  deleteCourse(@Param('id') courseId: string): Promise<number> {
+    return this.courseService.deleteCourse(courseId)
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateCourseNotificationDto } from "src/models/dto/CreateCourseNotificationDto";
 import { CreateMembershipNotificationDto } from "src/models/dto/CreateMembershipNotificationDto";
+import { ENotificationType } from "src/models/enums/ENotificationType";
 import { Notification } from "src/models/Notification";
 import { User } from "src/models/User";
 import { Repository } from "typeorm";
@@ -38,5 +39,15 @@ export class NotificationRepository {
 
   async removeNotification(id: number) {
     return this.notification.delete(id)
+  }
+
+  async getPendingCoursesByUserId(studentId: number): Promise<Notification[]> {
+    return this.notification.find({
+      where: {
+        user: { id: studentId },
+        type: ENotificationType.PENDING_COURSE_PURCHASE
+      },
+      relations: ["user", "course"]
+    })
   }
 }

@@ -1,3 +1,5 @@
+import { Course } from "../Course"
+
 export class StudentRegistrationDto {
   email: string
   phone: string
@@ -13,4 +15,5 @@ export class StudentRegistrationDto {
   fieldOfWork: string
   diplomaNumber: string
   personalDataCollectionConsent: boolean
+  course: Course | null
 }
