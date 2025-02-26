@@ -14,7 +14,7 @@ const UserDropdown = () => {
   const redirectCabinet = useCallback(() => {
     navigate(`/cabinet/${user.id}`);
     ref.current?.close();
-  }, [navigate]);
+  }, [navigate, user.id]);
 
   const redirectStudent = useCallback(() => {
     navigate("/student-registration");

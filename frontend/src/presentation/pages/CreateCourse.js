@@ -35,16 +35,19 @@ const CreateCourse = () => {
     [createCourse]
   );
 
-  const handleSearch = useCallback((e) => {
-    const value = e.target.value;
-    if (!isEmpty(value)) searchForUser(value);
-  }, []);
+  const handleSearch = useCallback(
+    (e) => {
+      const value = e.target.value;
+      if (!isEmpty(value)) searchForUser(value);
+    },
+    [searchForUser]
+  );
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/courses");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   return (
     <div className="card">

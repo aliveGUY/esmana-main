@@ -27,7 +27,7 @@ const CourseListItem = ({ course }) => {
     } else {
       navigate(`/student-registration?cid=${course.id}`);
     }
-  }, []);
+  }, [navigate, createCourseJoinRequest, isAuthorized, user.id, course.id]);
 
   return (
     <Fragment>

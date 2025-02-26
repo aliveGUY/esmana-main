@@ -27,10 +27,13 @@ const OutlineTextfield = (props) => {
     },
   });
 
-  const handleChange = useCallback((e) => {
-    field.onChange(e);
-    if (onChange) onChange(e);
-  }, []);
+  const handleChange = useCallback(
+    (e) => {
+      field.onChange(e);
+      if (onChange) onChange(e);
+    },
+    [field, onChange]
+  );
 
   // const toggleLabel = (value) => {
   //   if (isEmpty(value)) {

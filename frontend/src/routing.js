@@ -12,7 +12,6 @@ import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
 import Memberships from "./presentation/pages/Memberships";
 import Home from "./presentation/pages/Home";
-import { element } from "prop-types";
 import NotificationDetails from "./presentation/pages/NotificationDetails";
 
 const routing = [

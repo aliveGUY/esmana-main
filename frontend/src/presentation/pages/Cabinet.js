@@ -34,24 +34,27 @@ const Cabinet = () => {
 
   const closePasswordForm = useCallback(() => setShowChangePassword(false), []);
 
-  const handleChangePassword = useCallback((data) => {
-    if (!isEqual(data.newPassword, data.repeatPassword)) return;
-    changePassword(data);
-  }, []);
+  const handleChangePassword = useCallback(
+    (data) => {
+      if (!isEqual(data.newPassword, data.repeatPassword)) return;
+      changePassword(data);
+    },
+    [changePassword]
+  );
 
   useEffect(() => {
     if (isAuthorized) {
       getCoursesByStudent(user.id);
       getPendingCoursesByStudent(user.id);
     }
-  }, [isAuthorized, user]);
+  }, [isAuthorized, user, getPendingCoursesByStudent, getCoursesByStudent]);
 
   useEffect(() => {
     if (isSuccess) {
       closePasswordForm();
       methods.reset();
     }
-  }, [isSuccess]);
+  }, [isSuccess, methods, closePasswordForm]);
 
   if (isUnauthorized) return;
 

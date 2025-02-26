@@ -36,7 +36,7 @@ const CourseSectionStudents = (props) => {
         courseId,
       });
     },
-    [removeStudentFromCourse]
+    [removeStudentFromCourse, courseId]
   );
 
   const handleAdd = useCallback(
@@ -44,16 +44,16 @@ const CourseSectionStudents = (props) => {
       addStudentsToCourse(data);
       methods.setValue("students", []);
     },
-    [addStudentsToCourse]
+    [addStudentsToCourse, methods]
   );
 
-  const openForm = useCallback(() => setFormOpened(true), []);
-  const closeForm = useCallback(() => setFormOpened(false), []);
+  const openForm = useCallback(() => setFormOpened(true), [setFormOpened]);
+  const closeForm = useCallback(() => setFormOpened(false), [setFormOpened]);
 
   const handleSearch = useCallback((e) => {
     const value = e.target.value;
     if (!isEmpty(value)) searchForUser(value);
-  }, []);
+  }, [searchForUser]);
 
   return (
     <div className="details-frame-section">

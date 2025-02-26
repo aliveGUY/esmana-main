@@ -23,7 +23,7 @@ const Courses = () => {
     if (isAuthorized) {
       getAllCourses();
     }
-  }, [isUnauthorized, isAuthorized]);
+  }, [isUnauthorized, isAuthorized, getAllCourses, getAllActiveCourses]);
 
   return (
     <div className="card">{isLoading ? "Loading..." : <CoursesTable />}</div>

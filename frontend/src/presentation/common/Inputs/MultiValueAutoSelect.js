@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import Popup from "../Popup";
 import { isEqual, map, some, values, without } from "lodash";
 import PropTypes from "prop-types";
@@ -9,7 +9,6 @@ const MultiValueAutoSelect = (props) => {
   const {
     inputId,
     label,
-    required = false,
     options = [],
     onChange,
     parseValue = (value) => value,
@@ -20,17 +19,14 @@ const MultiValueAutoSelect = (props) => {
 
   const selectedValues = watch(inputId);
 
-  const openPopup = useCallback(
-    () => popupRef.current?.open(),
-    [popupRef.current]
-  );
-  const closePopup = useCallback(
-    () => popupRef.current?.close(),
-    [popupRef.current]
-  );
+  const openPopup = useCallback(() => popupRef.current?.open(), [popupRef]);
+  const closePopup = useCallback(() => popupRef.current?.close(), [popupRef]);
 
-  const isValueSelected = (newValue) =>
-    some(selectedValues, (selectedValue) => isEqual(selectedValue, newValue));
+  const isValueSelected = useCallback(
+    (newValue) =>
+      some(selectedValues, (selectedValue) => isEqual(selectedValue, newValue)),
+    [selectedValues]
+  );
 
   const handleSelect = useCallback(
     (e) => {
@@ -43,7 +39,7 @@ const MultiValueAutoSelect = (props) => {
       closePopup();
       inputRef.current.value = "";
     },
-    [inputId, setValue, closePopup]
+    [inputId, selectedValues, setValue, closePopup, isValueSelected]
   );
 
   const handleRemove = useCallback(

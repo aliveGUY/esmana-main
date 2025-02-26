@@ -110,7 +110,7 @@ const RegisterMember = () => {
 
   useEffect(() => {
     if (isSuccess) redirect();
-  }, [isSuccess]);
+  }, [isSuccess, redirect]);
 
   return (
     <div className="card">

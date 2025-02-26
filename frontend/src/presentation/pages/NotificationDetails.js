@@ -29,12 +29,12 @@ const NotificationDetails = () => {
 
   const handleApprove = useCallback(
     () => approveCourseRequest(notification),
-    [notification]
+    [notification, approveCourseRequest]
   );
 
   useEffect(() => {
     if (isSuccess) navigate("/courses");
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   if (isError) return "Error";
 

@@ -21,13 +21,13 @@ const CourseSectionSettings = (props) => {
         active: e.target.checked,
       });
     },
-    [courseId]
+    [courseId, setCourseStatus]
   );
 
   const handleDeleteCourse = useCallback(() => {
     deleteCourse(courseId);
     onCloseFrame();
-  }, [courseId]);
+  }, [courseId, deleteCourse, onCloseFrame]);
 
   return (
     <div className="details-frame-section">
