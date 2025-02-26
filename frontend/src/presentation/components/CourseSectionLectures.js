@@ -2,10 +2,12 @@ import React, { useCallback, useState } from "react";
 import LectureFormWidget from "./LectureFormWidget";
 import { format } from "date-fns";
 import { map } from "lodash";
+import { useAuth } from "../../hooks/useAuth";
 
 const CourseSectionLectures = (props) => {
   const { lectures, courseId } = props;
   const [lectureFormOpened, setLectureFormOpened] = useState(false);
+  const { isAuthorized } = useAuth();
 
   const parseSpeakerNames = (speakers) => {
     const namesArray = map(speakers, (speaker) =>
@@ -41,20 +43,22 @@ const CourseSectionLectures = (props) => {
             </div>
           </div>
         ))}
-        {lectureFormOpened ? (
-          <LectureFormWidget
-            onCancel={closeLectureCreationWidget}
-            courseId={courseId}
-          />
-        ) : (
-          <span className="add-lecture-button">
-            <button
-              className="button black medium outlined"
-              onClick={openLectureCreationWidget}
-            >
-              Add Lecture
-            </button>
-          </span>
+        {isAuthorized && (
+          <div className="add-lecture-action">
+            {lectureFormOpened ? (
+              <LectureFormWidget
+                onCancel={closeLectureCreationWidget}
+                courseId={courseId}
+              />
+            ) : (
+              <button
+                className="button black medium outlined"
+                onClick={openLectureCreationWidget}
+              >
+                Add Lecture
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

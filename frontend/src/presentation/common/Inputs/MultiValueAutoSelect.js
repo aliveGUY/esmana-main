@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Popup from "../Popup";
 import { isEqual, map, some, values, without } from "lodash";
 import PropTypes from "prop-types";
@@ -16,9 +16,9 @@ const MultiValueAutoSelect = (props) => {
   } = props;
   const popupRef = useRef();
   const inputRef = useRef();
-  const { setValue, getValues } = useFormContext();
+  const { setValue, watch } = useFormContext();
 
-  const selectedValues = getValues(inputId);
+  const selectedValues = watch(inputId);
 
   const openPopup = useCallback(
     () => popupRef.current?.open(),
@@ -37,11 +37,11 @@ const MultiValueAutoSelect = (props) => {
       const value = JSON.parse(e.target.value);
       if (isValueSelected(value)) return;
 
-      inputRef.current.value = "";
-      closePopup();
       setValue(inputId, [...selectedValues, value], {
         shouldValidate: true,
       });
+      closePopup();
+      inputRef.current.value = "";
     },
     [inputId, setValue, closePopup]
   );
@@ -57,6 +57,7 @@ const MultiValueAutoSelect = (props) => {
     },
     [inputId, setValue]
   );
+
   return (
     <Popup
       ref={popupRef}

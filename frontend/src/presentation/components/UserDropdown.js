@@ -9,7 +9,7 @@ const UserDropdown = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const ref = useRef();
-  const { isUnauthorized, user } = useAuth();
+  const { user } = useAuth();
 
   const redirectCabinet = useCallback(() => {
     navigate(`/cabinet/${user.id}`);
@@ -48,8 +48,6 @@ const UserDropdown = () => {
   }, [logout, navigate]);
 
   const togglePopup = useCallback(() => ref.current?.toggle(), []);
-
-  if (isUnauthorized) return;
 
   return (
     <div className="user-icon-wrapper">

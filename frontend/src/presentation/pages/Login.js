@@ -20,7 +20,7 @@ const Login = () => {
   const onSubmit = useCallback(login, [login]);
 
   const redirectStudent = useCallback(
-    () => navigate("/student-registration"),
+    () => navigate("/courses"),
     [navigate]
   );
   const redirectMember = useCallback(

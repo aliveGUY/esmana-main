@@ -27,10 +27,10 @@ const CoursesTable = () => {
         <div>
           <p className="grid-title action-cell">Actions</p>
         </div>
+        {map(courses, (course, index) => (
+          <CourseListItem course={course} key={index} />
+        ))}
       </div>
-      {map(courses, (course, index) => (
-        <CourseListItem course={course} key={index} />
-      ))}
     </div>
   );
 };

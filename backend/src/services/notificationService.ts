@@ -1,10 +1,13 @@
 import { Injectable } from "@nestjs/common";
+import { use } from "passport";
 import { Course } from "src/models/Course";
 import { CreateCourseNotificationDto } from "src/models/dto/CreateCourseNotificationDto";
 import { CreateMembershipNotificationDto } from "src/models/dto/CreateMembershipNotificationDto";
 import { ENotificationSeverity } from "src/models/enums/ENotificationSeverity";
 import { ENotificationType } from "src/models/enums/ENotificationType";
+import { ERoles } from "src/models/enums/ERoles";
 import { Membership } from "src/models/Membership";
+import { Notification } from "src/models/Notification";
 import { User } from "src/models/User";
 import { NotificationRepository } from "src/repositories/notificationRepository";
 
@@ -39,7 +42,7 @@ export class NotificationService {
       severity: ENotificationSeverity.WARNING,
       type: ENotificationType.MEMBERSHIP_WILL_EXPIRE,
       membership,
-      user
+      user,
     }
 
     return await this.notificationRepository.createMembershipNotification(notification)
@@ -50,9 +53,19 @@ export class NotificationService {
       severity: ENotificationSeverity.ERROR,
       type: ENotificationType.MEMBERSHIP_IS_EXPIRED,
       membership,
-      user
+      user,
     }
 
     return await this.notificationRepository.createMembershipNotification(notification)
+  }
+
+  async getAllNotifications(user: User): Promise<Notification[]> {
+    if (user.role === ERoles.USER) return await this.notificationRepository.getUserNotifications(user)
+    return await this.notificationRepository.getAllNotifications()
+  }
+
+  async getNotificationById(id: number, user: User): Promise<Notification> {
+    if (user.role === ERoles.USER) return await this.notificationRepository.getNotificationByUserAndId(id, user)
+    return await this.notificationRepository.getNotificationById(id)
   }
 }

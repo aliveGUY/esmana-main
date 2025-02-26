@@ -1,0 +1,102 @@
+.notification-wrapper {
+  .notification-icon-button {
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: none;
+    border-radius: 99%;
+    position: relative;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &:active {
+      background-color: #e0e0e0;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .notification-count {
+      pointer-events: none;
+      background-color: red;
+      color: white;
+      font-weight: 700;
+      border-radius: 99px;
+      padding: 2px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+  }
+
+  .bell-notifications-wrapper {
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .bell-notification {
+      width: 260px;
+      padding: 16px 12px;
+      position: relative;
+      border-top: 1px solid #e0e0e0;
+      cursor: pointer;
+
+      &:first-of-type {
+        border-color: white;
+      }
+
+      &:hover {
+        border-color: white;
+        background-color: #e0e0e0;
+        border-radius: 12px;
+
+        & + .bell-notification {
+          border-color: white;
+        }
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 16px;
+        bottom: 16px;
+        left: 0;
+        width: 6px;
+        background-color: white;
+        pointer-events: none;
+        border-radius: 99px;
+      }
+
+      &.warning {
+        &::before {
+          background-color: orange;
+        }
+      }
+
+      &.info {
+        &::before {
+          background-color: blue;
+        }
+      }
+
+      &.error {
+        &::before {
+          background-color: red;
+        }
+      }
+
+      &.success {
+        &::before {
+          background-color: green;
+        }
+      }
+    }
+  }
+}

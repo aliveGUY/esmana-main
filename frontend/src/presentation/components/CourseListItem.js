@@ -1,82 +1,88 @@
-import { isEmpty } from "lodash";
-import React, { useCallback, useState } from "react";
-import CrossIcon from "../../static/images/cross.svg";
-import CheckMarkIcon from "../../static/images/check-mark.svg";
-import { format } from "date-fns";
+import React, { Fragment, useCallback, useState } from "react";
 import CourseSectionLectures from "./CourseSectionLectures";
 import CourseSectionSettings from "./CourseSectionSettings";
 import CourseSectionStudents from "./CourseSectionStudents";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import CourseHeader from "./CourseHeader";
+import { useCreateCourseJoinRequestMutation } from "../../state/asynchronous/users";
 
 const CourseListItem = ({ course }) => {
-  const { active, beginningDate, finishDate, lectures, title, students } =
-    course;
-  const date = new Date(beginningDate);
-  const formattedDate = format(date, "yyyy-MM-dd");
+  const { active, lectures, students } = course;
   const [open, setOpen] = useState(false);
+  const { isAuthorized, user } = useAuth();
+  const [createCourseJoinRequest, { isLoading }] =
+    useCreateCourseJoinRequestMutation();
 
+  const navigate = useNavigate();
   const openFrame = useCallback(() => setOpen(true), [setOpen]);
   const closeFrame = useCallback(() => setOpen(false), [setOpen]);
 
-  return (
-    <div className={`courses-grid  ${open && "open"}`}>
-      <div className="course-item status-column">
-        <div className="status-cell">
-          <div
-            className={`course-status-icon ${active ? "active" : "inactive"}`}
-          >
-            <img
-              src={active ? CheckMarkIcon : CrossIcon}
-              alt="Course status icon"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="course-item">
-        <p>{title}</p>
-      </div>
-      <div className="course-item">
-        <p>{formattedDate}</p>
-      </div>
-      <div className="course-item">
-        <p>{isEmpty(finishDate) ? "N/A" : finishDate}</p>
-      </div>
-      <div className="course-item">
-        <p>{students.length}</p>
-      </div>
-      <div className="course-item">
-        {!open && (
-          <p className="action-cell">
-            <button
-              className="button black medium outlined"
-              onClick={openFrame}
-            >
-              Details
-            </button>
-            <button className="button black medium">Join</button>
-          </p>
-        )}
-      </div>
+  const handleRequest = useCallback(() => {
+    if (isAuthorized) {
+      createCourseJoinRequest({
+        user: { id: user.id },
+        course: { id: course.id },
+      });
+    } else {
+      navigate(`/student-registration?cid=${course.id}`);
+    }
+  }, []);
 
-      <div className="details-frame">
-        <CourseSectionLectures lectures={lectures} courseId={course.id} />
-        <div className="details-frame-section">
-          <div className="details-frame-actions">
-            <button
-              className="button black medium outlined"
-              onClick={closeFrame}
-            >
-              Cancel
-            </button>
-            <button className="button black medium">Join</button>
+  return (
+    <Fragment>
+      {!open && (
+        <CourseHeader
+          onRequest={handleRequest}
+          onOpenFrame={openFrame}
+          course={course}
+          open={open}
+          isLoading={isLoading}
+        />
+      )}
+
+      <div className={`details-frame ${open && "open"}`}>
+        <div className="courses-grid">
+          <CourseHeader
+            onRequest={handleRequest}
+            onOpenFrame={openFrame}
+            course={course}
+            open={open}
+          />
+        </div>
+        <div className="details-wrapper">
+          <CourseSectionLectures lectures={lectures} courseId={course.id} />
+          {isAuthorized && (
+            <div className="admin-only">
+              <CourseSectionStudents students={students} courseId={course.id} />
+              <hr />
+              <CourseSectionSettings
+                courseId={course.id}
+                active={active}
+                onCloseFrame={closeFrame}
+              />
+            </div>
+          )}
+          <div className="details-frame-section">
+            <div className="details-frame-actions">
+              <button
+                className="button black medium outlined"
+                onClick={closeFrame}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isLoading}
+                onClick={handleRequest}
+                className="button black medium"
+              >
+                {isLoading ? "Loading" : "Send Request"}
+              </button>
+            </div>
           </div>
         </div>
-        <div className="admin-only">
-          <CourseSectionStudents students={students} />
-          <hr />
-          <CourseSectionSettings courseId={course.id} active={active} />
-        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

@@ -1,11 +1,59 @@
-import { map } from "lodash";
-import React from "react";
+import { isEmpty, map } from "lodash";
+import React, { useCallback, useState } from "react";
+import {
+  useAddStudentsToCourseMutation,
+  useRemoveStudentFromCourseMutation,
+  useSearchForUserMutation,
+} from "../../state/asynchronous/users";
+import { FormProvider, useForm } from "react-hook-form";
+import MultiValueAutoSelect from "../common/Inputs/MultiValueAutoSelect";
 
 const CourseSectionStudents = (props) => {
-  const { students } = props;
+  const { students, courseId } = props;
+  const [formOpened, setFormOpened] = useState(false);
+
+  const methods = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      students: [],
+      courseId,
+    },
+  });
+
+  const [removeStudentFromCourse] = useRemoveStudentFromCourseMutation();
+  const [addStudentsToCourse] = useAddStudentsToCourseMutation();
+  const [searchForUser, { data }] = useSearchForUserMutation();
 
   const parseName = (student) =>
     [student.firstName, student.middleName, student.lastName].join(" ");
+
+  const parseValue = (option) => option.email;
+
+  const handleRemove = useCallback(
+    (e) => {
+      removeStudentFromCourse({
+        studentId: Number(e.target.value),
+        courseId,
+      });
+    },
+    [removeStudentFromCourse]
+  );
+
+  const handleAdd = useCallback(
+    (data) => {
+      addStudentsToCourse(data);
+      methods.setValue("students", []);
+    },
+    [addStudentsToCourse]
+  );
+
+  const openForm = useCallback(() => setFormOpened(true), []);
+  const closeForm = useCallback(() => setFormOpened(false), []);
+
+  const handleSearch = useCallback((e) => {
+    const value = e.target.value;
+    if (!isEmpty(value)) searchForUser(value);
+  }, []);
 
   return (
     <div className="details-frame-section">
@@ -17,10 +65,46 @@ const CourseSectionStudents = (props) => {
             <div>{student.email}</div>
             <div>{student.phone}</div>
             <div>
-              <button className="button outlined small red">Delete Student</button>
+              <button
+                className="button outlined small red"
+                value={student.id}
+                onClick={handleRemove}
+              >
+                Delete Student
+              </button>
             </div>
           </div>
         ))}
+        <span className="add-student-action">
+          {formOpened ? (
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(handleAdd)}>
+                <MultiValueAutoSelect
+                  required
+                  inputId="students"
+                  label="Students"
+                  onChange={handleSearch}
+                  options={data}
+                  parseValue={parseValue}
+                />
+                <div className="actions">
+                  <button
+                    type="button"
+                    onClick={closeForm}
+                    className="button black medium outlined"
+                  >
+                    Cancel
+                  </button>
+                  <button className="button black medium">Add</button>
+                </div>
+              </form>
+            </FormProvider>
+          ) : (
+            <button className="button black medium outlined" onClick={openForm}>
+              Add Students
+            </button>
+          )}
+        </span>
       </div>
     </div>
   );

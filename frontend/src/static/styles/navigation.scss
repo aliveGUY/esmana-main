@@ -3,7 +3,17 @@
   padding: 16px 48px 12px 48px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: space-between;
+
+  .navigation-section {
+    display: flex;
+    gap: 36px;
+    align-items: center;
+
+    &.actions {
+      margin-right: 48px;
+    }
+  }
 
   .logo {
     height: 64px;

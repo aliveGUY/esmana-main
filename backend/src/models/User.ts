@@ -6,11 +6,13 @@ import {
   UpdateDateColumn,
   Index,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from "typeorm";
 import { Identity } from "./Identity";
 import { ERoles } from "./enums/ERoles";
 import { Exclude } from 'class-transformer';
+import { Notification } from "./Notification";
 
 
 @Entity({ name: "user" })
@@ -50,6 +52,9 @@ export class User {
   @OneToOne(() => Identity, (identity) => identity.user, { cascade: true })
   @JoinColumn({ name: "identity_id" })
   identity: Identity;
+
+  @OneToMany(() => Notification, notification => notification.user, { cascade: true })
+  notifications: Notification[];
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;

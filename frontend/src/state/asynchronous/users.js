@@ -117,6 +117,60 @@ const usersApi = createApi({
         body: course,
       }),
     }),
+
+    deleteCourse: builder.mutation({
+      query: (courseId) => ({
+        url: `/course/${courseId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    removeStudentFromCourse: builder.mutation({
+      query: (courseStudent) => ({
+        url: "/course/student",
+        method: "DELETE",
+        body: courseStudent,
+      }),
+    }),
+
+    addStudentsToCourse: builder.mutation({
+      query: (courseStudent) => ({
+        url: "/course/student",
+        method: "POST",
+        body: courseStudent,
+      }),
+    }),
+
+    createCourseJoinRequest: builder.mutation({
+      query: (courseRequestData) => ({
+        url: "/notification/pending-course-purchase",
+        method: "POST",
+        body: courseRequestData,
+      }),
+    }),
+
+    createMembershipRequest: builder.mutation({
+      query: (membershipRequestData) => ({
+        url: "/notification/pending-membership-purchase",
+        method: "POST",
+        body: membershipRequestData,
+      }),
+    }),
+
+    getAllNotifications: builder.query({
+      query: () => "/notification",
+    }),
+
+    getNotificationById: builder.query({
+      query: (id) => `/notification/${id}`,
+    }),
+    approveCourseRequest: builder.mutation({
+      query: (notification) => ({
+        url: "/course/approve-request",
+        method: "POST",
+        body: notification,
+      }),
+    }),
   }),
 });
 
@@ -137,6 +191,13 @@ export const {
   useCreateLectureMutation,
   useSearchForUserMutation,
   useSetCourseStatusMutation,
+  useDeleteCourseMutation,
+  useRemoveStudentFromCourseMutation,
+  useAddStudentsToCourseMutation,
+  useCreateCourseJoinRequestMutation,
+  useGetAllNotificationsQuery,
+  useGetNotificationByIdQuery,
+  useApproveCourseRequestMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

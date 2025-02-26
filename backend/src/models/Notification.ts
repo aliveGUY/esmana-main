@@ -3,7 +3,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  OneToOne
+  JoinColumn,
+  ManyToOne
 } from "typeorm";
 import { User } from "./User";
 import { Course } from "./Course";
@@ -16,13 +17,16 @@ export class Notification {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, { nullable: true, onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.notifications, { nullable: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "user_id" })
   user: User | null;
-
-  @OneToOne(() => Course, { nullable: true, onDelete: "CASCADE" })
+  
+  @ManyToOne(() => Course, (course) => course.notifications, { nullable: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "course_id" })
   course: Course | null;
-
-  @OneToOne(() => Membership, { nullable: true, onDelete: "CASCADE" })
+  
+  @ManyToOne(() => Membership, (membership) => membership.notifications, { nullable: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "membership_id" })
   membership: Membership | null;
 
   @Column({ name: 'seen', type: 'bool', nullable: false, default: false })

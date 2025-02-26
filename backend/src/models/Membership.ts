@@ -5,9 +5,11 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  Index
+  Index,
+  OneToMany
 } from "typeorm";
 import { User } from "./User";
+import { Notification } from "./Notification";
 
 @Entity({ name: "membership" })
 export class Membership {
@@ -24,6 +26,9 @@ export class Membership {
 
   @Column({ name: 'activation_date', type: "date", nullable: true })
   activationDate: Date;
+
+  @OneToMany(() => Notification, notification => notification.membership, { cascade: true })
+  notifications: Notification[];
 
   @Column({ name: 'expires_at', type: "date", nullable: true })
   expiresAt: Date;

@@ -1,17 +1,33 @@
 import React, { useCallback } from "react";
-import { useSetCourseStatusMutation } from "../../state/asynchronous/users";
+import {
+  useDeleteCourseMutation,
+  useSetCourseStatusMutation,
+} from "../../state/asynchronous/users";
 import Switch from "../common/Inputs/Switch";
 
 const CourseSectionSettings = (props) => {
-  const { courseId, active } = props;
-  const [setCourseStatus, { isLoading }] = useSetCourseStatusMutation();
+  const { courseId, active, onCloseFrame } = props;
+  const [setCourseStatus, { isLoading: statusToggleLoading }] =
+    useSetCourseStatusMutation();
+  const [deleteCourse, { isLoading: courseDeletionLoading }] =
+    useDeleteCourseMutation();
 
-  const handleStatusToggle = useCallback((e) => {
-    setCourseStatus({
-      id: courseId,
-      active: e.target.checked,
-    });
-  }, []);
+  const isLoading = statusToggleLoading || courseDeletionLoading;
+
+  const handleStatusToggle = useCallback(
+    (e) => {
+      setCourseStatus({
+        id: courseId,
+        active: e.target.checked,
+      });
+    },
+    [courseId]
+  );
+
+  const handleDeleteCourse = useCallback(() => {
+    deleteCourse(courseId);
+    onCloseFrame();
+  }, [courseId]);
 
   return (
     <div className="details-frame-section">
@@ -25,7 +41,13 @@ const CourseSectionSettings = (props) => {
           )}
         </div>
         <div className="settings-item">
-          <button className="button outlined small red">Delete Course</button>
+          <button
+            className="button outlined small red"
+            disabled={isLoading}
+            onClick={handleDeleteCourse}
+          >
+            {isLoading ? "Loading..." : "Delete Course"}
+          </button>
         </div>
       </div>
     </div>

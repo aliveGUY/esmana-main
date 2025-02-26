@@ -8,10 +8,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
-  JoinColumn
+  JoinColumn,
+  OneToOne
 } from "typeorm";
 import { User } from "./User";
 import { Lecture } from "./Lecture";
+import { Notification } from "./Notification";
 
 @Entity({ name: "course" })
 export class Course {
@@ -49,6 +51,9 @@ export class Course {
 
   @Column({ name: 'certificate', type: "varchar", length: 500, nullable: false })
   certificate: string;
+
+  @OneToMany(() => Notification, notification => notification.course, { cascade: true })
+  notifications: Notification[];
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;
