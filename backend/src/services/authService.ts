@@ -6,6 +6,8 @@ import { LoginUserDto } from "src/models/dto/LoginUserDto";
 import { User } from "src/models/User";
 import { GetUserDto } from "src/models/dto/GetUserDto";
 import { CheckIfUserExistDto } from "src/models/dto/CheckIfUserExistDto";
+import { ChangePasswordDto } from "src/models/dto/ChangePasswordDto";
+import { hash } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +27,22 @@ export class AuthService {
     }
 
     return foundUser;
+  }
+
+  async changePassword(user: User, passwords: ChangePasswordDto): Promise<void> {
+    const userDto: LoginUserDto = {
+      phoneOrEmail: user.email,
+      password: passwords.oldPassword
+    }
+
+    const validatedUser = await this.validateUser(userDto)
+
+    if (isEmpty(validatedUser)) {
+      throw new UnauthorizedException()
+    }
+
+    const hashedPassword: string = await hash(passwords.newPassword, 10)
+    return await this.usersRepository.changePassword(validatedUser.id, hashedPassword)
   }
 
   async findUserById(id: number): Promise<User | null> {

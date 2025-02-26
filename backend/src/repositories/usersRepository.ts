@@ -65,6 +65,11 @@ export class UsersRepository {
     })
   }
 
+  async changePassword(userId: number, hashedPassword: string): Promise<void> {
+    await this.users.update(userId, { password: hashedPassword });
+
+  }
+
   async registerMember(dto: MemberRegistrationDto): Promise<GetUserDto> {
     const newUser: CreateUserDto = {
       email: dto.email,

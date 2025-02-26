@@ -183,6 +183,14 @@ const usersApi = createApi({
         method: "GET",
       }),
     }),
+
+    changePassword: builder.mutation({
+      query: (passDto) => ({
+        url: "/auth/pass",
+        method: "PUT",
+        body: passDto,
+      }),
+    }),
   }),
 });
 
@@ -212,6 +220,7 @@ export const {
   useApproveCourseRequestMutation,
   useGetCoursesByStudentMutation,
   useGetPendingCoursesByStudentMutation,
+  useChangePasswordMutation
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

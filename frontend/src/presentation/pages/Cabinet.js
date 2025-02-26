@@ -5,9 +5,11 @@ import MembershipSection from "../components/MembershipSection";
 import CoursesSection from "../components/CoursesSection";
 import { useAuth } from "../../hooks/useAuth";
 import {
+  useChangePasswordMutation,
   useGetCoursesByStudentMutation,
   useGetPendingCoursesByStudentMutation,
 } from "../../state/asynchronous/users";
+import { isEqual } from "lodash";
 
 const Cabinet = () => {
   const methods = useForm({
@@ -23,13 +25,18 @@ const Cabinet = () => {
 
   const [getCoursesByStudent] = useGetCoursesByStudentMutation();
   const [getPendingCoursesByStudent] = useGetPendingCoursesByStudentMutation();
+  const [changePassword, { isLoading, isSuccess }] =
+    useChangePasswordMutation();
 
   const togglePassword = useCallback(() => {
     setShowChangePassword((prev) => !prev);
   }, []);
 
+  const closePasswordForm = useCallback(() => setShowChangePassword(false), []);
+
   const handleChangePassword = useCallback((data) => {
-    console.log({ data });
+    if (!isEqual(data.newPassword, data.repeatPassword)) return;
+    changePassword(data);
   }, []);
 
   useEffect(() => {
@@ -38,6 +45,13 @@ const Cabinet = () => {
       getPendingCoursesByStudent(user.id);
     }
   }, [isAuthorized, user]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      closePasswordForm();
+      methods.reset();
+    }
+  }, [isSuccess]);
 
   if (isUnauthorized) return;
 
@@ -76,7 +90,9 @@ const Cabinet = () => {
                 >
                   Cancel
                 </button>
-                <button className="button black medium">Change password</button>
+                <button className="button black medium">
+                  {isLoading ? "Loading..." : "Change password"}
+                </button>
               </div>
             </form>
           </FormProvider>

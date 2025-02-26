@@ -19,10 +19,13 @@ import LoginWidget from "../components/LoginWidget";
 
 const RegisterMember = () => {
   const navigate = useNavigate();
-  const { isUnauthorized, user } = useAuth();
+  const { isAuthorized, user } = useAuth();
   const loginWidgetRef = useRef(null);
   const [params] = useSearchParams();
-  const isSync = params.get("sync") === "yes";
+  const noSync = params.get("sync") === "no";
+  const yesSync = params.get("sync") === "yes";
+
+  const shouldSync = (!noSync || yesSync) && isAuthorized;
 
   const [checkIfUserExists, { data: isUserExist }] =
     useCheckIfUserExistsMutation();
@@ -59,13 +62,13 @@ const RegisterMember = () => {
   });
 
   const handleCheck = useCallback(() => {
-    if (!isSync) return;
+    if (shouldSync) return;
     const [email, phone] = methods.getValues(["email", "phone"]);
 
     if (isEmpty(email) && isEmpty(phone)) return;
 
     checkIfUserExists({ email, phone });
-  }, [checkIfUserExists, isSync, methods]);
+  }, [checkIfUserExists, shouldSync, methods]);
 
   const redirect = useCallback(() => {
     navigate("/");
@@ -75,7 +78,7 @@ const RegisterMember = () => {
 
   const onSubmit = useCallback(
     (data) => {
-      if (isUnauthorized) {
+      if (!shouldSync) {
         registerMember(data);
         return;
       }
@@ -93,14 +96,14 @@ const RegisterMember = () => {
         relevantTopics: data.relevantTopics,
       });
     },
-    [isUnauthorized, user, extendStudentToMember, registerMember]
+    [shouldSync, user, extendStudentToMember, registerMember]
   );
 
   return (
     <div className="card">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          {isUnauthorized ? (
+          {!shouldSync ? (
             <Fragment>
               <OutlineTextfield
                 required

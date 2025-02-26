@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
+import { isEmpty } from 'lodash';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
 import { LocalAuthGuard } from 'src/guards/LocalGuard';
 import { LogoutGuard } from 'src/guards/LogoutGuard';
@@ -28,8 +29,11 @@ export class AuthController {
   logoutUser() { }
 
   @Put('pass')
-  changePassword(@Body() passwords: ChangePasswordDto) {
+  @UseGuards(AuthenticatedGuard)
+  changePassword(@Req() req: Request, @Body() passwords: ChangePasswordDto) {
+    if (isEmpty(req.user)) throw new UnauthorizedException()
 
+    return this.authService.changePassword(req.user, passwords)
   }
 
   @Post('check')
