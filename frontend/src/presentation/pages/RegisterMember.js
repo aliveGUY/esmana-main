@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useRef } from "react";
+import React, { Fragment, useCallback, useEffect, useRef } from "react";
 import OutlineTextfield from "../common/Inputs/OutlineTextfield";
 import AutoSelect from "../common/Inputs/AutoSelect";
 import Checkbox from "../common/Inputs/Checkbox";
@@ -29,8 +29,17 @@ const RegisterMember = () => {
 
   const [checkIfUserExists, { data: isUserExist }] =
     useCheckIfUserExistsMutation();
-  const [registerMember] = useRegisterMemberMutation();
-  const [extendStudentToMember] = useExtendStudentToMemberMutation();
+  const [
+    registerMember,
+    { isLoading: isRegisterLoading, isSuccess: isRegisterSuccess },
+  ] = useRegisterMemberMutation();
+  const [
+    extendStudentToMember,
+    { isLoading: isExtendLoading, isSuccess: isExtendSuccess },
+  ] = useExtendStudentToMemberMutation();
+
+  const isLoading = isRegisterLoading | isExtendLoading;
+  const isSuccess = isRegisterSuccess | isExtendSuccess;
 
   const methods = useForm({
     mode: "onChange",
@@ -98,6 +107,10 @@ const RegisterMember = () => {
     },
     [shouldSync, user, extendStudentToMember, registerMember]
   );
+
+  useEffect(() => {
+    if (isSuccess) redirect();
+  }, [isSuccess]);
 
   return (
     <div className="card">
@@ -249,7 +262,7 @@ const RegisterMember = () => {
               className="button black medium"
               disabled={Object.keys(methods.formState.errors).length > 0}
             >
-              {false ? "Loading..." : "Submit"}
+              {isLoading ? "Loading..." : "Submit"}
             </button>
           </div>
         </form>

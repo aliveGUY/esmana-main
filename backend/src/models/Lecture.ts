@@ -9,7 +9,6 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index
 } from "typeorm";
 import { Course } from "./Course";
 import { User } from "./User";

@@ -103,7 +103,18 @@ export class UsersRepository {
       user: createdUser
     }
 
-    const createdIdentity: Identity = await this.identityRepository.createMemberIdentity(newIdentity)
+    let createdIdentity: Identity | undefined
+    try {
+      createdIdentity = await this.identityRepository.createStudentIdentity(newIdentity)
+    } catch {
+      await this.users.delete(createdUser.id)
+      throw new Error('Error creating user')
+    }
+
+    if (isEmpty(createdIdentity)) {
+      await this.users.delete(createdUser.id)
+      throw new Error('Error creating user')
+    }
 
     await this.users.update(createdUser.id, { identity: createdIdentity })
 
@@ -134,7 +145,18 @@ export class UsersRepository {
       user: createdUser
     }
 
-    const createdIdentity: Identity = await this.identityRepository.createStudentIdentity(newIdentity)
+    let createdIdentity: Identity | undefined
+    try {
+      createdIdentity = await this.identityRepository.createStudentIdentity(newIdentity)
+    } catch {
+      await this.users.delete(createdUser.id)
+      throw new Error('Error creating user')
+    }
+
+    if (isEmpty(createdIdentity)) {
+      await this.users.delete(createdUser.id)
+      throw new Error('Error creating user')
+    }
 
     await this.users.update(createdUser.id, { identity: createdIdentity })
 

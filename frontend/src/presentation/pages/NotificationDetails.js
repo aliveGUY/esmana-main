@@ -1,9 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   useApproveCourseRequestMutation,
   useGetNotificationByIdQuery,
 } from "../../state/asynchronous/users";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { find, isEmpty } from "lodash";
 import { format } from "date-fns";
@@ -16,8 +16,9 @@ const NotificationDetails = () => {
   const nid = searchParams.get("nid");
   const { isLoading: isGetNotificationLoading, isError } =
     useGetNotificationByIdQuery(nid);
-  const [approveCourseRequest, { isLoading: isApproveLoading }] =
+  const [approveCourseRequest, { isLoading: isApproveLoading, isSuccess }] =
     useApproveCourseRequestMutation();
+  const navigate = useNavigate();
 
   const notifications = useSelector((state) => state.notifications.collection);
 
@@ -30,6 +31,10 @@ const NotificationDetails = () => {
     () => approveCourseRequest(notification),
     [notification]
   );
+
+  useEffect(() => {
+    if (isSuccess) navigate("/courses");
+  }, [isSuccess]);
 
   if (isError) return "Error";
 
