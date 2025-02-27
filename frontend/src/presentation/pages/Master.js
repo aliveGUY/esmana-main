@@ -48,8 +48,9 @@ const MasterPage = () => {
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Esmana main proof of concept" />
       </Helmet>
-      <Navigation />
-      <div className="layout">{outlet}</div>
+      <Navigation>
+        <div className="layout">{outlet}</div>
+      </Navigation>
     </div>
   );
 };

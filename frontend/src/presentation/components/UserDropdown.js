@@ -16,31 +16,6 @@ const UserDropdown = () => {
     ref.current?.close();
   }, [navigate, user.id]);
 
-  const redirectStudent = useCallback(() => {
-    navigate("/student-registration");
-    ref.current?.close();
-  }, [navigate]);
-
-  const redirectClients = useCallback(() => {
-    navigate("/clients");
-    ref.current?.close();
-  }, [navigate]);
-
-  const redirectMember = useCallback(() => {
-    navigate("/member-registration?sync=no");
-    ref.current?.close();
-  }, [navigate]);
-
-  const redirectCourse = useCallback(() => {
-    navigate("/courses/new");
-    ref.current?.close();
-  }, [navigate]);
-
-  const redirectCoursesList = useCallback(() => {
-    navigate("/courses");
-    ref.current?.close();
-  }, [navigate]);
-
   const handleLogout = useCallback(() => {
     ref.current?.close();
     logout();
@@ -58,21 +33,6 @@ const UserDropdown = () => {
           <div className="select-option-wrapper">
             <button onClick={redirectCabinet} className="select-option">
               Cabinet
-            </button>
-            <button onClick={redirectCoursesList} className="select-option">
-              Courses
-            </button>
-            <button onClick={redirectClients} className="select-option">
-              Clients
-            </button>
-            <button onClick={redirectCourse} className="select-option">
-              Create new Course
-            </button>
-            <button onClick={redirectStudent} className="select-option">
-              Register new Student
-            </button>
-            <button onClick={redirectMember} className="select-option">
-              Register new Member
             </button>
             <button onClick={handleLogout} className="select-option">
               Logout

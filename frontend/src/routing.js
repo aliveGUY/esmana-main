@@ -75,7 +75,7 @@ const routing = [
             element: <CreateCourse />,
           },
           {
-            path: "memberships",
+            path: "membership",
             element: <Memberships />,
           },
           {

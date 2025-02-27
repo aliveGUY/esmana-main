@@ -39,8 +39,6 @@ export class Identity {
   @Column({ name: 'personal_data_collection_consent', type: "boolean", nullable: false, default: true })
   personalDataCollectionConsent: boolean;
 
-
-
   @Column({ name: 'residence_address', nullable: true })
   residenceAddress: string;
 
@@ -50,11 +48,9 @@ export class Identity {
   @Column({ name: 'region', nullable: true })
   region: string;
 
-  @Index({ unique: true })
   @Column({ name: 'taxpayer_id', nullable: true })
   taxpayerId: string;
 
-  @Index({ unique: true })
   @Column({ name: 'passport_id', nullable: true })
   passportId: string;
 

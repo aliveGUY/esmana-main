@@ -1,49 +1,49 @@
-.top-bar-navigation {
-  background-color: white;
-  padding: 16px 48px 12px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.app-wrapper {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 82px 1fr;
+  min-height: 100vh;
 
-  .navigation-section {
+  &.unauthed {
+    display: block;
+  }
+
+  .content-wrapper {
+    width: 100%;
+  }
+
+  .top-bar-navigation {
+    grid-column: 1/-1;
+    background-color: white;
+    padding: 16px 48px 12px 48px;
     display: flex;
-    gap: 36px;
     align-items: center;
+    justify-content: space-between;
 
-    &.actions {
-      margin-right: 48px;
-    }
-  }
-
-  .logo {
-    height: 64px;
-  }
-
-  .back-button-container {
-    width: 79px;
-    position: relative;
-
-    .back-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+    .navigation-section {
       display: flex;
-      padding-left: 8px;
-      transition: opacity 0.2s ease, transform 0.3s ease;
+      gap: 36px;
+      align-items: center;
 
-      & .material-symbols-outlined {
-        height: 16px;
-        display: flex;
-        align-items: center;
-        padding-right: 4px;
+      &.actions {
+        margin-right: 48px;
       }
     }
 
-    &.hidden {
-      .back-button {
-        opacity: 0;
-        transform: none;
-      }
+    .logo {
+      height: 64px;
+    }
+  }
+
+  .body-wrapper {
+    display: flex;
+  }
+
+  .sidenav {
+    background-color: white;
+
+    .nested-nav {
+      padding-left: 16px;
     }
   }
 }
