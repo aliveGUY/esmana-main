@@ -1,10 +1,10 @@
 import { Box, Stack } from "@mui/material";
 import React, { useEffect } from "react";
-import TopBarNavigation from "../navigatoin/TopBarNavigation";
 import { Outlet, useNavigate } from "react-router-dom";
 import MetadataWrapper from "./MetadataWrapper";
 import { useAuth } from "../../../hooks/useAuth";
 import Footer from "./Footer";
+import UnauthorizedTopBarNavigation from "../navigatoin/UnauthorizedTopBarNavigation";
 
 const Unauthorized = () => {
   const { isAuthorized } = useAuth();
@@ -17,7 +17,7 @@ const Unauthorized = () => {
   return (
     <MetadataWrapper>
       <Stack minHeight="100vh">
-        <TopBarNavigation />
+        <UnauthorizedTopBarNavigation />
         <Box
           sx={{
             maxWidth: 1400,

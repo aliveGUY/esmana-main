@@ -62,7 +62,7 @@ const routing = [
       {
         path: "courses",
         title: "Esmana - Apply to school",
-        element: <Courses />,
+        element: <Courses isDashboard />,
       },
       {
         path: "user-courses",

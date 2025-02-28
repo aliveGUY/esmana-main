@@ -24,7 +24,7 @@ const Login = () => {
     [navigate]
   );
   const redirectMember = useCallback(
-    () => navigate("/member-registration?sync=yes"),
+    () => navigate("/apply-organization"),
     [navigate]
   );
 
