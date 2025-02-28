@@ -13,6 +13,7 @@ import {
 import Footer from "./Footer";
 import { useDispatch } from "react-redux";
 import { insertNotification } from "../../../state/reducers/notifications";
+import { BASE_URL } from "../../../constants/config";
 
 const Dashboard = () => {
   const { isUnauthorized, isAuthorized, user, isUninitialized, isLoading } =
@@ -28,7 +29,7 @@ const Dashboard = () => {
       getCoursesByStudent(user.id);
       getPendingCoursesByStudent(user.id);
       const eventSource = new EventSource(
-        "http://localhost:8080/notification/event"
+        `${BASE_URL}/notification/event`
       );
 
       eventSource.onmessage = (e) =>
