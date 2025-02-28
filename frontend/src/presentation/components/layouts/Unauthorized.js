@@ -5,10 +5,12 @@ import MetadataWrapper from "./MetadataWrapper";
 import { useAuth } from "../../../hooks/useAuth";
 import Footer from "./Footer";
 import UnauthorizedTopBarNavigation from "../navigatoin/UnauthorizedTopBarNavigation";
+import { useGetSessionQuery } from "../../../state/asynchronous/users";
 
 const Unauthorized = () => {
   const { isAuthorized } = useAuth();
   const navigate = useNavigate();
+  useGetSessionQuery();
 
   useEffect(() => {
     if (isAuthorized) navigate("/dashboard");

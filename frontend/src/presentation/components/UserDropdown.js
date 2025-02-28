@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import UserIcon from "../../static/images/user-icon.svg";
 import Popup from "../common/Popup";
 import { useAuth } from "../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { removeUserFromState } from "../../state/reducers/auth";
 
 const UserDropdown = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const ref = useRef();
   const { user } = useAuth();
+  const dispatch = useDispatch();
 
   const redirectCabinet = useCallback(() => {
     navigate(`/dashboard/cabinet/${user.id}`);
@@ -18,6 +21,7 @@ const UserDropdown = () => {
 
   const handleLogout = useCallback(() => {
     ref.current?.close();
+    dispatch(removeUserFromState());
     logout();
     navigate("/login");
   }, [logout, navigate]);

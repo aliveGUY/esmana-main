@@ -2,11 +2,9 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { useCurrentRoute } from "../../../hooks/useCurrentRoute";
 import ThumbnailImage from "../../../static/images/thumbnail.jpg";
-import { useGetSessionQuery } from "../../../state/asynchronous/users";
 
 const MetadataWrapper = ({ children }) => {
   const currentRoute = useCurrentRoute();
-  useGetSessionQuery();
 
   return (
     <div>

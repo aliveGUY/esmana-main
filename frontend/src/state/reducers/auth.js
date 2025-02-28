@@ -4,6 +4,11 @@ import { usersEndpoints } from "../asynchronous/users";
 const authSlice = createSlice({
   name: "auth",
   initialState: { user: {}, isIdentityComplete: false },
+  reducers: {
+    removeUserFromState: (state) => {
+      state.user = {};
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       usersEndpoints.login.matchFulfilled,
@@ -45,5 +50,7 @@ const authSlice = createSlice({
     );
   },
 });
+
+export const { removeUserFromState } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -8,6 +8,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import {
   useGetCoursesByStudentMutation,
   useGetPendingCoursesByStudentMutation,
+  useGetSessionQuery,
 } from "../../../state/asynchronous/users";
 import Footer from "./Footer";
 import { useDispatch } from "react-redux";
@@ -17,26 +18,29 @@ const Dashboard = () => {
   const { isUnauthorized, isAuthorized, user, isUninitialized, isLoading } =
     useAuth();
 
+  useGetSessionQuery();
   const dispatch = useDispatch();
-
   const [getCoursesByStudent] = useGetCoursesByStudentMutation();
   const [getPendingCoursesByStudent] = useGetPendingCoursesByStudentMutation();
-
-  useEffect(() => {
-    const eventSource = new EventSource(
-      "http://localhost:8080/notification/event"
-    );
-
-    eventSource.onmessage = (e) =>
-      dispatch(insertNotification(JSON.parse(e.data)));
-  }, [dispatch]);
 
   useEffect(() => {
     if (isAuthorized) {
       getCoursesByStudent(user.id);
       getPendingCoursesByStudent(user.id);
+      const eventSource = new EventSource(
+        "http://localhost:8080/notification/event"
+      );
+
+      eventSource.onmessage = (e) =>
+        dispatch(insertNotification(JSON.parse(e.data)));
     }
-  }, [isAuthorized, user, getPendingCoursesByStudent, getCoursesByStudent]);
+  }, [
+    isAuthorized,
+    user,
+    getPendingCoursesByStudent,
+    getCoursesByStudent,
+    dispatch,
+  ]);
 
   if (isUninitialized || isLoading) {
     return "Loading...";
