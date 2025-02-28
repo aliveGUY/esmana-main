@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { useNavigationConfig } from "../../hooks/useNavigationConfig";
+import { useNavigationConfig } from "../../../hooks/useNavigationConfig";
 import { map } from "lodash";
 
 import Collapse from "@mui/material/Collapse";
-import { Box, Button, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Link } from "react-router-dom";
 
 const NestedNavElement = ({ title, children }) => {
   const [open, setOpen] = useState(false);
@@ -31,7 +34,7 @@ const NestedNavElement = ({ title, children }) => {
   );
 };
 
-const SideNav = () => {
+const SideBarNavigation = () => {
   const config = useNavigationConfig();
 
   const construct = (elements) => {
@@ -46,7 +49,7 @@ const SideNav = () => {
       }
 
       return (
-        <Button fullWidth variant="outlined" href={element.path}>
+        <Button fullWidth variant="outlined" component={Link} to={element.path}>
           {element.title}
         </Button>
       );
@@ -64,4 +67,4 @@ const SideNav = () => {
   );
 };
 
-export default React.memo(SideNav);
+export default React.memo(SideBarNavigation);

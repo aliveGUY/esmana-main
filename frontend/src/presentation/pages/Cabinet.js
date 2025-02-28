@@ -4,11 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import MembershipSection from "../components/MembershipSection";
 import CoursesSection from "../components/CoursesSection";
 import { useAuth } from "../../hooks/useAuth";
-import {
-  useChangePasswordMutation,
-  useGetCoursesByStudentMutation,
-  useGetPendingCoursesByStudentMutation,
-} from "../../state/asynchronous/users";
+import { useChangePasswordMutation } from "../../state/asynchronous/users";
 import { isEqual } from "lodash";
 
 const Cabinet = () => {
@@ -20,11 +16,9 @@ const Cabinet = () => {
     },
   });
 
-  const { isUnauthorized, isAuthorized, user } = useAuth();
+  const { isUnauthorized, user } = useAuth();
   const [showChangePassword, setShowChangePassword] = useState(false);
 
-  const [getCoursesByStudent] = useGetCoursesByStudentMutation();
-  const [getPendingCoursesByStudent] = useGetPendingCoursesByStudentMutation();
   const [changePassword, { isLoading, isSuccess }] =
     useChangePasswordMutation();
 
@@ -41,13 +35,6 @@ const Cabinet = () => {
     },
     [changePassword]
   );
-
-  useEffect(() => {
-    if (isAuthorized) {
-      getCoursesByStudent(user.id);
-      getPendingCoursesByStudent(user.id);
-    }
-  }, [isAuthorized, user, getPendingCoursesByStudent, getCoursesByStudent]);
 
   useEffect(() => {
     if (isSuccess) {

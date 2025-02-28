@@ -14,7 +14,7 @@ const BellNotification = ({ notification, onClick }) => {
 
   const redirect = useCallback(() => {
     onClick();
-    navigate(`notification-details?nid=${notification.id}`);
+    navigate(`dashboard/notification-details?nid=${notification.id}`);
   }, [onClick, navigate, notification.id]);
 
   return (

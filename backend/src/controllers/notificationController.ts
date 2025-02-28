@@ -1,16 +1,28 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Request, Sse, UseGuards } from "@nestjs/common";
+import { map, Observable } from "rxjs";
 import { AuthenticatedGuard } from "src/guards/AuthenticatedGuard";
+import { Course } from "src/models/Course";
 import { CourseNotificationPayloadDto } from "src/models/dto/CourseNotificationPayloadDto";
-import { CreateCourseNotificationDto } from "src/models/dto/CreateCourseNotificationDto";
 import { CreateMembershipNotificationDto } from "src/models/dto/CreateMembershipNotificationDto";
 import { MembershipNotificationPayloadDto } from "src/models/dto/MembershipNotificationPayloadDto";
 import { Notification } from "src/models/Notification";
 import { NotificationService } from "src/services/notificationService";
 
+interface MessageEvent {
+  data: string | object
+}
+
 @Controller('/notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService,
   ) { }
+
+  @Sse('/event')
+  sendEvent(): Observable<MessageEvent> {
+    return this.notificationService.getNotifications().pipe(
+      map((data) => ({ data: data.payload })),
+    )
+  }
 
   @Get()
   @UseGuards(AuthenticatedGuard)
@@ -19,7 +31,7 @@ export class NotificationController {
   }
 
   @Post('/pending-course-purchase')
-  createPendingCoursePurchaseNotification(@Body() { user, course }: CourseNotificationPayloadDto): Promise<CreateCourseNotificationDto> {
+  createPendingCoursePurchaseNotification(@Body() { user, course }: CourseNotificationPayloadDto): Promise<Course | null> {
     return this.notificationService.createPendingCoursePurchaseNotification(user, course)
   }
 

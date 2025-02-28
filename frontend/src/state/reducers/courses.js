@@ -93,6 +93,17 @@ const coursesSlice = createSlice({
         state.studentPendingCourses = courses;
       }
     );
+
+    builder.addMatcher(
+      usersEndpoints.createCourseJoinRequest.matchFulfilled,
+      (state, { payload }) => {
+        const copiedPending = JSON.parse(
+          JSON.stringify(state.studentPendingCourses)
+        );
+
+        state.studentPendingCourses = [...copiedPending, payload];
+      }
+    );
   },
 });
 

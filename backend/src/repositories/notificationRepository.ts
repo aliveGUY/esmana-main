@@ -17,8 +17,9 @@ export class NotificationRepository {
     return this.notification.save(notification)
   }
 
-  async createCourseNotification(notification: CreateCourseNotificationDto): Promise<CreateCourseNotificationDto> {
-    return this.notification.save(notification)
+  async createCourseNotification(notification: CreateCourseNotificationDto): Promise<Notification> {
+    const newNotification = await this.notification.save(notification)
+    return this.notification.findOneOrFail({ where: { id: newNotification.id }, relations: ["user", "course", "membership"] })
   }
 
   async getAllNotifications(): Promise<Notification[]> {

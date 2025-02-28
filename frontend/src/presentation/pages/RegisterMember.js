@@ -6,7 +6,7 @@ import DatePicker from "../common/Inputs/DatePicker";
 import Password from "../common/Inputs/Password";
 import { FormProvider, useForm } from "react-hook-form";
 import CheckboxGroup from "../common/Inputs/CheckboxGroup";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import ShieldIcon from "../../static/images/shield-check.svg";
 import {
@@ -17,15 +17,12 @@ import {
 import { isEmpty } from "lodash";
 import LoginWidget from "../components/LoginWidget";
 
-const RegisterMember = () => {
+const RegisterMember = ({ sync = false }) => {
   const navigate = useNavigate();
   const { isAuthorized, user } = useAuth();
   const loginWidgetRef = useRef(null);
-  const [params] = useSearchParams();
-  const noSync = params.get("sync") === "no";
-  const yesSync = params.get("sync") === "yes";
 
-  const shouldSync = (!noSync || yesSync) && isAuthorized;
+  const shouldSync = sync && isAuthorized;
 
   const [checkIfUserExists, { data: isUserExist }] =
     useCheckIfUserExistsMutation();

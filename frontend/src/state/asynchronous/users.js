@@ -220,7 +220,7 @@ export const {
   useApproveCourseRequestMutation,
   useGetCoursesByStudentMutation,
   useGetPendingCoursesByStudentMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

@@ -1,88 +1,103 @@
 import React from "react";
 
 import Clients from "./presentation/pages/Clients";
-import Master from "./presentation/pages/Master";
 import RegisterStudent from "./presentation/pages/RegisterStudent";
 import Login from "./presentation/pages/Login";
-import ProtectedRoutes from "./presentation/components/ProtectedRoutes";
 import Cabinet from "./presentation/pages/Cabinet";
-import CabinetRoutes from "./presentation/components/CabinetRoutes";
 import RegisterMember from "./presentation/pages/RegisterMember";
 import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
 import Memberships from "./presentation/pages/Memberships";
 import Home from "./presentation/pages/Home";
 import NotificationDetails from "./presentation/pages/NotificationDetails";
+import Dashboard from "./presentation/components/layouts/Dashboard";
+import Unauthorized from "./presentation/components/layouts/Unauthorized";
+import { Navigate } from "react-router-dom";
 
 const routing = [
   {
     path: "/",
-    element: <Master />,
+    element: <Unauthorized />,
     children: [
       {
-        path: "student-registration",
-        title: "Esmana - Apply to school",
-        description: "Metadata for esmana registration",
-        element: <RegisterStudent />,
-      },
-      {
-        path: "member-registration",
-        title: "Esmana - Join ESMANA",
-        description: "Metadata for esmana registration",
-        element: <RegisterMember />,
-      },
-      {
         path: "login",
-        title: "Esmana - Login",
-        description: "Metadata for esmana login",
+        title: "Esmana - Apply to school",
         element: <Login />,
       },
       {
+        path: "apply-school",
+        title: "Esmana - Apply to school",
+        element: <RegisterStudent />,
+      },
+      {
+        path: "apply-organization",
+        title: "Esmana - Apply to school",
+        element: <RegisterMember sync />,
+      },
+      {
         path: "courses",
-        title: "Esmana - Courses",
-        description: "Metadata for esmana login",
+        title: "Esmana - Apply to school",
         element: <Courses />,
       },
       {
         path: "/",
-        element: <ProtectedRoutes />,
-        children: [
-          {
-            index: true,
-            title: "Esmana",
-            description: "Metadata for esmana main page",
-            element: <Home />,
-          },
-          {
-            path: "clients",
-            title: "Esmana - Clients",
-            description: "Metadata for esmana main page",
-            element: <Clients />,
-          },
-          {
-            path: "cabinet",
-            title: "Esmana - Cabinet",
-            element: <CabinetRoutes />,
-            children: [
-              {
-                path: ":id",
-                element: <Cabinet />,
-              },
-            ],
-          },
-          {
-            path: "courses/new",
-            element: <CreateCourse />,
-          },
-          {
-            path: "membership",
-            element: <Memberships />,
-          },
-          {
-            path: "notification-details",
-            element: <NotificationDetails />,
-          },
-        ],
+        element: <Navigate to="/login" />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+    children: [
+      {
+        index: true,
+        title: "Esmana - Apply to school",
+        element: <Home />,
+      },
+      {
+        path: "membership",
+        title: "Esmana - Apply to school",
+        element: <Memberships />,
+      },
+      {
+        path: "courses",
+        title: "Esmana - Apply to school",
+        element: <Courses />,
+      },
+      {
+        path: "user-courses",
+        title: "Esmana - Apply to school",
+        element: <div>test</div>,
+      },
+      {
+        path: "courses/new",
+        title: "Esmana - Apply to school",
+        element: <CreateCourse />,
+      },
+      {
+        path: "student-registration",
+        title: "Esmana - Apply to school",
+        element: <RegisterStudent />,
+      },
+      {
+        path: "member-registration",
+        title: "Esmana - Apply to school",
+        element: <RegisterMember />,
+      },
+      {
+        path: "clients",
+        title: "Esmana - Apply to school",
+        element: <Clients />,
+      },
+      {
+        path: "cabinet/:id",
+        title: "Esmana - Apply to school",
+        element: <Cabinet />,
+      },
+      {
+        path: "dashboard/notification-details",
+        title: "Esmana - Apply to school",
+        element: <NotificationDetails />,
       },
     ],
   },

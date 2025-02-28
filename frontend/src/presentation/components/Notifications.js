@@ -9,7 +9,7 @@ import BellNotification from "./BellNotification";
 const Notifications = () => {
   const ref = useRef();
   const notifications = useSelector((state) => state.notifications.collection);
- 
+
   useGetAllNotificationsQuery();
 
   const togglePopup = useCallback(() => ref.current.toggle(), []);

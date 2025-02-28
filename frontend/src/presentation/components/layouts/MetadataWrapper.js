@@ -1,29 +1,12 @@
-import React, { useEffect } from "react";
-import { useOutlet } from "react-router-dom";
+import React from "react";
 import { Helmet } from "react-helmet";
-import { useCurrentRoute } from "../../hooks/useCurrentRoute";
-import Navigation from "../components/Navigation";
-import ThumbnailImage from "../../static/images/thumbnail.jpg";
-import {
-  useCheckIfIdentityCompleteMutation,
-  useGetSessionQuery,
-} from "../../state/asynchronous/users";
-import { useAuth } from "../../hooks/useAuth";
+import { useCurrentRoute } from "../../../hooks/useCurrentRoute";
+import ThumbnailImage from "../../../static/images/thumbnail.jpg";
+import { useGetSessionQuery } from "../../../state/asynchronous/users";
 
-const MasterPage = () => {
-  const outlet = useOutlet();
-  const { user } = useAuth();
-
-  useGetSessionQuery();
-  const [checkIfIdentityComplete] = useCheckIfIdentityCompleteMutation();
-
-  useEffect(() => {
-    if (user.id) {
-      checkIfIdentityComplete(user.id);
-    }
-  }, [user, checkIfIdentityComplete]);
-
+const MetadataWrapper = ({ children }) => {
   const currentRoute = useCurrentRoute();
+  useGetSessionQuery();
 
   return (
     <div>
@@ -48,11 +31,9 @@ const MasterPage = () => {
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Esmana main proof of concept" />
       </Helmet>
-      <Navigation>
-        <div className="layout">{outlet}</div>
-      </Navigation>
+      <div className="layout">{children}</div>
     </div>
   );
 };
 
-export default React.memo(MasterPage);
+export default React.memo(MetadataWrapper);

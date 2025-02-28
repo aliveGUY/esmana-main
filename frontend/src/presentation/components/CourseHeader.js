@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash";
 
 const CourseHeader = (props) => {
-  const { onRequest, onOpenFrame, course, open, isLoading } = props;
+  const { course, open, actions } = props;
   const date = new Date(course.beginningDate);
   const formattedDate = format(date, "yyyy-MM-dd");
   return (
@@ -37,23 +37,7 @@ const CourseHeader = (props) => {
         <p>{course.students.length}</p>
       </div>
       <div className="course-item">
-        {!open && (
-          <p className="action-cell">
-            <button
-              className="button black medium outlined"
-              onClick={onOpenFrame}
-            >
-              Details
-            </button>
-            <button
-              disabled={isLoading}
-              onClick={onRequest}
-              className="button black medium"
-            >
-              {isLoading ? "Loading" : "Send Request"}
-            </button>
-          </p>
-        )}
+        {!open && <p className="action-cell">{actions}</p>}
       </div>
     </Fragment>
   );

@@ -12,14 +12,14 @@ const UserDropdown = () => {
   const { user } = useAuth();
 
   const redirectCabinet = useCallback(() => {
-    navigate(`/cabinet/${user.id}`);
+    navigate(`/dashboard/cabinet/${user.id}`);
     ref.current?.close();
   }, [navigate, user.id]);
 
   const handleLogout = useCallback(() => {
     ref.current?.close();
     logout();
-    navigate("login");
+    navigate("/login");
   }, [logout, navigate]);
 
   const togglePopup = useCallback(() => ref.current?.toggle(), []);

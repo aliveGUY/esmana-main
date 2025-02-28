@@ -6,6 +6,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import CourseHeader from "./CourseHeader";
 import { useCreateCourseJoinRequestMutation } from "../../state/asynchronous/users";
+import { useSelector } from "react-redux";
+import { includes, map } from "lodash";
 
 const CourseListItem = ({ course }) => {
   const { active, lectures, students } = course;
@@ -17,6 +19,28 @@ const CourseListItem = ({ course }) => {
   const navigate = useNavigate();
   const openFrame = useCallback(() => setOpen(true), [setOpen]);
   const closeFrame = useCallback(() => setOpen(false), [setOpen]);
+
+  const studentActiveCourses = useSelector(
+    (state) => state.courses.studentActiveCourses
+  );
+  const studentPendingCourses = useSelector(
+    (state) => state.courses.studentPendingCourses
+  );
+
+  const pendingIds = map(studentPendingCourses, (course) => course.id);
+  const activeIds = map(studentActiveCourses, (course) => course.id);
+
+  const disableApply = () =>
+    includes(activeIds, course.id) ||
+    includes(pendingIds, course.id) ||
+    isLoading;
+
+  const getApplyText = () => {
+    if (includes(activeIds, course.id)) return "Already available";
+    if (includes(pendingIds, course.id)) return "Request is pending";
+    if (isLoading) return "Loading...";
+    return "Send request";
+  };
 
   const handleRequest = useCallback(() => {
     if (isAuthorized) {
@@ -33,11 +57,25 @@ const CourseListItem = ({ course }) => {
     <Fragment>
       {!open && (
         <CourseHeader
-          onRequest={handleRequest}
-          onOpenFrame={openFrame}
           course={course}
           open={open}
-          isLoading={isLoading}
+          actions={
+            <Fragment>
+              <button
+                className="button black medium outlined"
+                onClick={openFrame}
+              >
+                Details
+              </button>
+              <button
+                disabled={disableApply()}
+                onClick={handleRequest}
+                className="button black medium"
+              >
+                {getApplyText()}
+              </button>
+            </Fragment>
+          }
         />
       )}
 
@@ -72,11 +110,11 @@ const CourseListItem = ({ course }) => {
                 Cancel
               </button>
               <button
-                disabled={isLoading}
+                disabled={disableApply()}
                 onClick={handleRequest}
                 className="button black medium"
               >
-                {isLoading ? "Loading" : "Send Request"}
+                {getApplyText()}
               </button>
             </div>
           </div>

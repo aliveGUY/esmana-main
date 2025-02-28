@@ -2,26 +2,26 @@ export const useNavigationConfig = () => {
   return [
     {
       title: "Home page",
-      path: "/",
+      path: "/dashboard",
     },
     {
       title: "Membership",
-      path: "/membership",
+      path: "/dashboard/membership",
     },
     {
       title: "Courses",
       children: [
         {
           title: "All Courses",
-          path: "/courses",
+          path: "/dashboard/courses",
         },
         {
           title: "Your Courses",
-          path: "/user-courses",
+          path: "/dashboard/user-courses",
         },
         {
           title: "Create new course",
-          path: "/courses/new",
+          path: "/dashboard/courses/new",
         },
       ],
     },
@@ -30,15 +30,15 @@ export const useNavigationConfig = () => {
       children: [
         {
           title: "All clients",
-          path: "/clients",
+          path: "/dashboard/clients",
         },
         {
           title: "Register new Member",
-          path: "/member-registration",
+          path: "/dashboard/member-registration",
         },
         {
           title: "Register new Student",
-          path: "/student-registration",
+          path: "/dashboard/student-registration",
         },
       ],
     },
