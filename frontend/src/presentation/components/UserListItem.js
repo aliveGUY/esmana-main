@@ -12,7 +12,7 @@ const UserListItem = ({ user }) => {
   );
 
   const redirect = useCallback(
-    () => navigate(`/cabinet/${user.id}`),
+    () => navigate(`/dashboard/cabinet/${user.id}`),
     [navigate, user.id]
   );
 

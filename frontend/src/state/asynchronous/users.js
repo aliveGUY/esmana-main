@@ -16,6 +16,10 @@ const usersApi = createApi({
       query: () => "/users",
     }),
 
+    getUserById: builder.query({
+      query: (id) => `users/cabinet/${id}`,
+    }),
+
     registerUser: builder.mutation({
       query: (userData) => ({
         url: "/users/student",
@@ -221,6 +225,7 @@ export const {
   useGetCoursesByStudentMutation,
   useGetPendingCoursesByStudentMutation,
   useChangePasswordMutation,
+  useGetUserByIdQuery
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

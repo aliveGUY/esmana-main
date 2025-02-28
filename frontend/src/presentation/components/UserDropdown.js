@@ -24,7 +24,7 @@ const UserDropdown = () => {
     dispatch(removeUserFromState());
     logout();
     navigate("/login");
-  }, [logout, navigate]);
+  }, [logout, navigate, dispatch]);
 
   const togglePopup = useCallback(() => ref.current?.toggle(), []);
 

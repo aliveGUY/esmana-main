@@ -33,7 +33,7 @@ const NotificationDetails = () => {
   );
 
   useEffect(() => {
-    if (isSuccess) navigate("/courses");
+    if (isSuccess) navigate("/dashboard/courses");
   }, [isSuccess, navigate]);
 
   if (isError) return "Error";

@@ -45,7 +45,7 @@ const CreateCourse = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/courses");
+      navigate("/dashboard/courses");
     }
   }, [isSuccess, navigate]);
 

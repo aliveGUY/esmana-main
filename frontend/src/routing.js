@@ -7,12 +7,13 @@ import Cabinet from "./presentation/pages/Cabinet";
 import RegisterMember from "./presentation/pages/RegisterMember";
 import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
-import Memberships from "./presentation/pages/Memberships";
+import Membership from "./presentation/pages/Membership";
 import Home from "./presentation/pages/Home";
 import NotificationDetails from "./presentation/pages/NotificationDetails";
 import Dashboard from "./presentation/components/layouts/Dashboard";
 import Unauthorized from "./presentation/components/layouts/Unauthorized";
 import { Navigate } from "react-router-dom";
+import UserCourses from "./presentation/pages/UserCourses";
 
 const routing = [
   {
@@ -57,7 +58,7 @@ const routing = [
       {
         path: "membership",
         title: "Esmana - Apply to school",
-        element: <Memberships />,
+        element: <Membership />,
       },
       {
         path: "courses",
@@ -67,7 +68,7 @@ const routing = [
       {
         path: "user-courses",
         title: "Esmana - Apply to school",
-        element: <div>test</div>,
+        element:<UserCourses />,
       },
       {
         path: "courses/new",

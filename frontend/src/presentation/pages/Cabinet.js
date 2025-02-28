@@ -2,10 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import Password from "../common/Inputs/Password";
 import { FormProvider, useForm } from "react-hook-form";
 import MembershipSection from "../components/MembershipSection";
-import CoursesSection from "../components/CoursesSection";
 import { useAuth } from "../../hooks/useAuth";
-import { useChangePasswordMutation } from "../../state/asynchronous/users";
+import {
+  useChangePasswordMutation,
+  useGetUserByIdQuery,
+} from "../../state/asynchronous/users";
 import { isEqual } from "lodash";
+import { useParams } from "react-router-dom";
 
 const Cabinet = () => {
   const methods = useForm({
@@ -15,11 +18,13 @@ const Cabinet = () => {
       repeatPassword: "",
     },
   });
+  const { id } = useParams();
+  const { data, isLoading: isUserLoading } = useGetUserByIdQuery(id);
 
-  const { isUnauthorized, user } = useAuth();
+  const { isUnauthorized } = useAuth();
   const [showChangePassword, setShowChangePassword] = useState(false);
 
-  const [changePassword, { isLoading, isSuccess }] =
+  const [changePassword, { isLoading: isChangePasswordLoading, isSuccess }] =
     useChangePasswordMutation();
 
   const togglePassword = useCallback(() => {
@@ -43,16 +48,18 @@ const Cabinet = () => {
     }
   }, [isSuccess, methods, closePasswordForm]);
 
-  if (isUnauthorized) return;
+  if (isUnauthorized) return "Unauthorized";
 
-  const name = [user.firstName, user.middleName, user.lastName].join(" ");
+  if (isUserLoading) return "Loading...";
+
+  const name = [data.firstName, data.middleName, data.lastName].join(" ");
 
   return (
     <div className="card cabinet-page">
       <div className="section">
         <div>Name: {name}</div>
-        <div>Phone: {user.phone}</div>
-        <div>Email: {user.email}</div>
+        <div>Phone: {data.phone}</div>
+        <div>Email: {data.email}</div>
       </div>
 
       <hr />
@@ -81,7 +88,7 @@ const Cabinet = () => {
                   Cancel
                 </button>
                 <button className="button black medium">
-                  {isLoading ? "Loading..." : "Change password"}
+                  {isChangePasswordLoading ? "Loading..." : "Change password"}
                 </button>
               </div>
             </form>
@@ -100,7 +107,6 @@ const Cabinet = () => {
 
       <div className="section">
         <MembershipSection />
-        <CoursesSection />
       </div>
     </div>
   );

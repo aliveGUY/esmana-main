@@ -4,6 +4,7 @@ import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
 import { StudentToMemberDto } from 'src/models/dto/StudentToMemberDto';
+import { User } from 'src/models/User';
 import { IdentityService } from 'src/services/identityService';
 import { UsersService } from 'src/services/usersService';
 
@@ -52,5 +53,10 @@ export class UsersController {
   @Get('mail-search/:partialEmail')
   searchForUserByEmail(@Param('partialEmail') partialEmail: string): Promise<GetUserDto[]> {
     return this.usersService.searchForUserByEmail(partialEmail)
+  }
+
+  @Get('cabinet/:id')
+  getUserById(@Param('id') id: string): Promise<User | null> {
+    return this.usersService.findUserById(Number(id))
   }
 }
