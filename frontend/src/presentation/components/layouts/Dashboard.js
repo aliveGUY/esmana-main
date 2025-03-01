@@ -7,41 +7,24 @@ import SideBarNavigation from "../navigatoin/SideBarNavigation";
 import { useAuth } from "../../../hooks/useAuth";
 import {
   useGetCoursesByStudentMutation,
-  useGetPendingCoursesByStudentMutation,
   useGetSessionQuery,
 } from "../../../state/asynchronous/users";
 import Footer from "./Footer";
-import { useDispatch } from "react-redux";
-import { insertNotification } from "../../../state/reducers/notifications";
-import { BASE_URL } from "../../../constants/config";
+import NotificationListener from "../listeners/NotificationListener";
+import ToasterNotifications from "../notification/ToasterNotifications";
 
 const Dashboard = () => {
   const { isUnauthorized, isAuthorized, user, isUninitialized, isLoading } =
     useAuth();
 
   useGetSessionQuery();
-  const dispatch = useDispatch();
   const [getCoursesByStudent] = useGetCoursesByStudentMutation();
-  const [getPendingCoursesByStudent] = useGetPendingCoursesByStudentMutation();
 
   useEffect(() => {
     if (isAuthorized) {
       getCoursesByStudent(user.id);
-      getPendingCoursesByStudent(user.id);
-      const eventSource = new EventSource(
-        `${BASE_URL}/notification/event`
-      );
-
-      eventSource.onmessage = (e) =>
-        dispatch(insertNotification(JSON.parse(e.data)));
     }
-  }, [
-    isAuthorized,
-    user,
-    getPendingCoursesByStudent,
-    getCoursesByStudent,
-    dispatch,
-  ]);
+  }, [isAuthorized, user, getCoursesByStudent]);
 
   if (isUninitialized || isLoading) {
     return "Loading...";
@@ -53,6 +36,8 @@ const Dashboard = () => {
 
   return (
     <MetadataWrapper>
+      <NotificationListener />
+      <ToasterNotifications />
       <Box
         sx={{
           display: "grid",

@@ -38,10 +38,11 @@ const SideBarNavigation = () => {
   const config = useNavigationConfig();
 
   const construct = (elements) => {
-    return map(elements, (element) => {
+    return map(elements, (element, index) => {
       if (element.children) {
         return (
           <NestedNavElement
+            key={element.title + index}
             title={element.title}
             children={construct(element.children)}
           />
@@ -49,7 +50,13 @@ const SideBarNavigation = () => {
       }
 
       return (
-        <Button fullWidth variant="outlined" component={Link} to={element.path}>
+        <Button
+          key={element.title + index}
+          fullWidth
+          variant="outlined"
+          component={Link}
+          to={element.path}
+        >
           {element.title}
         </Button>
       );

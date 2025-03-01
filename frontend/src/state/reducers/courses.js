@@ -85,25 +85,6 @@ const coursesSlice = createSlice({
         state.studentActiveCourses = payload;
       }
     );
-
-    builder.addMatcher(
-      usersEndpoints.getPendingCoursesByStudent.matchFulfilled,
-      (state, { payload }) => {
-        const courses = map(payload, (notification) => notification.course);
-        state.studentPendingCourses = courses;
-      }
-    );
-
-    builder.addMatcher(
-      usersEndpoints.createCourseJoinRequest.matchFulfilled,
-      (state, { payload }) => {
-        const copiedPending = JSON.parse(
-          JSON.stringify(state.studentPendingCourses)
-        );
-
-        state.studentPendingCourses = [...copiedPending, payload];
-      }
-    );
   },
 });
 

@@ -2,19 +2,25 @@ import React, { useCallback } from "react";
 import { filter, isEmpty, map, startsWith } from "lodash";
 import PropTypes from "prop-types";
 import { Controller, useFormContext } from "react-hook-form";
-import FilledTextfield from "./FilledTextfield";
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  TextField,
+  FormHelperText,
+} from "@mui/material";
 
-const CheckboxGroup = (props) => {
-  const { options, label, inputId, required } = props;
+const CheckboxGroup = ({ options, label, inputId, required }) => {
   const {
     setValue,
     getValues,
     formState: { errors },
   } = useFormContext();
 
-  const removeOtherOption = (options) => {
-    return filter(options, (option) => !startsWith(option, "other: "));
-  };
+  const removeOtherOption = (options) =>
+    filter(options, (option) => !startsWith(option, "other: "));
 
   const handleOtherChange = useCallback(
     (e) => {
@@ -23,14 +29,15 @@ const CheckboxGroup = (props) => {
       const allPreviousValues = getValues(inputId) || [];
       const previousCheckboxValues = removeOtherOption(allPreviousValues);
 
-      if (isEmpty(newValue)) {
-        setValue(inputId, previousCheckboxValues, { shouldValidate: true });
-        return;
-      }
-
-      setValue(inputId, [...previousCheckboxValues, currentValue], {
-        shouldValidate: true,
-      });
+      setValue(
+        inputId,
+        isEmpty(newValue)
+          ? previousCheckboxValues
+          : [...previousCheckboxValues, currentValue],
+        {
+          shouldValidate: true,
+        }
+      );
     },
     [getValues, inputId, setValue]
   );
@@ -39,10 +46,9 @@ const CheckboxGroup = (props) => {
     (e) => {
       const newValue = e.target.value;
       const previousValues = getValues(inputId) || [];
-      let currentValues = previousValues;
-
-      if (e.target.checked) currentValues = [...previousValues, newValue];
-      else currentValues = previousValues.filter((v) => v !== newValue);
+      const currentValues = e.target.checked
+        ? [...previousValues, newValue]
+        : previousValues.filter((v) => v !== newValue);
 
       setValue(inputId, currentValues, { shouldValidate: true });
     },
@@ -50,48 +56,49 @@ const CheckboxGroup = (props) => {
   );
 
   return (
-    <div className="checkbox-group">
-      <p className="label">{label}</p>
-      <Controller
-        name={inputId}
-        rules={{
-          required: required ? "* Field is required" : false,
-        }}
-        render={({ field }) => (
-          <div className="options">
-            {map(removeOtherOption(options), (option, index) => (
-              <div className="checkbox-wrapper" key={index}>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  id={option}
-                  name={option}
-                  {...field}
-                  value={option}
-                  checked={getValues(inputId)?.includes(option)}
-                  onChange={handleCheckboxChange}
+    <FormControl component="fieldset" error={!!errors[inputId]}>
+      {label && <FormLabel component="legend">{label}</FormLabel>}
+      <FormGroup>
+        <Controller
+          name={inputId}
+          rules={{ required: required ? "* Field is required" : false }}
+          render={({ field }) => (
+            <>
+              {map(removeOtherOption(options), (option, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      {...field}
+                      value={option}
+                      checked={getValues(inputId)?.includes(option)}
+                      onChange={handleCheckboxChange}
+                    />
+                  }
+                  label={option}
                 />
-                <label className="label" htmlFor={option}>
-                  {option}
-                </label>
-              </div>
-            ))}
-            <FilledTextfield
-              placeholder="Other..."
-              onChange={handleOtherChange}
-            />
-          </div>
-        )}
-      />
+              ))}
+              {/* "Other" input field */}
+              <TextField
+                variant="standard"
+                size="small"
+                label="Other..."
+                onChange={handleOtherChange}
+                fullWidth
+              />
+            </>
+          )}
+        />
+      </FormGroup>
       {errors[inputId] && (
-        <p style={{ color: "red" }}>{errors[inputId].message}</p>
+        <FormHelperText>{errors[inputId].message}</FormHelperText>
       )}
-    </div>
+    </FormControl>
   );
 };
 
 CheckboxGroup.propTypes = {
-  option: PropTypes.array.isRequired,
+  options: PropTypes.array.isRequired,
   label: PropTypes.string,
   inputId: PropTypes.string.isRequired,
   required: PropTypes.bool,

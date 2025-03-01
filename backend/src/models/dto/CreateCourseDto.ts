@@ -6,4 +6,5 @@ export class CreateCourseDto {
   beginningDate: Date;
   availabilityTime: Date;
   certificate: string;
+  price: number
 }

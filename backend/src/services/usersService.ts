@@ -5,13 +5,15 @@ import { hash } from 'bcryptjs';
 import { User } from "src/models/User";
 import { StudentRegistrationDto } from "src/models/dto/StudentRegistrationDto";
 import { MemberRegistrationDto } from "src/models/dto/MemberRegistrationDto";
-import { isEmpty } from "lodash";
 import { NotificationService } from "./notificationService";
+import { isEmpty } from "lodash";
+import { CourseRepository } from "src/repositories/courseRepository";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository,
-    private readonly notificationService: NotificationService) { }
+    private readonly notificationService: NotificationService,
+    private readonly courseRepository: CourseRepository) { }
 
   async getAllUsers(): Promise<GetUserDto[]> {
     return await this.usersRepository.getAllUsers()
@@ -19,11 +21,11 @@ export class UsersService {
 
   async registerStudent(student: StudentRegistrationDto): Promise<GetUserDto> {
     student.password = await hash(student.password, 10)
-    const newStudent = await this.usersRepository.registerStudent(student);
+    const newStudent: User = await this.usersRepository.registerStudent(student) as User;
 
     if (!isEmpty(student.course)) {
-      const user = { id: newStudent.id } as User
-      await this.notificationService.createPendingCoursePurchaseNotification(user, student.course)
+      await this.courseRepository.addStudentsToCourse(student.course.id, [newStudent.id])
+      await this.notificationService.createCoursePurchaseNotification(newStudent, student.course)
     }
 
     return newStudent

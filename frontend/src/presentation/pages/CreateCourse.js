@@ -54,6 +54,7 @@ const CreateCourse = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
           <OutlineTextfield required inputId="title" label="Title" />
+          <OutlineTextfield required inputId="price" label="Price" />
           <MultiValueAutoSelect
             required
             inputId="students"

@@ -20,11 +20,11 @@ export class Notification {
   @ManyToOne(() => User, (user) => user.notifications, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user: User | null;
-  
+
   @ManyToOne(() => Course, (course) => course.notifications, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "course_id" })
   course: Course | null;
-  
+
   @ManyToOne(() => Membership, (membership) => membership.notifications, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "membership_id" })
   membership: Membership | null;
@@ -33,15 +33,13 @@ export class Notification {
   seen: boolean;
 
   @Column({
-    type: "enum",
-    enum: ENotificationSeverity,
+    type: "varchar", length: "255",
     default: ENotificationSeverity.ERROR,
   })
   severity: ENotificationSeverity;
 
   @Column({
-    type: "enum",
-    enum: ENotificationType,
+    type: "varchar", length: "255",
     default: ENotificationType.UNKNOWN,
   })
   type: ENotificationType;

@@ -19,7 +19,7 @@ export class NotificationRepository {
 
   async createCourseNotification(notification: CreateCourseNotificationDto): Promise<Notification> {
     const newNotification = await this.notification.save(notification)
-    return this.notification.findOneOrFail({ where: { id: newNotification.id }, relations: ["user", "course", "membership"] })
+    return this.notification.findOneOrFail({ where: { id: newNotification.id }, relations: ["user", "course"] })
   }
 
   async getAllNotifications(): Promise<Notification[]> {
@@ -46,7 +46,7 @@ export class NotificationRepository {
     return this.notification.find({
       where: {
         user: { id: studentId },
-        type: ENotificationType.PENDING_COURSE_PURCHASE
+        type: ENotificationType.COURSE_PURCHASE
       },
       relations: ["user", "course"]
     })

@@ -9,7 +9,6 @@ import Courses from "./presentation/pages/Courses";
 import CreateCourse from "./presentation/pages/CreateCourse";
 import Membership from "./presentation/pages/Membership";
 import Home from "./presentation/pages/Home";
-import NotificationDetails from "./presentation/pages/NotificationDetails";
 import Dashboard from "./presentation/components/layouts/Dashboard";
 import Unauthorized from "./presentation/components/layouts/Unauthorized";
 import { Navigate } from "react-router-dom";
@@ -94,11 +93,6 @@ const routing = [
         path: "cabinet/:id",
         title: "Esmana - Apply to school",
         element: <Cabinet />,
-      },
-      {
-        path: "dashboard/notification-details",
-        title: "Esmana - Apply to school",
-        element: <NotificationDetails />,
       },
     ],
   },

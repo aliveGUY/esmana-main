@@ -3,20 +3,18 @@ import CourseSectionLectures from "./CourseSectionLectures";
 import CourseSectionSettings from "./CourseSectionSettings";
 import CourseSectionStudents from "./CourseSectionStudents";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import CourseHeader from "./CourseHeader";
-import { useCreateCourseJoinRequestMutation } from "../../state/asynchronous/users";
 import { useSelector } from "react-redux";
 import { includes, map } from "lodash";
+import { useAddStudentsToCourseMutation } from "../../state/asynchronous/users";
 
 const CourseListItem = ({ course }) => {
   const { active, lectures, students } = course;
   const [open, setOpen] = useState(false);
   const { isAuthorized, user } = useAuth();
-  const [createCourseJoinRequest, { isLoading }] =
-    useCreateCourseJoinRequestMutation();
 
-  const navigate = useNavigate();
+  const [addStudentsToCourse, { isLoading }] = useAddStudentsToCourseMutation();
+
   const openFrame = useCallback(() => setOpen(true), [setOpen]);
   const closeFrame = useCallback(() => setOpen(false), [setOpen]);
 
@@ -42,16 +40,14 @@ const CourseListItem = ({ course }) => {
     return "Send request";
   };
 
-  const handleRequest = useCallback(() => {
-    if (isAuthorized) {
-      createCourseJoinRequest({
-        user: { id: user.id },
-        course: { id: course.id },
-      });
-    } else {
-      navigate(`/student-registration?cid=${course.id}`);
-    }
-  }, [navigate, createCourseJoinRequest, isAuthorized, user.id, course.id]);
+  const handleAddStudentToCourse = useCallback(
+    () =>
+      addStudentsToCourse({
+        courseId: course.id,
+        students: [user],
+      }),
+    [addStudentsToCourse, course.id, user]
+  );
 
   return (
     <Fragment>
@@ -69,7 +65,7 @@ const CourseListItem = ({ course }) => {
               </button>
               <button
                 disabled={disableApply()}
-                onClick={handleRequest}
+                onClick={handleAddStudentToCourse}
                 className="button black medium"
               >
                 {getApplyText()}
@@ -82,7 +78,7 @@ const CourseListItem = ({ course }) => {
       <div className={`details-frame ${open && "open"}`}>
         <div className="courses-grid">
           <CourseHeader
-            onRequest={handleRequest}
+            onRequest={handleAddStudentToCourse}
             onOpenFrame={openFrame}
             course={course}
             open={open}
@@ -111,7 +107,7 @@ const CourseListItem = ({ course }) => {
               </button>
               <button
                 disabled={disableApply()}
-                onClick={handleRequest}
+                onClick={handleAddStudentToCourse}
                 className="button black medium"
               >
                 {getApplyText()}

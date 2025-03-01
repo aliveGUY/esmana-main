@@ -11,12 +11,13 @@ import { SessionSerializer } from 'src/utils/SessionSerializer';
 import { IdentityModule } from './identityModule';
 import { UsersModule } from './usersModule';
 import { NotificationModule } from './notificationModule';
+import { CourseModule } from './courseModule';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ session: true }),
-    UsersModule, IdentityModule, NotificationModule
+    UsersModule, IdentityModule, NotificationModule, CourseModule
   ],
   controllers: [AuthController],
   providers: [

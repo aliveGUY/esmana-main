@@ -6,13 +6,14 @@ import { SetCourseStatusDto } from "src/models/dto/SetCourseStatusDto";
 import { CourseRepository } from "src/repositories/courseRepository";
 import { AddStudentsToCourseDto } from "src/models/dto/AddStudentsToCourseDto";
 import { map } from "lodash";
-import { NotificationRepository } from "src/repositories/notificationRepository";
-import { ApproveCourseNotificationDto } from "src/models/dto/ApproveCourseNotificationDto";
+import { NotificationService } from "./notificationService";
+import { User } from "src/models/User";
 
 @Injectable()
 export class CourseService {
-  constructor(private readonly courseRepository: CourseRepository,
-    private readonly notificationRepository: NotificationRepository
+  constructor(
+    private readonly courseRepository: CourseRepository,
+    private readonly notificationService: NotificationService
   ) { }
 
   async createCourse(course: CreateCourseDto): Promise<Course> {
@@ -41,12 +42,15 @@ export class CourseService {
 
   async addStudentsToCourse(courseStudent: AddStudentsToCourseDto): Promise<Course> {
     const studentIds: number[] = map(courseStudent.students, student => student.id)
-    return this.courseRepository.addStudentsToCourse(courseStudent.courseId, studentIds)
-  }
 
-  async approveRequest(notification: ApproveCourseNotificationDto) {
-    await this.notificationRepository.removeNotification(notification.id)
-    return this.courseRepository.addStudentsToCourse(notification.course.id, [notification.user.id])
+    const notificationPromises = map(studentIds, studentId => this.notificationService.createCoursePurchaseNotification(
+      { id: studentId } as User,
+      { id: courseStudent.courseId } as Course)
+    )
+
+    await Promise.all(notificationPromises)
+
+    return this.courseRepository.addStudentsToCourse(courseStudent.courseId, studentIds)
   }
 
   async getCoursesByStudentId(studentId: number): Promise<Course[]> {

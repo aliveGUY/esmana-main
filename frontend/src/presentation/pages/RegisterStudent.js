@@ -8,6 +8,7 @@ import DatePicker from "../common/Inputs/DatePicker";
 import AutoSelect from "../common/Inputs/AutoSelect";
 import Checkbox from "../common/Inputs/Checkbox";
 import CheckboxGroup from "../common/Inputs/CheckboxGroup";
+import { isEmpty } from "lodash";
 
 const RegisterStudent = () => {
   const navigate = useNavigate();
@@ -36,7 +37,15 @@ const RegisterStudent = () => {
     },
   });
 
-  const onSubmit = useCallback((data) => register(data), [register]);
+  const onSubmit = useCallback(
+    (data) => {
+      if (isEmpty(cid)) {
+      } else {
+        register(data);
+      }
+    },
+    [register, cid]
+  );
 
   const redirect = useCallback(() => {
     navigate("/");

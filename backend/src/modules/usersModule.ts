@@ -6,9 +6,10 @@ import { UsersRepository } from 'src/repositories/usersRepository';
 import { UsersService } from 'src/services/usersService';
 import { IdentityModule } from './identityModule';
 import { NotificationModule } from './notificationModule';
+import { CourseModule } from './courseModule';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), IdentityModule, NotificationModule],
+  imports: [TypeOrmModule.forFeature([User]), IdentityModule, NotificationModule, CourseModule],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
   exports: [UsersService],

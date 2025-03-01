@@ -1,61 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { usersEndpoints } from "../asynchronous/users";
-import { map, includes, filter } from "lodash";
+import { filter, isEmpty } from "lodash";
 
 const notificationsSlice = createSlice({
   name: "notifications",
-  initialState: { collection: [] },
+  initialState: { bellNotifications: [], toasterNotification: [] },
   reducers: {
     insertNotification: (state, action) => {
-      state.collection.push(action.payload);
+      state.bellNotifications.push(action.payload);
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      usersEndpoints.getAllNotifications.matchFulfilled,
-      (state, { payload }) => {
-        state.collection = payload;
-      }
-    );
 
-    builder.addMatcher(
-      usersEndpoints.getNotificationById.matchFulfilled,
-      (state, { payload }) => {
-        const clonedNotifications = JSON.parse(
-          JSON.stringify(state.collection)
-        );
+    addToasterNotification: (state, { payload }) => {
+      state.toasterNotification.push(payload);
+    },
 
-        const currentNotifications = map(
-          clonedNotifications,
-          (notification) => notification.id
-        );
+    removeToasterNotification: (state, { payload }) => {
+      const copiedCollection = JSON.parse(
+        JSON.stringify(state.toasterNotification)
+      );
 
-        if (!includes(currentNotifications, payload.id)) {
-          state.collection = [...clonedNotifications, payload];
-        }
-      }
-    );
+      const newCollection = filter(
+        copiedCollection,
+        (notification) => notification.notificationId !== payload.notificationId
+      );
 
-    builder.addMatcher(
-      usersEndpoints.approveCourseRequest.matchFulfilled,
-      (state, { payload }) => {
-        const copiedCollection = JSON.parse(JSON.stringify(state.collection));
-
-        const newCollection = filter(copiedCollection, (notificationsSlice) => {
-          if (
-            notificationsSlice.course &&
-            notificationsSlice.course.id === payload.id
-          )
-            return false;
-          return true;
-        });
-
-        state.collection = newCollection;
-      }
-    );
+      state.toasterNotification = isEmpty(newCollection) ? [] : newCollection;
+    },
   },
 });
 
-export const { insertNotification } = notificationsSlice.actions;
+export const {
+  insertNotification,
+  addToasterNotification,
+  removeToasterNotification,
+} = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

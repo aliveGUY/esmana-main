@@ -1,5 +1,4 @@
 import React, { useCallback, useRef } from "react";
-import { useGetAllNotificationsQuery } from "../../state/asynchronous/users";
 import BellIcon from "../../static/images/bell.svg";
 import { useSelector } from "react-redux";
 import Popup from "../common/Popup";
@@ -8,9 +7,9 @@ import BellNotification from "./BellNotification";
 
 const Notifications = () => {
   const ref = useRef();
-  const notifications = useSelector((state) => state.notifications.collection);
-
-  useGetAllNotificationsQuery();
+  const notifications = useSelector(
+    (state) => state.notifications.bellNotifications
+  );
 
   const togglePopup = useCallback(() => ref.current.toggle(), []);
   const closePopup = useCallback(() => ref.current.close(), []);

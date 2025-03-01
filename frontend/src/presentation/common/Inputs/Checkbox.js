@@ -1,48 +1,49 @@
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
+import {
+  Checkbox as MuiCheckbox,
+  FormControlLabel,
+  FormHelperText,
+} from "@mui/material";
 
-const Checkbox = (props) => {
-  const { label, value, inputId, required } = props;
+const CheckboxField = ({ label, value, inputId, required }) => {
   const {
     formState: { errors },
   } = useFormContext();
 
   return (
-    <div>
-      <Controller
-        name={inputId}
-        rules={{
-          required: required ? "* Field is required" : false,
-        }}
-        render={({ field }) => (
-          <div className="checkbox-wrapper">
-            <input
-              type="checkbox"
-              className="checkbox"
-              id={label}
-              name={label}
-              {...field}
-              value={value}
-            />
-            <label className="label" htmlFor={label}>
-              {label}
-            </label>
-          </div>
-        )}
-      />
-      {errors[inputId] && (
-        <p style={{ color: "red" }}>{errors[inputId].message}</p>
+    <Controller
+      name={inputId}
+      rules={{
+        required: required ? "* Field is required" : false,
+      }}
+      render={({ field }) => (
+        <>
+          <FormControlLabel
+            control={
+              <MuiCheckbox
+                {...field}
+                value={value}
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            }
+            label={label}
+          />
+          {errors[inputId] && (
+            <FormHelperText error>{errors[inputId].message}</FormHelperText>
+          )}
+        </>
       )}
-    </div>
+    />
   );
 };
 
-Checkbox.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string.isRequired,
+CheckboxField.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.bool, // Checkbox value should be a boolean
   inputId: PropTypes.string.isRequired,
   required: PropTypes.bool,
 };
 
-export default React.memo(Checkbox);
+export default React.memo(CheckboxField);

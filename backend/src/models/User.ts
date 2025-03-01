@@ -14,7 +14,6 @@ import { ERoles } from "./enums/ERoles";
 import { Exclude } from 'class-transformer';
 import { Notification } from "./Notification";
 
-
 @Entity({ name: "user" })
 export class User {
   @PrimaryGeneratedColumn()

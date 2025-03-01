@@ -1,103 +1,46 @@
 import { Injectable } from "@nestjs/common";
-import { Observable, Subject } from "rxjs";
+import { filter, map, Observable, Subject } from "rxjs";
 import { Course } from "src/models/Course";
-import { CreateCourseNotificationDto } from "src/models/dto/CreateCourseNotificationDto";
-import { CreateMembershipNotificationDto } from "src/models/dto/CreateMembershipNotificationDto";
-import { ENotificationCast } from "src/models/enums/ENotificationCast";
+import { ECast } from "src/models/enums/ECast";
 import { ENotificationSeverity } from "src/models/enums/ENotificationSeverity";
 import { ENotificationType } from "src/models/enums/ENotificationType";
 import { ERoles } from "src/models/enums/ERoles";
-import { INotification } from "src/models/interfaces/INotification";
-import { Membership } from "src/models/Membership";
+import { ESseEventType } from "src/models/enums/ESseEventType";
+import { ISseEvent } from "src/models/interfaces/ISseEvent";
 import { Notification } from "src/models/Notification";
 import { User } from "src/models/User";
 import { NotificationRepository } from "src/repositories/notificationRepository";
 
 @Injectable()
 export class NotificationService {
-  private notificationSubject = new Subject<INotification>();
+  private notificationSubject = new Subject<ISseEvent>();
 
   constructor(private readonly notificationRepository: NotificationRepository) { }
 
-  async createPendingMembershipPurchaseNotification(user: User, membership: Membership): Promise<CreateMembershipNotificationDto> {
-    const notification: CreateMembershipNotificationDto = {
-      severity: ENotificationSeverity.WARNING,
-      type: ENotificationType.PENDING_MEMBERSHIP_PURCHASE,
-      membership,
-      user,
-    }
-
-    return await this.notificationRepository.createMembershipNotification(notification)
-  }
-
-  async createPendingCoursePurchaseNotification(user: User, course: Course): Promise<Course | null> {
-    const notification: CreateCourseNotificationDto = {
-      severity: ENotificationSeverity.WARNING,
-      type: ENotificationType.PENDING_COURSE_PURCHASE,
+  async createCoursePurchaseNotification(user: User, course: Course) {
+    const createdNotification: Notification = await this.notificationRepository.createCourseNotification({
+      severity: ENotificationSeverity.INFO,
+      type: ENotificationType.COURSE_PURCHASE,
       course,
       user,
-    }
+    })
 
-    try {
-      const createdNotification = await this.notificationRepository.createCourseNotification(notification)
-
-      this.notify({
-        cast: ENotificationCast.ADMINS,
-        userId: null,
-        payload: {
-          id: createdNotification.id,
-          user: createdNotification.user,
-          course: createdNotification.course,
-          membership: null,
-          seen: createdNotification.seen,
-          severity: ENotificationSeverity.WARNING,
-          type: ENotificationType.PENDING_COURSE_PURCHASE,
-          createdAt: new Date()
-        },
-      });
-
-      return createdNotification.course
-    }
-    catch {
-      this.notify({
-        cast: ENotificationCast.ADMINS,
-        userId: null,
-        payload: {
-          id: null,
-          user: user,
-          course: course,
-          membership: null,
-          seen: false,
-          severity: ENotificationSeverity.ERROR,
-          type: ENotificationType.PENDING_COURSE_PURCHASE,
-          createdAt: new Date()
-        },
-      });
-    }
-
-    return null
-  }
-
-  async createMembershipWillExpireNotification(user: User, membership: Membership): Promise<CreateMembershipNotificationDto> {
-    const notification: CreateMembershipNotificationDto = {
-      severity: ENotificationSeverity.WARNING,
-      type: ENotificationType.MEMBERSHIP_WILL_EXPIRE,
-      membership,
-      user,
-    }
-
-    return await this.notificationRepository.createMembershipNotification(notification)
-  }
-
-  async createMembershipIsExpiredNotification(user: User, membership: Membership): Promise<CreateMembershipNotificationDto> {
-    const notification: CreateMembershipNotificationDto = {
-      severity: ENotificationSeverity.ERROR,
-      type: ENotificationType.MEMBERSHIP_IS_EXPIRED,
-      membership,
-      user,
-    }
-
-    return await this.notificationRepository.createMembershipNotification(notification)
+    this.notify({
+      cast: ECast.ADMINS,
+      type: ESseEventType.ADD_BELL_NOTIFICATION,
+      data: createdNotification
+    })
+    this.notify({
+      cast: ECast.ADMINS,
+      type: ESseEventType.ADD_TOASTER_NOTIFICATION,
+      data: createdNotification
+    })
+    this.notify({
+      cast: ECast.USER,
+      userId: createdNotification.user?.id,
+      type: ESseEventType.ADD_TOASTER_NOTIFICATION,
+      data: createdNotification
+    })
   }
 
   async getAllNotifications(user: User): Promise<Notification[]> {
@@ -114,11 +57,27 @@ export class NotificationService {
     return this.notificationRepository.getPendingCoursesByUserId(studentId)
   }
 
-  notify(data: INotification) {
+  notify(data: ISseEvent) {
     this.notificationSubject.next(data);
   }
 
-  getNotifications(): Observable<INotification> {
-    return this.notificationSubject.asObservable();
+  getNotifications(user: User): Observable<ISseEvent> {
+    return this.notificationSubject.asObservable().pipe(
+      filter((event: ISseEvent) => {
+        if (
+          user.role === ERoles.USER
+          && event.cast === ECast.USER
+          && user.id === event.userId
+        ) return true
+
+        if (
+          (user.role === ERoles.ADMIN ||
+            user.role === ERoles.OWNER)
+          && event.cast === ECast.ADMINS
+        ) return true
+
+        return false
+      })
+    )
   }
 }

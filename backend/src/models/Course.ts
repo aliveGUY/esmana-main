@@ -51,6 +51,9 @@ export class Course {
   @Column({ name: 'certificate', type: "varchar", length: 500, nullable: false })
   certificate: string;
 
+  @Column({ name: 'price', type: "decimal", precision: 10, scale: 2, nullable: false })
+  price: number;
+
   @OneToMany(() => Notification, notification => notification.course, { cascade: true })
   notifications: Notification[];
 

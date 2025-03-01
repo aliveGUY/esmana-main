@@ -141,47 +141,8 @@ const usersApi = createApi({
       }),
     }),
 
-    createCourseJoinRequest: builder.mutation({
-      query: (courseRequestData) => ({
-        url: "/notification/pending-course-purchase",
-        method: "POST",
-        body: courseRequestData,
-      }),
-    }),
-
-    createMembershipRequest: builder.mutation({
-      query: (membershipRequestData) => ({
-        url: "/notification/pending-membership-purchase",
-        method: "POST",
-        body: membershipRequestData,
-      }),
-    }),
-
-    getAllNotifications: builder.query({
-      query: () => "/notification",
-    }),
-
-    getNotificationById: builder.query({
-      query: (id) => `/notification/${id}`,
-    }),
-
-    approveCourseRequest: builder.mutation({
-      query: (notification) => ({
-        url: "/course/approve-request",
-        method: "POST",
-        body: notification,
-      }),
-    }),
-
     getCoursesByStudent: builder.mutation({
       query: (studentId) => `/course/student/${studentId}`,
-    }),
-
-    getPendingCoursesByStudent: builder.mutation({
-      query: (studentId) => ({
-        url: `/notification/pending-courses/${studentId}`,
-        method: "GET",
-      }),
     }),
 
     changePassword: builder.mutation({
@@ -214,12 +175,7 @@ export const {
   useDeleteCourseMutation,
   useRemoveStudentFromCourseMutation,
   useAddStudentsToCourseMutation,
-  useCreateCourseJoinRequestMutation,
-  useGetAllNotificationsQuery,
-  useGetNotificationByIdQuery,
-  useApproveCourseRequestMutation,
   useGetCoursesByStudentMutation,
-  useGetPendingCoursesByStudentMutation,
   useChangePasswordMutation,
   useGetUserByIdQuery
 } = usersApi;

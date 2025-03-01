@@ -6,7 +6,6 @@ import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
 import { SetCourseStatusDto } from 'src/models/dto/SetCourseStatusDto';
 import { CourseService } from 'src/services/courseService';
 import { AddStudentsToCourseDto } from 'src/models/dto/AddStudentsToCourseDto';
-import { ApproveCourseNotificationDto } from 'src/models/dto/ApproveCourseNotificationDto';
 
 @Controller('/course')
 export class CourseController {
@@ -46,12 +45,6 @@ export class CourseController {
   @UseGuards(AuthenticatedGuard)
   addStudentsToCourse(@Body() courseStudent: AddStudentsToCourseDto): Promise<Course> {
     return this.courseService.addStudentsToCourse(courseStudent)
-  }
-
-  @Post('approve-request')
-  @UseGuards(AuthenticatedGuard)
-  approveJoinRequest(@Body() notification: ApproveCourseNotificationDto) {
-    return this.courseService.approveRequest(notification)
   }
 
   @Get('student/:id')

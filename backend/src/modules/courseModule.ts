@@ -10,6 +10,6 @@ import { NotificationModule } from './notificationModule';
   imports: [TypeOrmModule.forFeature([Course]), NotificationModule],
   controllers: [CourseController],
   providers: [CourseRepository, CourseService],
-  exports: [CourseService],
+  exports: [CourseService, CourseRepository],
 })
 export class CourseModule { }

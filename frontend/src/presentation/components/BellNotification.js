@@ -1,16 +1,9 @@
 import React, { useCallback } from "react";
-import { useBellNotificationMessage } from "../../hooks/useBellNotificationMessage";
 import { useNavigate } from "react-router-dom";
 
 const BellNotification = ({ notification, onClick }) => {
-  const { severity, type, course, membership, user } = notification;
+  const { severity } = notification;
   const navigate = useNavigate();
-  const { title, description } = useBellNotificationMessage({
-    type,
-    course,
-    membership,
-    user,
-  });
 
   const redirect = useCallback(() => {
     onClick();
@@ -19,8 +12,8 @@ const BellNotification = ({ notification, onClick }) => {
 
   return (
     <div className={`bell-notification ${severity}`} onClick={redirect}>
-      <h4 className="title">{title}</h4>
-      <p className="description">{description}</p>
+      <h4 className="title">title</h4>
+      <p className="description">description</p>
     </div>
   );
 };

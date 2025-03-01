@@ -1,49 +1,59 @@
-import React, { useCallback } from "react";
-import OutlineTextfield from "./OutlineTextfield";
-import { useFormContext } from "react-hook-form";
-import CalendarIcon from "../../../static/images/calendar.svg";
+import React, { Fragment, useCallback, useState } from "react";
+import { useController, useFormContext } from "react-hook-form";
 import PropTypes from "prop-types";
+import { DatePicker as MuiDatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
-const DatePicker = (props) => {
-  const { inputId, label, required = false, isHourly = false } = props;
-  const { setValue } = useFormContext();
+const CustomDatePicker = ({ inputId, label, required = false }) => {
+  const { control, setValue } = useFormContext();
+
+  const { field, fieldState } = useController({
+    control,
+    name: inputId,
+    defaultValue: null,
+    rules: {
+      required: required ? "* Field is required" : false,
+    },
+  });
+
+  const [selectedDate, setSelectedDate] = useState(
+    field.value ? dayjs(field.value) : null
+  );
 
   const handleChange = useCallback(
-    (e) => {
-      setValue(inputId, e.target.value, { shouldValidate: true });
+    (newValue) => {
+      setSelectedDate(newValue);
+      setValue(
+        inputId,
+        newValue ? dayjs(newValue).format("YYYY-MM-DD") : null,
+        {
+          shouldValidate: true,
+        }
+      );
     },
     [setValue, inputId]
   );
 
   return (
-    <div className="datepicker">
-      <OutlineTextfield
-        inputId={inputId}
-        label={label}
-        required={required}
-        endIcon={
-          <button className="icon-button small white" type="button">
-            <img
-              src={CalendarIcon}
-              className="password-icon"
-              alt="date picker icon"
-            />
-          </button>
-        }
-      />
-      <input
-        type={isHourly ? "datetime-local" : "date"}
-        className="datepicker-input"
+    <Fragment>
+      <MuiDatePicker
+        {...field}
+        value={selectedDate}
         onChange={handleChange}
+        label={label}
+        renderInput={(params) => <input {...params} />}
       />
-    </div>
+      {fieldState.error && (
+        <p style={{ color: "red" }}>{fieldState.error.message}</p>
+      )}
+    </Fragment>
   );
 };
 
-DatePicker.propTypes = {
+CustomDatePicker.propTypes = {
   inputId: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   required: PropTypes.bool,
 };
 
-export default React.memo(DatePicker);
+export default React.memo(CustomDatePicker);

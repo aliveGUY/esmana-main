@@ -61,6 +61,7 @@ export class CreateTables1739726621576 implements MigrationInterface {
           { name: "availability_time", type: "timestamp", isNullable: false },
           { name: "active", type: "boolean", isNullable: false, default: false },
           { name: "certificate", type: "varchar", length: "500", isNullable: false },
+          { name: 'price', type: "decimal", precision: 10, scale: 2, isNullable: false },
           { name: "created_at", type: "timestamp", precision: 6, default: "CURRENT_TIMESTAMP(6)" },
           { name: "updated_at", type: "timestamp", precision: 6, default: "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" }
         ]
@@ -103,8 +104,8 @@ export class CreateTables1739726621576 implements MigrationInterface {
           { name: "course_id", type: "int", isNullable: true },
           { name: "membership_id", type: "int", isNullable: true },
           { name: "seen", type: "boolean", isNullable: false, default: false },
-          { name: "severity", type: "enum", enum: ["success", "warning", "error", "info"], default: "'error'" },
-          { name: "type", type: "enum", enum: ["unknown", "pending_course_purchase", "pending_membership_purchase", "membership_will_expire", "membership_is_expired"], default: "'unknown'" },
+          { name: "severity", type: "varchar", length: "255", isNullable: false, default: "error" },
+          { name: "type", type: "varchar", length: "255", isNullable: false, default: "unknown" },
           { name: "created_at", type: "timestamp", precision: 6, default: "CURRENT_TIMESTAMP(6)" }
         ]
       })
