@@ -40,6 +40,8 @@ const RegisterStudent = () => {
   const onSubmit = useCallback(
     (data) => {
       if (isEmpty(cid)) {
+        data.course = null;
+        register(data);
       } else {
         register(data);
       }

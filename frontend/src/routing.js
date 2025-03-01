@@ -13,6 +13,7 @@ import Dashboard from "./presentation/components/layouts/Dashboard";
 import Unauthorized from "./presentation/components/layouts/Unauthorized";
 import { Navigate } from "react-router-dom";
 import UserCourses from "./presentation/pages/UserCourses";
+import Course from "./presentation/pages/Course";
 
 const routing = [
   {
@@ -67,12 +68,17 @@ const routing = [
       {
         path: "user-courses",
         title: "Esmana - Apply to school",
-        element:<UserCourses />,
+        element: <UserCourses />,
       },
       {
         path: "courses/new",
         title: "Esmana - Apply to school",
         element: <CreateCourse />,
+      },
+      {
+        path: "course/:id",
+        title: "Esmana - Apply to school",
+        element: <Course />,
       },
       {
         path: "student-registration",

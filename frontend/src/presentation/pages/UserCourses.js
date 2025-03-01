@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Paper from "@mui/material/Paper";
 import { useSelector } from "react-redux";
 import { Box, Stack, Typography } from "@mui/material";
 import { isEmpty, map } from "lodash";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const Course = ({ course, isPending }) => {
+  const navigate = useNavigate();
+
   const beginningDate = isEmpty(course.beginningDate)
     ? "N/A"
     : format(course.beginningDate, "yyyy-MM-dd, HH:mm");
@@ -20,12 +23,19 @@ const Course = ({ course, isPending }) => {
     return "Active";
   };
 
+  const redirect = useCallback(
+    () => navigate(`/dashboard/course/${course.id}`),
+    [navigate, course.id]
+  );
+
   return (
     <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
+      onClick={redirect}
       sx={{
+        cursor: "pointer",
         border: "1px solid black",
         borderRadius: "8px",
         px: 3,
