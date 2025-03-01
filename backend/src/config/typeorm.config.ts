@@ -12,6 +12,7 @@ export const typeOrmConfig = new DataSource({
   database: process.env.DB_NAME,
   entities: [__dirname + '/../models/*.js'],
   migrations: [__dirname + '/../migrations/*.js'],
-  synchronize: process.env.NODE_ENV === "development",
+  // synchronize: process.env.NODE_ENV === "development",
+  synchronize: false,
   logging: true
 });

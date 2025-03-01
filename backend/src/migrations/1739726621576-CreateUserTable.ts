@@ -104,8 +104,8 @@ export class CreateTables1739726621576 implements MigrationInterface {
           { name: "course_id", type: "int", isNullable: true },
           { name: "membership_id", type: "int", isNullable: true },
           { name: "seen", type: "boolean", isNullable: false, default: false },
-          { name: "severity", type: "varchar", length: "255", isNullable: false, default: "error" },
-          { name: "type", type: "varchar", length: "255", isNullable: false, default: "unknown" },
+          { name: "severity", type: "varchar", length: "255", isNullable: false, default: "'error'" },
+          { name: "type", type: "varchar", length: "255", isNullable: false, default: "'unknown'" },
           { name: "created_at", type: "timestamp", precision: 6, default: "CURRENT_TIMESTAMP(6)" }
         ]
       })
