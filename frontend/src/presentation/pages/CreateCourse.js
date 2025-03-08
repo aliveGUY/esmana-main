@@ -20,7 +20,6 @@ const CreateCourse = () => {
     defaultValues: {
       title: "",
       students: [],
-      beginningDate: "",
       availabilityTime: "",
       certificate: "",
     },
@@ -63,7 +62,6 @@ const CreateCourse = () => {
             options={data}
             parseValue={parseValue}
           />
-          <DatePicker required inputId="beginningDate" label="Beginning Date" />
           <DatePicker
             required
             inputId="availabilityTime"

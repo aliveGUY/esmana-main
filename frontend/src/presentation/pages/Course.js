@@ -3,12 +3,16 @@ import { find, isEmpty, map } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useCreateCallMutation } from "../../state/asynchronous/users";
 
 const Course = () => {
   const { id } = useParams();
   const [selectedLecture, setSelectedLecture] = useState(0);
   const courses = useSelector((state) => state.courses.studentActiveCourses);
   const course = find(courses, (course) => course.id === Number(id));
+
+  const [createCall] = useCreateCallMutation();
+  const handleCall = useCallback(createCall, [createCall]);
 
   const lecture = useMemo(
     () => course?.lectures[selectedLecture],
@@ -53,7 +57,10 @@ const Course = () => {
             },
           }}
         >
-          <iframe title="course video" src="https://www.youtube.com/embed/tgbNymZ7vqY" />
+          <iframe
+            title="course video"
+            src="https://www.youtube.com/embed/tgbNymZ7vqY"
+          />
           <Typography fontWeight={700} fontSize={22}>
             {lecture.title}
           </Typography>
@@ -61,7 +68,9 @@ const Course = () => {
             Speakers: {parseSpeakerNames(lecture.speakers)}
           </Typography>
           <Box>
-            <Button variant="contained">Join Lecture</Button>
+            <Button onClick={handleCall} variant="contained">
+              Create Call
+            </Button>
           </Box>
         </Stack>
       </Stack>

@@ -152,6 +152,28 @@ const usersApi = createApi({
         body: passDto,
       }),
     }),
+
+    searchYouTubeVideo: builder.query({
+      query: (q) => `/lecture/search?q=${q}`,
+    }),
+
+    createCall: builder.mutation({
+      query: () => ({
+        url: "/lecture/google",
+        method: "GET",
+      }),
+    }),
+
+    createCheckoutSession: builder.mutation({
+      query: () => ({
+        url: "/lecture/create-checkout-session",
+        method: "POST",
+      }),
+    }),
+
+    getCheckoutSessionStatus: builder.query({
+      query: (sessionId) => `/lecture/session-status?sid=${sessionId}`,
+    }),
   }),
 });
 
@@ -177,7 +199,13 @@ export const {
   useAddStudentsToCourseMutation,
   useGetCoursesByStudentMutation,
   useChangePasswordMutation,
-  useGetUserByIdQuery
+  useGetUserByIdQuery,
+
+  // integrations
+  useSearchYouTubeVideoQuery,
+  useCreateCallMutation,
+  useCreateCheckoutSessionMutation,
+  useGetCheckoutSessionStatusQuery,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

@@ -6,8 +6,12 @@ import { isEmpty } from "lodash";
 
 const CourseHeader = (props) => {
   const { course, open, actions } = props;
-  const date = new Date(course.beginningDate);
-  const formattedDate = format(date, "yyyy-MM-dd");
+
+  const formatDate = (date) => {
+    if (isEmpty(date)) return "N/A";
+    return format(new Date(date), "yyyy-MM-dd");
+  };
+
   return (
     <Fragment>
       <div className="course-item status-column">
@@ -28,10 +32,10 @@ const CourseHeader = (props) => {
         <p>{course.title}</p>
       </div>
       <div className="course-item">
-        <p>{formattedDate}</p>
+        <p>{formatDate(course.beginningDate)}</p>
       </div>
       <div className="course-item">
-        <p>{isEmpty(course.finishDate) ? "N/A" : course.finishDate}</p>
+        <p>{formatDate(course.finishDate)}</p>
       </div>
       <div className="course-item">
         <p>{course.students.length}</p>

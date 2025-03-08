@@ -73,4 +73,12 @@ export class CourseRepository {
       relations: ['lectures', 'lectures.speakers', 'students'],
     });
   }
+
+  async updateCourseDates(courseId: number, beginningDate: Date, finishDate: Date): Promise<Course> {
+    await this.course.update(courseId, { beginningDate, finishDate })
+    return this.course.findOneOrFail({
+      where: { id: courseId },
+      relations: ['lectures', 'lectures.speakers', 'students'],
+    });
+  }
 }

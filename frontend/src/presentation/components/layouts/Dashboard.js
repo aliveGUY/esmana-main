@@ -8,6 +8,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import {
   useGetCoursesByStudentMutation,
   useGetSessionQuery,
+  useSearchYouTubeVideoQuery,
 } from "../../../state/asynchronous/users";
 import Footer from "./Footer";
 import NotificationListener from "../listeners/NotificationListener";
@@ -16,6 +17,8 @@ import ToasterNotifications from "../notification/ToasterNotifications";
 const Dashboard = () => {
   const { isUnauthorized, isAuthorized, user, isUninitialized, isLoading } =
     useAuth();
+
+  // useSearchYouTubeVideoQuery("cats");
 
   useGetSessionQuery();
   const [getCoursesByStudent] = useGetCoursesByStudentMutation();

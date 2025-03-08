@@ -56,7 +56,7 @@ export class CreateTables1739726621576 implements MigrationInterface {
         columns: [
           { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
           { name: "title", type: "varchar", length: "255", isNullable: false },
-          { name: "beginning_date", type: "timestamp", isNullable: false },
+          { name: "beginning_date", type: "timestamp", isNullable: true },
           { name: "finish_date", type: "timestamp", isNullable: true },
           { name: "availability_time", type: "timestamp", isNullable: false },
           { name: "active", type: "boolean", isNullable: false, default: false },

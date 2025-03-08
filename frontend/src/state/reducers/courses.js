@@ -38,7 +38,7 @@ const coursesSlice = createSlice({
     builder.addMatcher(
       usersEndpoints.createLecture.matchFulfilled,
       mapCourses((course, payload) => {
-        if (course.id === payload.course.id) course.lectures.push(payload);
+        if (course.id === payload.id) course = payload;
         return course;
       })
     );

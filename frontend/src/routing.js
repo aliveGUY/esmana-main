@@ -14,6 +14,9 @@ import Unauthorized from "./presentation/components/layouts/Unauthorized";
 import { Navigate } from "react-router-dom";
 import UserCourses from "./presentation/pages/UserCourses";
 import Course from "./presentation/pages/Course";
+import Checkout from "./presentation/pages/Checkout";
+import { element } from "prop-types";
+import Return from "./presentation/pages/Return";
 
 const routing = [
   {
@@ -54,6 +57,16 @@ const routing = [
         index: true,
         title: "Esmana - Apply to school",
         element: <Home />,
+      },
+      {
+        path: "checkout",
+        title: "Esmana - Apply to school",
+        element: <Checkout />,
+      },
+      {
+        path: "return",
+        title: "Esmana - Apply to school",
+        element: <Return />,
       },
       {
         path: "membership",

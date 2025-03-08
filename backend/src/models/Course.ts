@@ -35,7 +35,7 @@ export class Course {
   lectures: Lecture[];
 
   @Index()
-  @Column({ name: 'beginning_date', type: "timestamp", nullable: false })
+  @Column({ name: 'beginning_date', type: "timestamp", nullable: true })
   beginningDate: Date;
 
   @Index()
