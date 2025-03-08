@@ -6,7 +6,7 @@ import * as passport from 'passport'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isDevelop = process.env.NODE_ENV === 'development'
-  const allowedOrigins = [isDevelop ? 'http://localhost:3000' : 'https://esmana-main.org', 'https://accounts.google.com']
+  const allowedOrigins = isDevelop ? 'http://localhost:3000' : 'https://esmana-main.org'
 
   if (!process.env.SESSION_SECRET) throw new Error()
   const expressApp = app.getHttpAdapter().getInstance();
@@ -25,14 +25,7 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        console.log({ origin })
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
