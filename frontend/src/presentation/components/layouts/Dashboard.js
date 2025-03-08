@@ -8,7 +8,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import {
   useGetCoursesByStudentMutation,
   useGetSessionQuery,
-  useSearchYouTubeVideoQuery,
+  // useSearchYouTubeVideoQuery,
 } from "../../../state/asynchronous/users";
 import Footer from "./Footer";
 import NotificationListener from "../listeners/NotificationListener";

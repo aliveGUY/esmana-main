@@ -18,7 +18,7 @@ const Checkout = () => {
 
   useEffect(() => {
     createCheckoutSession();
-  }, []);
+  }, [createCheckoutSession]);
 
   if (isEmpty(data?.clientSecret)) return "Loading...";
 

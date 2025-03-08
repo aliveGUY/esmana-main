@@ -19,8 +19,6 @@ const Course = () => {
     [selectedLecture, course]
   );
 
-  console.log({ lecture });
-
   const parseSpeakerNames = (speakers) => {
     const namesArray = map(speakers, (speaker) =>
       [speaker.firstName, speaker.middleName, speaker.lastName].join(" ")
