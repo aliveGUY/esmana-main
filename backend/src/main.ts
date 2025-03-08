@@ -6,7 +6,7 @@ import * as passport from 'passport'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isDevelop = process.env.NODE_ENV === 'development'
-  const clientOrigin = 'https://esmana-main.org'
+  const clientOrigin = isDevelop ? 'http://localhost:3000' : 'https://esmana-main.org'
 
   if (!process.env.SESSION_SECRET) throw new Error()
   const expressApp = app.getHttpAdapter().getInstance();
