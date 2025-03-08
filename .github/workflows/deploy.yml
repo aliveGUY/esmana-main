@@ -22,6 +22,8 @@ jobs:
 
       # Build Frontend
       - name: Build Frontend
+        env:
+          REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
         run: |
           cd frontend
           npm install --omit=dev
