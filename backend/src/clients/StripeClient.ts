@@ -9,7 +9,7 @@ export class StripeClient {
       throw new Error('Unable to initialize stripe')
 
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-02-24.acacia",
+      apiVersion: "2025-03-31.basil",
     });
   }
 
@@ -31,6 +31,7 @@ export class StripeClient {
       ],
       mode: 'payment',
       return_url: `${this.frontDomain}/dashboard/return?session_id={CHECKOUT_SESSION_ID}`,
+      locale: 'en-GB'
     })
 
     return { clientSecret: session.client_secret }
