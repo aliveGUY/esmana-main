@@ -124,7 +124,7 @@ const CheckoutCourses = () => {
             },
           }}
         >
-          <img alt="neurons image" src={LoginImage} />
+          <img alt="neurons" src={LoginImage} />
         </Grid2>
       </Grid2>
     </Fragment>
