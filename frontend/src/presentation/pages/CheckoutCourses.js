@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { map } from "lodash";
-import { Grid2, Typography, Stack, Button, Box } from "@mui/material";
+import { Grid2, Typography, Stack, Button } from "@mui/material";
 import CheckoutStep from "../components/CheckoutStep";
 import InputFactory from "../components/InputFactory";
 
@@ -124,7 +124,7 @@ const CheckoutCourses = () => {
             },
           }}
         >
-          <img src={LoginImage} />
+          <img alt="neurons image" src={LoginImage} />
         </Grid2>
       </Grid2>
     </Fragment>

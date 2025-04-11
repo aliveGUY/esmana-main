@@ -214,7 +214,7 @@ const CheckoutMembership = () => {
             },
           }}
         >
-          <img src={LoginImage} />
+          <img alt="neurons image" src={LoginImage} />
         </Grid2>
       </Grid2>
     </Fragment>

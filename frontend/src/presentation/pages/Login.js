@@ -34,7 +34,7 @@ const Login = () => {
             },
           }}
         >
-          <img src={LoginImage} />
+          <img alt="ESMANA logo" src={LoginImage} />
         </Grid2>
         <Grid2 size={{ xs: 4 }}>
           <Stack p={4} spacing={2}>
