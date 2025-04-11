@@ -1,14 +1,13 @@
+import { Injectable } from "@nestjs/common";
 import Stripe from "stripe";
-
+@Injectable()
 export class StripeClient {
   private stripe: Stripe;
   private frontDomain: string = 'https://www.esmana-main.org'
 
   constructor() {
     if (!process.env.STRIPE_SECRET_KEY) {
-      console.log('TEST')
-      console.log({ env: process.env })
-      throw new Error(`Cannot find stripe config ${{ env: process.env }}`)
+      throw new Error('Stripe key ot defined')
     }
 
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
