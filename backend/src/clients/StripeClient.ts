@@ -30,7 +30,8 @@ export class StripeClient {
         }
       ],
       mode: 'payment',
-      return_url: `${this.frontDomain}/dashboard/return?session_id={CHECKOUT_SESSION_ID}`
+      return_url: `${this.frontDomain}/dashboard/return?session_id={CHECKOUT_SESSION_ID}`,
+      locale: 'en-GB'
     })
 
     return { clientSecret: session.client_secret }

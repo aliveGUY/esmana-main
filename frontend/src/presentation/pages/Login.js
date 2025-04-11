@@ -1,81 +1,52 @@
-import React, { useCallback, useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
-import OutlineTextfield from "../common/Inputs/OutlineTextfield";
-import { useLoginMutation } from "../../state/asynchronous/users";
-import Password from "../common/Inputs/Password";
+import React, { Fragment } from "react";
+import { Grid2, Typography, TextField, Button, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+import LoginImage from "../../static/images/image1_0.jpg";
+import TopBarNavigation from "../common/TopBarNavigation";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
 
-  const methods = useForm({
-    mode: "onTouched",
-    defaultValues: {
-      phoneOrEmail: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = useCallback(login, [login]);
-
-  const redirectStudent = useCallback(
-    () => navigate("/courses"),
-    [navigate]
-  );
-  const redirectMember = useCallback(
-    () => navigate("/apply-organization"),
-    [navigate]
-  );
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/");
-    }
-  }, [isSuccess, navigate]);
+  const onLogin = () => {
+    navigate("dashboard");
+  };
 
   return (
-    <div className="card">
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)} className="form">
-          <OutlineTextfield
-            required
-            inputId="phoneOrEmail"
-            label="Phone or email"
-          />
-          <Password required inputId="password" label="Password" />
-
-          {isError && <p className="error">Incorrect username or password</p>}
-
-          <div className="actions">
-            <button
-              type="button"
-              className="button black medium outlined"
-              onClick={redirectMember}
-            >
-              Join organization
-            </button>
-            <button
-              type="button"
-              className="button black medium outlined"
-              onClick={redirectStudent}
-            >
-              Apply to school
-            </button>
-            <button
-              type="submit"
-              className="button black medium"
-              disabled={
-                Object.keys(methods.formState.errors).length > 0 || isLoading
-              }
-            >
-              {isLoading ? "Loading..." : "Login"}
-            </button>
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+    <Fragment>
+      <TopBarNavigation />
+      <Grid2 container minHeight="calc(100vh - 64px)">
+        <Grid2
+          size={{ xs: 8 }}
+          sx={{
+            overflow: "hidden",
+            position: "relative",
+            img: {
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              bottom: 0,
+              right: 0,
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+              transform: "translateX(-50%)",
+            },
+          }}
+        >
+          <img src={LoginImage} />
+        </Grid2>
+        <Grid2 size={{ xs: 4 }}>
+          <Stack p={4} spacing={2}>
+            <Typography variant="h4">Login</Typography>
+            <TextField />
+            <TextField />
+            <Button onClick={onLogin}>Login</Button>
+          </Stack>
+        </Grid2>
+      </Grid2>
+    </Fragment>
   );
 };
 
-export default React.memo(Login);
+export default Login;

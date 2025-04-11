@@ -1,56 +1,40 @@
 import React from "react";
-
-import Clients from "./presentation/pages/Clients";
-import RegisterStudent from "./presentation/pages/RegisterStudent";
-import Login from "./presentation/pages/Login";
-import Cabinet from "./presentation/pages/Cabinet";
-import RegisterMember from "./presentation/pages/RegisterMember";
-import Courses from "./presentation/pages/Courses";
-import CreateCourse from "./presentation/pages/CreateCourse";
-import Membership from "./presentation/pages/Membership";
+import DashboardLayout from "./presentation/components/DashboardLayout";
 import Home from "./presentation/pages/Home";
-import Dashboard from "./presentation/components/layouts/Dashboard";
-import Unauthorized from "./presentation/components/layouts/Unauthorized";
-import { Navigate } from "react-router-dom";
-import UserCourses from "./presentation/pages/UserCourses";
-import Course from "./presentation/pages/Course";
-import Checkout from "./presentation/pages/Checkout";
-import Return from "./presentation/pages/Return";
+import Profile from "./presentation/pages/Profile";
+import Users from "./presentation/pages/Users";
+import Courses from "./presentation/pages/Courses";
+import Login from "./presentation/pages/Login";
+import ForgotPassword from "./presentation/pages/ForgotPassword";
+import ResetPassword from "./presentation/pages/ResetPassword";
+import CheckoutMembership from "./presentation/pages/CheckoutMembership";
+import CheckoutCourses from "./presentation/pages/CheckoutCourses";
+import NotFoundPage from "./presentation/pages/404";
 
 const routing = [
   {
     path: "/",
-    element: <Unauthorized />,
-    children: [
-      {
-        path: "login",
-        title: "Esmana - Apply to school",
-        element: <Login />,
-      },
-      {
-        path: "apply-school",
-        title: "Esmana - Apply to school",
-        element: <RegisterStudent />,
-      },
-      {
-        path: "apply-organization",
-        title: "Esmana - Apply to school",
-        element: <RegisterMember sync />,
-      },
-      {
-        path: "courses",
-        title: "Esmana - Apply to school",
-        element: <Courses />,
-      },
-      {
-        path: "/",
-        element: <Navigate to="/login" />,
-      },
-    ],
+    element: <Login />,
+  },
+  {
+    path: "/forgot",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/course-checkout",
+    element: <CheckoutCourses />,
+  },
+  {
+    path: "/membership-checkout",
+    element: <CheckoutMembership />,
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <DashboardLayout />,
     children: [
       {
         index: true,
@@ -58,61 +42,31 @@ const routing = [
         element: <Home />,
       },
       {
-        path: "checkout",
+        path: "profile",
         title: "Esmana - Apply to school",
-        element: <Checkout />,
+        element: <Profile />,
       },
       {
-        path: "return",
+        path: "users",
         title: "Esmana - Apply to school",
-        element: <Return />,
-      },
-      {
-        path: "membership",
-        title: "Esmana - Apply to school",
-        element: <Membership />,
+        element: <Users />,
       },
       {
         path: "courses",
         title: "Esmana - Apply to school",
-        element: <Courses isDashboard />,
+        element: <Courses />,
       },
       {
-        path: "user-courses",
+        path: "*",
         title: "Esmana - Apply to school",
-        element: <UserCourses />,
-      },
-      {
-        path: "courses/new",
-        title: "Esmana - Apply to school",
-        element: <CreateCourse />,
-      },
-      {
-        path: "course/:id",
-        title: "Esmana - Apply to school",
-        element: <Course />,
-      },
-      {
-        path: "student-registration",
-        title: "Esmana - Apply to school",
-        element: <RegisterStudent />,
-      },
-      {
-        path: "member-registration",
-        title: "Esmana - Apply to school",
-        element: <RegisterMember />,
-      },
-      {
-        path: "clients",
-        title: "Esmana - Apply to school",
-        element: <Clients />,
-      },
-      {
-        path: "cabinet/:id",
-        title: "Esmana - Apply to school",
-        element: <Cabinet />,
+        element: <NotFoundPage />,
       },
     ],
+  },
+  {
+    path: "*",
+    title: "Esmana - Apply to school",
+    element: <NotFoundPage />,
   },
 ];
 

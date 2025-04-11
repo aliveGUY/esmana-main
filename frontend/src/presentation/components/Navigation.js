@@ -1,30 +1,37 @@
 import React from "react";
-import NavLogo from "../../static/images/logo-big.png";
-import UserDropdown from "./UserDropdown";
-import Notifications from "./Notifications";
-import { useAuth } from "../../hooks/useAuth";
-import SideNav from "./SideNav";
+import { map } from "lodash";
+import { Link } from "react-router-dom";
+import { Button as MuiButton, Stack } from "@mui/material";
 
-const Navigation = ({ children }) => {
-  const { isAuthorized } = useAuth();
+const Navigation = () => {
+  const config = [
+    {
+      name: "Home",
+      path: "/dashboard",
+    },
+    {
+      name: "Profile",
+      path: "/dashboard/profile",
+    },
+    {
+      name: "Users",
+      path: "/dashboard/users",
+    },
+    {
+      name: "Courses",
+      path: "/dashboard/courses",
+    },
+  ];
+
   return (
-    <div className={`app-wrapper ${!isAuthorized && "unauthed"}`}>
-      <div className="top-bar-navigation">
-        <div className="navigation-section">
-          <img src={NavLogo} alt="Esmana logo" className="logo" />
-        </div>
-
-        {isAuthorized && (
-          <div className="navigation-section actions">
-            <Notifications />
-            <UserDropdown />
-          </div>
-        )}
-      </div>
-      {isAuthorized && <SideNav />}
-      <div className="content-wrapper">{children}</div>
-    </div>
+    <Stack>
+      {map(config, (item, index) => (
+        <MuiButton key={index} component={Link} to={item.path}>
+          {item.name}
+        </MuiButton>
+      ))}
+    </Stack>
   );
 };
 
-export default React.memo(Navigation);
+export default Navigation;
