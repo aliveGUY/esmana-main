@@ -5,8 +5,11 @@ export class StripeClient {
   private frontDomain: string = 'https://www.esmana-main.org'
 
   constructor() {
-    if (!process.env.STRIPE_SECRET_KEY)
-      throw new Error(`Unable to initialize stripe ${{ env: process.env }}`)
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.log('TEST')
+      console.log({ env: process.env })
+      throw new Error(`Cannot find stripe config ${{ env: process.env }}`)
+    }
 
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: "2025-03-31.basil",
