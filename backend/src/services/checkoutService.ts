@@ -31,8 +31,11 @@ export class CheckoutService {
         timestamp: new Date()
       };
 
+
       // Save the session
       req.session.save();
+
+      console.log({ successfulPayments: req.session.successfulPayments })
     }
 
     return { received: true }
