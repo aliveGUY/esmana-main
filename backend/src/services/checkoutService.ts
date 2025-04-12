@@ -4,6 +4,14 @@ import { CreateMemberIdentityDto } from "src/models/dto/CreateMemberIdentityDto"
 import Stripe from "stripe";
 import { Response } from "express";
 
+// Declare the global variable to store successful payments
+declare global {
+  var successfulPayments: Record<string, any>;
+}
+
+// Initialize the global variable if it doesn't exist
+global.successfulPayments = global.successfulPayments || {};
+
 @Injectable()
 export class CheckoutService {
   constructor(private readonly stripeClient: StripeClient) { }
@@ -20,21 +28,13 @@ export class CheckoutService {
       const paymentIntent: Stripe.PaymentIntent = event.data.object;
       const accountData = JSON.parse(paymentIntent.metadata.name);
 
-      // Store the payment intent ID in the session
-      if (!req.session.successfulPayments) {
-        req.session.successfulPayments = {};
-      }
-
-      req.session.successfulPayments[paymentIntent.id] = {
+      // Store the payment intent ID in the global variable
+      global.successfulPayments[paymentIntent.id] = {
         email: accountData.email,
         timestamp: new Date()
       };
 
-
-      // Save the session
-      req.session.save();
-
-      console.log({ saveAttempt: req.session.successfulPayments, paymentIntentId: paymentIntent.id })
+      console.log({ saveAttempt: global.successfulPayments, paymentIntentId: paymentIntent.id })
     }
 
     return { received: true }
@@ -42,9 +42,9 @@ export class CheckoutService {
 
   async checkPaymentStatus(paymentIntentId: string, req: any, res: Response) {
     // Check if we have a successful payment for this payment intent ID
-    console.log({ getAttempt: req.session.successfulPayments, paymentIntentId })
+    console.log({ getAttempt: global.successfulPayments, paymentIntentId })
 
-    if (!req.session.successfulPayments || !req.session.successfulPayments[paymentIntentId]) {
+    if (!global.successfulPayments[paymentIntentId]) {
       return res.status(404).json({
         success: false,
         message: 'Payment not found or not yet processed'
@@ -52,13 +52,10 @@ export class CheckoutService {
     }
 
     // Get the payment data
-    const paymentData = req.session.successfulPayments[paymentIntentId];
+    const paymentData = global.successfulPayments[paymentIntentId];
 
-    // Remove the payment intent ID from the session
-    delete req.session.successfulPayments[paymentIntentId];
-
-    // Save the session
-    req.session.save();
+    // Remove the payment intent ID from the global variable
+    delete global.successfulPayments[paymentIntentId];
 
     // Create a user object with the payment data
     // This is a temporary user just for the session
