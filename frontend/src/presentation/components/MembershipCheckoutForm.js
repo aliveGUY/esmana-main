@@ -58,48 +58,6 @@ const MembershipCheckoutForm = ({ config }) => {
     createPaymentIntent(formData);
   };
 
-  // Start polling for session creation
-  const checkPaymentStatus = async (attempt = 1) => {
-    // Limit to 15 attempts (30 seconds)
-    if (attempt > 15) {
-      console.error("Payment verification timeout");
-      // Show error message to user
-      return;
-    }
-
-    try {
-      const response = await fetch(`${BASE_URL}/check-payment-status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          paymentIntentId: result.paymentIntent.id,
-        }),
-        credentials: "include", // Important for cookies/session
-      });
-
-      if (response.ok) {
-        const statusData = await response.json();
-
-        if (statusData.success) {
-          // Session created, redirect to dashboard
-          window.location.href = statusData.redirectUrl || "/dashboard";
-        } else {
-          // Session not created yet, try again in 2 seconds
-          setTimeout(() => checkPaymentStatus(attempt + 1), 2000);
-        }
-      } else {
-        // Error in request, try again in 2 seconds
-        setTimeout(() => checkPaymentStatus(attempt + 1), 2000);
-      }
-    } catch (error) {
-      console.error("Error checking payment status:", error);
-      // Try again in 2 seconds
-      setTimeout(() => checkPaymentStatus(attempt + 1), 2000);
-    }
-  };
-
   const handlePaymentConfirmation = useCallback(async () => {
     if (!stripe || !elements) return;
 
@@ -122,9 +80,51 @@ const MembershipCheckoutForm = ({ config }) => {
 
     if (result.paymentIntent.status === "succeeded") {
       console.log("Payment succeeded!");
-
-      // Start polling
-      checkPaymentStatus();
+      
+      // Start polling for session creation
+      const checkPaymentStatus = async (paymentIntentId, attempt = 1) => {
+        // Limit to 15 attempts (30 seconds)
+        if (attempt > 15) {
+          console.error("Payment verification timeout");
+          // Show error message to user
+          return;
+        }
+        
+        try {
+          const response = await fetch(`${BASE_URL}/check-payment-status`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              paymentIntentId: paymentIntentId,
+            }),
+            credentials: "include", // Important for cookies/session
+          });
+          
+          if (response.ok) {
+            const statusData = await response.json();
+            
+            if (statusData.success) {
+              // Session created, redirect to dashboard
+              window.location.href = statusData.redirectUrl || "/dashboard";
+            } else {
+              // Session not created yet, try again in 2 seconds
+              setTimeout(() => checkPaymentStatus(paymentIntentId, attempt + 1), 2000);
+            }
+          } else {
+            // Error in request, try again in 2 seconds
+            setTimeout(() => checkPaymentStatus(paymentIntentId, attempt + 1), 2000);
+          }
+        } catch (error) {
+          console.error("Error checking payment status:", error);
+          // Try again in 2 seconds
+          setTimeout(() => checkPaymentStatus(paymentIntentId, attempt + 1), 2000);
+        }
+      };
+      
+      // Start polling with the payment intent ID
+      checkPaymentStatus(result.paymentIntent.id);
     }
   }, [data, elements, methods, stripe]);
 
