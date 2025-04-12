@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { usersMiddleware } from "./asynchronous/users";
+import { usersMiddleware } from "./asynchronous";
 import { reducers } from "./reducers";
-import { asyncReducers } from "./asynchronous";
+import asyncReducers from "./asynchronous";
 
 const rootReducer = combineReducers({
   ...reducers,

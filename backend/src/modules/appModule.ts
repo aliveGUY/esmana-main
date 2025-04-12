@@ -8,6 +8,7 @@ import { IdentityModule } from './identityModule';
 import { NotificationModule } from './notificationModule';
 import { CourseModule } from './courseModule';
 import { LectureModule } from './lectureModule';
+import { CheckoutModule } from './checkoutModule';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { LectureModule } from './lectureModule';
     IdentityModule,
     NotificationModule,
     CourseModule,
-    LectureModule
+    LectureModule,
+    CheckoutModule
   ],
 })
 

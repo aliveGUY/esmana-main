@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Grid2, Box, TextField } from "@mui/material";
 import {
   Elements,
@@ -9,63 +9,73 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useForm } from "react-hook-form";
-
+import { isEmpty } from "lodash";
 import { loadStripe } from "@stripe/stripe-js";
+import { useCreateMembershipPaymentIntentMutation as createPaymentIntentMut } from "../../state/asynchronous";
 
 const Payment = () => {
+  const [createPaymentIntent, { data, isLoading }] = createPaymentIntentMut();
   const stripe = useStripe();
   const elements = useElements();
-  const { handleSubmit, register } = useForm({
+
+  const { handleSubmit, register, getValues } = useForm({
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
+      city: "",
+      birthDate: "",
+      workplace: "",
+      position: "",
+      education: [],
+      fieldOfWork: "",
+      diplomaNumber: "",
+      personalDataCollectionConsent: false,
+      residenceAddress: "",
+      country: "",
+      region: "",
+      taxpayerId: "",
+      passportId: "",
+      passportIssuedBy: "",
+      educationInstitution: "",
+      workExperience: "",
+      relevantTopics: "",
+      user: {},
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = (formData) => {
+    createPaymentIntent(formData);
+  };
+
+  const handlePaymentConfirmation = async () => {
+    if (!stripe || !elements) return;
+
     console.log({ data });
 
-    if (!stripe || !elements) {
-      return;
-    }
-
-    // Send registration data and item ID to the server
-    const response = await fetch(
-      "https://api.esmana-main.org/create-payment-intent",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          itemId: "your_item_id",
-        }),
-      }
-    );
-
-    const { clientSecret } = await response.json();
-
+    const formData = getValues();
     const cardNumberElement = elements.getElement(CardNumberElement);
 
-    const result = await stripe.confirmCardPayment(clientSecret, {
+    const result = await stripe.confirmCardPayment(data.clientSecret, {
       payment_method: {
         card: cardNumberElement,
         billing_details: {
-          name: data.name,
-          email: data.email,
+          name: formData.name,
+          email: formData.email,
         },
       },
     });
 
     if (result.error) {
       console.log(result.error.message);
-    } else {
-      if (result.paymentIntent.status === "succeeded") {
-        console.log("Payment succeeded and account created!");
-      }
+    }
+
+    if (result.paymentIntent.status === "succeeded") {
+      console.log("Payment succeeded and account created!");
     }
   };
+
+  useEffect(() => {
+    if (isLoading || isEmpty(data)) return;
+    handlePaymentConfirmation();
+  }, [isLoading, handlePaymentConfirmation]);
 
   return (
     <Fragment>

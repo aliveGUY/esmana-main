@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { CreateMemberIdentityDto } from "src/models/dto/CreateMemberIdentityDto";
 import Stripe from "stripe";
+
 @Injectable()
 export class StripeClient {
   private stripe: Stripe;
@@ -14,63 +16,25 @@ export class StripeClient {
     });
   }
 
-  async createCheckoutSession({ email, username }) {
+  async createMembershipPaymentIntent(memberIdentity: CreateMemberIdentityDto) {
     const paymentIntent = await this.stripe.paymentIntents.create({
-      amount: 1000, // Example amount in cents
-      currency: 'usd',
-      metadata: { email, username },
+      amount: 500 * 100,
+      currency: 'uah',
+      metadata: { name: JSON.stringify(memberIdentity) },
     });
-
-
-    console.log({ email, username })
 
     return { clientSecret: paymentIntent.client_secret }
   }
 
-  async handleWebHook({ req, res, signature }) {
+  constructWebhookEvent(rawBody: Buffer, signature: string): Stripe.Event {
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    let event: Stripe.Event;
 
-    console.log({ endpointSecret })
+    if (!endpointSecret) throw new Error('No secret found')
 
-
-    console.log('Called webhook')
-    if (!endpointSecret) throw new Error('No secret')
-
-
-    try {
-      event = this.stripe.webhooks.constructEvent(
-        req.rawBody,
-        signature,
-        endpointSecret,
-      );
-    } catch (err) {
-      console.error(`Webhook signature verification failed.`, err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    console.log({ event })
-    // Handle the event
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log('SHOULD CREATE ACCOUNT')
-        // TODO: Implement your business logic for successful payment
-        break;
-      // Handle other event types as needed
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
-
-    res.json({ received: true });
-  }
-
-  async getSessionStatus(sessionId: string) {
-    const session = await this.stripe.checkout.sessions.retrieve(sessionId)
-
-    return {
-      status: session.status,
-      customerEmail: session.customer_details?.email
-    }
+    return this.stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      endpointSecret,
+    );
   }
 }

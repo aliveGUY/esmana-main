@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/appModule';
 import * as session from 'express-session';
-import * as passport from 'passport'
+import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -30,6 +30,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
     optionsSuccessStatus: 204,
+    preflightContinue: false,
   });
 
   app.use(passport.initialize())

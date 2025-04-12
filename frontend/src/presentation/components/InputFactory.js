@@ -1,11 +1,10 @@
 import React from "react";
 import { TextField } from "@mui/material";
-import Payment from "./Payment";
 
 const InputFactory = ({ name, label, inputType }) => {
   if (inputType === "textfield") return <TextField label={label} />;
 
-  if (inputType === "payment") return <Payment />;
+  // if (inputType === "payment") return <Payment />;
   return <TextField />;
 };
 
