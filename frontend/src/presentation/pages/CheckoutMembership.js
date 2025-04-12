@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect } from "react";
 import { Grid2, Box, TextField } from "@mui/material";
 import {
   Elements,
@@ -45,7 +45,7 @@ const Payment = () => {
     createPaymentIntent(formData);
   };
 
-  const handlePaymentConfirmation = async () => {
+  const handlePaymentConfirmation = useCallback(async () => {
     if (!stripe || !elements) return;
 
     console.log({ data });
@@ -70,7 +70,7 @@ const Payment = () => {
     if (result.paymentIntent.status === "succeeded") {
       console.log("Payment succeeded and account created!");
     }
-  };
+  }, [data, elements, getValues, stripe]);
 
   useEffect(() => {
     if (isLoading || isEmpty(data)) return;
