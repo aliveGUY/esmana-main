@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { GoogleMeetClient } from 'src/clients/GoogleMeetClient';
 import { YouTubeClient } from 'src/clients/YouTubeClient';
 import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
@@ -7,8 +7,9 @@ import { LectureService } from 'src/services/lectureService';
 import { Response } from 'express';
 import { StripeClient } from 'src/clients/StripeClient';
 import { Course } from 'src/models/Course';
+import Stripe from 'stripe';
 
-@Controller('/lecture')
+@Controller('/')
 export class LectureController {
   constructor(
     private readonly lectureService: LectureService,
@@ -33,11 +34,20 @@ export class LectureController {
     res.redirect(url);
   }
 
-  @Post('create-checkout-session')
-  async createCheckoutSession() {
-    return this.stripeClient.createCheckoutSession()
+  @Post('create-payment-intent')
+  async createCheckoutSession(@Body() data) {
+    return this.stripeClient.createCheckoutSession(data)
   }
 
+  @Post('payment-intent-webhook')
+  @HttpCode(200)
+  async handleWebhook(
+    @Req() req: Request & { rawBody: Buffer },
+    @Res() res: Response,
+    @Headers('stripe-signature') signature: string,
+  ) {
+    return this.stripeClient.handleWebHook({ req, res, signature })
+  }
   @Get('session-status')
   async getSessionStatus(@Query('sid') sessionId: string) {
     return this.stripeClient.getSessionStatus(sessionId)

@@ -4,7 +4,7 @@ import * as session from 'express-session';
 import * as passport from 'passport'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   const isDevelop = process.env.NODE_ENV === 'development'
   const clientOrigin = isDevelop ? 'http://localhost:3000' : ['https://www.esmana-main.org', 'https://esmana-main.org']
 
