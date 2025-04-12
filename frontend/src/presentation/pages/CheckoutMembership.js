@@ -33,7 +33,7 @@ const Payment = () => {
 
     // Send registration data and item ID to the server
     const response = await fetch(
-      "http://localhost:8080/create-payment-intent",
+      "https://api.esmana-main.org/create-payment-intent",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
