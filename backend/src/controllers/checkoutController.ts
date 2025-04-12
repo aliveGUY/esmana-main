@@ -18,7 +18,6 @@ export class CheckoutController {
     @Req() req: Request & { rawBody: Buffer },
     @Headers('stripe-signature') signature: string,
   ) {
-    console.log('webhook controller')
     return this.checkoutService.handlePaymentIntentWebhookEvent(req.rawBody, signature)
   }
 }

@@ -13,14 +13,12 @@ export class CheckoutService {
   }
 
   async handlePaymentIntentWebhookEvent(rawBody: Buffer, signature: string) {
-    console.log('webhook service')
     const event = this.stripeClient.constructWebhookEvent(rawBody, signature)
 
-    console.log({ event })
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent: Stripe.PaymentIntent = event.data.object;
       const accountData = JSON.parse(paymentIntent.metadata.name)
-      console.log('SHOULD CREATE ACCOUNT', { accountData })
+      console.log({ accountData })
     }
 
     return { received: true }

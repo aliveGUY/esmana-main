@@ -1,11 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { usersMiddleware } from "./asynchronous";
 import { reducers } from "./reducers";
-import asyncReducers from "./asynchronous";
+import usersApi from "./asynchronous";
 
 const rootReducer = combineReducers({
   ...reducers,
-  ...asyncReducers,
+  usersApi,
 });
 
 const store = configureStore({
