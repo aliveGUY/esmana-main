@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { StripeClient } from "src/clients/StripeClient";
 import { CreateMemberIdentityDto } from "src/models/dto/CreateMemberIdentityDto";
 import Stripe from "stripe";
+import { Response } from "express";
 
 @Injectable()
 export class CheckoutService {
@@ -12,15 +13,73 @@ export class CheckoutService {
     return this.stripeClient.createMembershipPaymentIntent(memberIdentity)
   }
 
-  async handlePaymentIntentWebhookEvent(rawBody: Buffer, signature: string) {
+  async handlePaymentIntentWebhookEvent(rawBody: Buffer, signature: string, req: any) {
     const event = this.stripeClient.constructWebhookEvent(rawBody, signature)
 
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent: Stripe.PaymentIntent = event.data.object;
-      const accountData = JSON.parse(paymentIntent.metadata.name)
-      console.log({ accountData })
+      const accountData = JSON.parse(paymentIntent.metadata.name);
+      console.log({ accountData });
+
+      // Store the payment intent ID in the session
+      if (!req.session.successfulPayments) {
+        req.session.successfulPayments = {};
+      }
+
+      req.session.successfulPayments[paymentIntent.id] = {
+        email: accountData.email,
+        timestamp: new Date()
+      };
+
+      // Save the session
+      req.session.save();
     }
 
     return { received: true }
+  }
+
+  async checkPaymentStatus(paymentIntentId: string, req: any, res: Response) {
+    // Check if we have a successful payment for this payment intent ID
+    if (!req.session.successfulPayments || !req.session.successfulPayments[paymentIntentId]) {
+      return res.status(404).json({
+        success: false,
+        message: 'Payment not found or not yet processed'
+      });
+    }
+
+    // Get the payment data
+    const paymentData = req.session.successfulPayments[paymentIntentId];
+
+    // Remove the payment intent ID from the session
+    delete req.session.successfulPayments[paymentIntentId];
+
+    // Save the session
+    req.session.save();
+
+    // Create a user object with the payment data
+    // This is a temporary user just for the session
+    const tempUser = {
+      id: Date.now(), // Generate a temporary ID
+      email: paymentData.email,
+      role: 'TEMP_USER'
+    };
+
+    // Log the user in
+    req.login(tempUser, (err) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to create session'
+        });
+      }
+
+      console.log("Sending redirect")
+
+      return res.status(200).json({
+        success: true,
+        message: 'Session created successfully',
+        redirectUrl: '/dashboard'
+      });
+    });
   }
 }

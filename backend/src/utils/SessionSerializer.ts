@@ -9,12 +9,26 @@ export class SessionSerializer extends PassportSerializer {
     super();
   }
 
-  serializeUser(user: User, done: (err: any, id?: any) => void) {
-    done(null, user.id);
+  serializeUser(user: User | any, done: (err: any, id?: any) => void) {
+    // Check if this is a temporary user (with non-numeric ID)
+    if (typeof user.id !== 'number') {
+      // For temporary users, serialize the whole user object
+      done(null, user);
+    } else {
+      // For regular users, just serialize the ID
+      done(null, user.id);
+    }
   }
 
-  async deserializeUser(id: number, done: (err: any, user?: User | null) => void) {
-    const foundUser = await this.authService.findUserById(id);
+  async deserializeUser(payload: number | any, done: (err: any, user?: User | null) => void) {
+    // Check if this is a serialized temporary user
+    if (typeof payload === 'object' && payload.id && typeof payload.id !== 'number') {
+      // For temporary users, return the whole object
+      return done(null, payload);
+    }
+    
+    // For regular users, look up by ID
+    const foundUser = await this.authService.findUserById(payload);
     return foundUser ? done(null, foundUser) : done(null, null);
   }
 }

@@ -1,5 +1,5 @@
-import { Body, Controller, Headers, HttpCode, Post, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Headers, HttpCode, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { CreateMemberIdentityDto } from 'src/models/dto/CreateMemberIdentityDto';
 import { CheckoutService } from 'src/services/checkoutService';
 
@@ -15,9 +15,18 @@ export class CheckoutController {
   @Post('payment-intent-webhook')
   @HttpCode(200)
   async handleWebhook(
-    @Req() req: Request & { rawBody: Buffer },
+    @Req() req: Request & { rawBody: Buffer, session: any },
     @Headers('stripe-signature') signature: string,
   ) {
-    return this.checkoutService.handlePaymentIntentWebhookEvent(req.rawBody, signature)
+    return this.checkoutService.handlePaymentIntentWebhookEvent(req.rawBody, signature, req)
+  }
+  
+  @Post('check-payment-status')
+  async checkPaymentStatus(
+    @Body() body: { paymentIntentId: string },
+    @Req() req: any,
+    @Res() res: Response
+  ) {
+    return this.checkoutService.checkPaymentStatus(body.paymentIntentId, req, res);
   }
 }
