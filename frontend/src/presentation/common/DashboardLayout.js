@@ -1,19 +1,19 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Grid, Divider } from "@mui/material";
-import Navigation from "./Navigation";
+import { Grid2, Divider } from "@mui/material";
+import Navigation from "../components/Navigation";
 
 const DashboardLayout = () => {
   return (
-    <Grid container minHeight="100vh">
-      <Grid xs={2}>
+    <Grid2 container minHeight="100vh">
+      <Grid2 size={{ xs: 2 }}>
         <Navigation />
-      </Grid>
+      </Grid2>
       <Divider orientation="vertical" flexItem />
-      <Grid xs>
+      <Grid2 size="grow">
         <Outlet />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 };
 

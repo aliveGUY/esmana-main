@@ -1,5 +1,4 @@
 import React from "react";
-import DashboardLayout from "./presentation/components/DashboardLayout";
 import Home from "./presentation/pages/Home";
 import Profile from "./presentation/pages/Profile";
 import Users from "./presentation/pages/Users";
@@ -10,6 +9,7 @@ import ResetPassword from "./presentation/pages/ResetPassword";
 import CheckoutMembership from "./presentation/pages/CheckoutMembership";
 import CheckoutCourses from "./presentation/pages/CheckoutCourses";
 import NotFoundPage from "./presentation/pages/404";
+import DashboardLayout from "./presentation/common/DashboardLayout";
 
 const routing = [
   {

@@ -1,34 +1,11 @@
-import React, { Fragment, useCallback, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid2,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import {
-  Elements,
-  CardNumberElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { FormProvider, useForm } from "react-hook-form";
-import { isEmpty } from "lodash";
-import { loadStripe } from "@stripe/stripe-js";
-import { useCreateMembershipPaymentIntentMutation as createPaymentIntentMut } from "../../state/asynchronous";
-import CardPayment from "../components/CardPayment";
-import useInputFactory from "../../hooks/useInputFactory";
+import React from "react";
+import { Box, Stack, Typography } from "@mui/material";
 import { INPUT_TYPE_TEXTFIELD } from "../../constants";
-import { map } from "lodash";
+import MembershipCheckoutForm from "../components/MembershipCheckoutForm";
+import SectionWrapper from "../common/SectionWrapper";
+import NavLogo from "../../static/images/logo-big.png";
 
-const Payment = () => {
-  const [createPaymentIntent, { data, isLoading }] = createPaymentIntentMut();
-  const stripe = useStripe();
-  const elements = useElements();
-  const factory = useInputFactory();
-
+const CheckoutMembership = () => {
   const config = [
     {
       inputs: [
@@ -198,121 +175,30 @@ const Payment = () => {
     },
   ];
 
-  const methods = useForm({
-    defaultValues: {
-      fieldOfWork: "",
-      workplace: "",
-      position: "",
-      workExperience: "",
-      education: [],
-      diplomaNumber: "",
-      educationInstitution: "",
-      taxpayerId: "",
-      passportId: "",
-      passportIssuedBy: "",
-      city: "",
-      residenceAddress: "",
-      country: "",
-      region: "",
-      phone: "",
-      email: "",
-      password: "",
-      birthDate: "",
-      cardOwner: "",
-      personalDataCollectionConsent: false,
-    },
-  });
-
-  const onSubmit = (formData) => {
-    createPaymentIntent(formData);
-  };
-
-  const handlePaymentConfirmation = useCallback(async () => {
-    if (!stripe || !elements) return;
-
-    const formData = methods.getValues();
-    const cardNumberElement = elements.getElement(CardNumberElement);
-
-    const result = await stripe.confirmCardPayment(data.clientSecret, {
-      payment_method: {
-        card: cardNumberElement,
-        billing_details: {
-          name: formData.cardOwner,
-        },
-      },
-    });
-
-    if (result.error) {
-      console.log(result.error.message);
-      return;
-    }
-
-    if (result.paymentIntent.status === "succeeded") {
-      console.log("Payment succeeded and account created!");
-    }
-  }, [data, elements, methods, stripe]);
-
-  useEffect(() => {
-    if (isLoading || isEmpty(data)) return;
-    handlePaymentConfirmation();
-  }, [isLoading, data, handlePaymentConfirmation]);
-
   return (
-    <Box
-      sx={{
-        maxWidth: "1400px",
-        mx: "auto",
-        py: 5,
-        px: 3,
-      }}
-    >
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Grid2 container spacing={2}>
-            <Grid2 size={{ xs: 8 }}>
-              <Stack spacing={2}>
-                <Paper sx={{ p: 4 }}>
-                  <CardPayment />
-                </Paper>
-                <Paper sx={{ p: 4 }}>
-                  <Stack spacing={4}>
-                    {map(config, (section, index) => (
-                      <Fragment>
-                        <Grid2 container spacing={2}>
-                          {map(section.inputs, (input, index) => (
-                            <Grid2 size={{ xs: 6 }}>{factory(input)}</Grid2>
-                          ))}
-                        </Grid2>
-                        <Divider />
-                      </Fragment>
-                    ))}
-                  </Stack>
-                </Paper>
-              </Stack>
-            </Grid2>
-            <Grid2 size={{ xs: 4 }}>
-              <Paper sx={{ p: 2, position: "sticky", top: 40 }}>
-                <Typography>Student membership</Typography>
-                <Typography>400 UAH</Typography>
-                <Button fullWidth variant="contained" type="submit">
-                  Buy
-                </Button>
-              </Paper>
-            </Grid2>
-          </Grid2>
-        </form>
-      </FormProvider>
+    <Box pb={4}>
+      <Box
+        sx={{
+          p: 3,
+          mb: 3,
+          background: "linear-gradient(135deg,#0045a2 10%,#A644E5 100%)",
+        }}
+      >
+        <SectionWrapper>
+          <Stack>
+            <Box sx={{ img: { height: 44 } }}>
+              <img src={NavLogo} alt="Esmana logo" className="logo" />
+            </Box>
+            <Typography color="white" fontSize={32} textAlign="center">
+              Join a Public Association
+            </Typography>
+          </Stack>
+        </SectionWrapper>
+      </Box>
+      <SectionWrapper>
+        <MembershipCheckoutForm config={config} />
+      </SectionWrapper>
     </Box>
-  );
-};
-
-const CheckoutMembership = () => {
-  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-
-  return (
-    <Elements stripe={stripePromise}>
-      <Payment />
-    </Elements>
   );
 };
 
