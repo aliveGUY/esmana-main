@@ -19,7 +19,6 @@ export class CheckoutService {
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent: Stripe.PaymentIntent = event.data.object;
       const accountData = JSON.parse(paymentIntent.metadata.name);
-      console.log({ accountData });
 
       // Store the payment intent ID in the session
       if (!req.session.successfulPayments) {
@@ -35,7 +34,7 @@ export class CheckoutService {
       // Save the session
       req.session.save();
 
-      console.log({ successfulPayments: req.session.successfulPayments })
+      console.log({ saveAttempt: req.session.successfulPayments, paymentIntentId: paymentIntent.id })
     }
 
     return { received: true }
@@ -43,6 +42,8 @@ export class CheckoutService {
 
   async checkPaymentStatus(paymentIntentId: string, req: any, res: Response) {
     // Check if we have a successful payment for this payment intent ID
+    console.log({ getAttempt: req.session.successfulPayments, paymentIntentId })
+
     if (!req.session.successfulPayments || !req.session.successfulPayments[paymentIntentId]) {
       return res.status(404).json({
         success: false,
