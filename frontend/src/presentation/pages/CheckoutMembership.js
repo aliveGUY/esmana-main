@@ -75,7 +75,7 @@ const Payment = () => {
   useEffect(() => {
     if (isLoading || isEmpty(data)) return;
     handlePaymentConfirmation();
-  }, [isLoading, handlePaymentConfirmation]);
+  }, [isLoading, data, handlePaymentConfirmation]);
 
   return (
     <Fragment>
