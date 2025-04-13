@@ -91,7 +91,7 @@ const MembershipCheckoutForm = ({ config }) => {
         }
         
         try {
-          const response = await fetch(`${BASE_URL}/check-payment-status`, {
+          const response = await fetch(`${BASE_URL}/check-registration-status`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
