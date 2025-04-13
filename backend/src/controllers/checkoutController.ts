@@ -19,7 +19,27 @@ export class CheckoutController {
     @Req() req: Request & { rawBody: Buffer, session: any },
     @Headers('stripe-signature') signature: string,
   ) {
-    return this.checkoutService.handlePaymentIntentWebhookEvent(req.rawBody, signature)
+    console.log('=== WEBHOOK REQUEST RECEIVED ===');
+    console.log('Headers:', JSON.stringify(req.headers));
+    console.log('Stripe-Signature:', signature);
+    // With bodyParser.raw, the raw body is in req.body as a Buffer
+    const rawBody = req.body;
+    console.log('Raw body available:', !!rawBody);
+    console.log('Raw body type:', typeof rawBody);
+    console.log('Raw body instanceof Buffer:', rawBody instanceof Buffer);
+    console.log('Raw body length:', rawBody?.length);
+    if (rawBody) {
+      console.log('Raw body (first 100 chars):', rawBody.toString().substring(0, 100) + '...');
+    }
+    
+    try {
+      const result = await this.checkoutService.handlePaymentIntentWebhookEvent(rawBody, signature);
+      console.log('Webhook processing result:', result);
+      return result;
+    } catch (error) {
+      console.error('Controller error handling webhook:', error);
+      return { received: false, error: error.message };
+    }
   }
 
   @Get('check-registration-status')

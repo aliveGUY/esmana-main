@@ -4,6 +4,7 @@ import Stripe from "stripe";
 @Injectable()
 export class StripeClient {
   private stripe: Stripe;
+  private readonly apiVersion = "2025-03-31.basil";
 
   constructor() {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -11,8 +12,12 @@ export class StripeClient {
     }
 
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-03-31.basil",
+      apiVersion: this.apiVersion,
     });
+  }
+
+  getApiVersion(): string {
+    return this.apiVersion;
   }
 
   async createMembershipPaymentIntent() {
@@ -25,15 +30,43 @@ export class StripeClient {
   }
 
   constructWebhookEvent(rawBody: Buffer, signature: string): Stripe.Event {
-    // const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    const endpointSecret = 'whsec_9aef58a731ce077eff0103f755b9fdf3910f74ab9d6856be24d309c03d51aae0'
-
-    if (!endpointSecret) throw new Error('No secret found')
-
-    return this.stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      endpointSecret,
-    );
+    console.log('=== CONSTRUCTING WEBHOOK EVENT ===');
+    
+    // Check inputs
+    if (!rawBody) {
+      console.error('Raw body is missing or empty');
+      throw new Error('Raw body is missing or empty');
+    }
+    
+    if (!signature) {
+      console.error('Signature is missing or empty');
+      throw new Error('Signature is missing or empty');
+    }
+    
+    // Get webhook secret from environment variable
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    
+    if (!webhookSecret) {
+      console.error('STRIPE_WEBHOOK_SECRET is not defined in environment variables');
+      throw new Error('Stripe webhook secret is not defined');
+    }
+    
+    console.log('Webhook secret available:', !!webhookSecret);
+    console.log('Webhook secret length:', webhookSecret.length);
+    console.log('Using webhook secret (first 10 chars):', webhookSecret.substring(0, 10) + '...');
+    
+    try {
+      const event = this.stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        webhookSecret,
+      );
+      
+      console.log('Event successfully constructed');
+      return event;
+    } catch (error) {
+      console.error('Error constructing webhook event:', error.message);
+      throw error;
+    }
   }
 }

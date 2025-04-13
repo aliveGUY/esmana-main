@@ -4,6 +4,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { createClient } from 'redis';
 import { RedisStore } from 'connect-redis';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -13,6 +14,12 @@ async function bootstrap() {
   if (!process.env.SESSION_SECRET) throw new Error()
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', 1);
+  
+  // Add raw body parser for webhook route
+  app.use(
+    '/payment-intent-webhook',
+    bodyParser.raw({ type: 'application/json' }),
+  );
 
   // Create Redis client for session store
   const redisClient = createClient({
