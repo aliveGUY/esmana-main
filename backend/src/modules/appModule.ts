@@ -9,10 +9,12 @@ import { NotificationModule } from './notificationModule';
 import { CourseModule } from './courseModule';
 import { LectureModule } from './lectureModule';
 import { CheckoutModule } from './checkoutModule';
+import { RedisModule } from './redisModule';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig.options),
+    RedisModule,
     UsersModule,
     AuthModule,
     IdentityModule,

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { isEmpty } from 'lodash';
-import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
-import { LocalAuthGuard } from 'src/guards/LocalGuard';
+import { AuthGuard } from 'src/guards/AuthGuard';
+import { LoginGuard } from 'src/guards/LoginGuard';
 import { LogoutGuard } from 'src/guards/LogoutGuard';
 import { ChangePasswordDto } from 'src/models/dto/ChangePasswordDto';
 import { CheckIfUserExistDto } from 'src/models/dto/CheckIfUserExistDto';
@@ -13,26 +13,28 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post()
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LoginGuard)
   loginUser(@Req() req: Request) {
+    // Login is handled by the LocalAuthGuard
     return req.user;
   }
 
   @Get()
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   getSession(@Req() req: Request) {
     return req.user
   }
 
   @Post('logout')
   @UseGuards(LogoutGuard)
-  logoutUser() { }
+  logoutUser() {
+    // Logout is handled by the LogoutGuard
+  }
 
   @Put('pass')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   changePassword(@Req() req: Request, @Body() passwords: ChangePasswordDto) {
     if (isEmpty(req.user)) throw new UnauthorizedException()
-
     return this.authService.changePassword(req.user, passwords)
   }
 

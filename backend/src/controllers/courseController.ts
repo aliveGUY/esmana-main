@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
+import { AuthGuard } from 'src/guards/AuthGuard';
 import { Course } from 'src/models/Course';
 import { RemoveStudentFromCourseDto } from 'src/models/dto/RemoveStudentFromCourseDto';
 import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
@@ -13,13 +13,13 @@ export class CourseController {
   ) { }
 
   @Post()
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   createCourse(@Body() course: CreateCourseDto): Promise<Course> {
     return this.courseService.createCourse(course)
   }
 
   @Get('all')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   getAllCourses(): Promise<Course[]> {
     return this.courseService.getAllCourses()
   }
@@ -30,31 +30,31 @@ export class CourseController {
   }
 
   @Put('set-status')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   setCourseStatus(@Body() course: SetCourseStatusDto): Promise<Course> {
     return this.courseService.setCourseStatus(course)
   }
 
   @Delete('student')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   removeStudentFromCourse(@Body() courseStudent: RemoveStudentFromCourseDto) {
     return this.courseService.removeStudentFromCourse(courseStudent)
   }
 
   @Post('student')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   addStudentsToCourse(@Body() courseStudent: AddStudentsToCourseDto): Promise<Course> {
     return this.courseService.addStudentsToCourse(courseStudent)
   }
 
   @Get('student/:id')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   getCoursesByStudentId(@Param('id') studentId: string): Promise<Course[]> {
     return this.courseService.getCoursesByStudentId(Number(studentId))
   }
 
   @Delete(':id')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   deleteCourse(@Param('id') courseId: string): Promise<number> {
     return this.courseService.deleteCourse(courseId)
   }

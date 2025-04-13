@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { GoogleMeetClient } from 'src/clients/GoogleMeetClient';
 import { YouTubeClient } from 'src/clients/YouTubeClient';
-import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
+import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateLectureDto } from 'src/models/dto/CreateLectureDto';
 import { LectureService } from 'src/services/lectureService';
 import { Response } from 'express';
@@ -15,7 +15,7 @@ export class LectureController {
     private readonly googleMeetClient: GoogleMeetClient) { }
 
   @Post()
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   async createLecture(@Body() lecture: CreateLectureDto): Promise<Course> {
     return await this.lectureService.createLecture(lecture)
   }

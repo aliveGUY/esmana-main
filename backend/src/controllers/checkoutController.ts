@@ -1,7 +1,8 @@
-import { Body, Controller, Headers, HttpCode, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateMemberIdentityDto } from 'src/models/dto/CreateMemberIdentityDto';
 import { CheckoutService } from 'src/services/checkoutService';
+import { PaymentLoginGuard } from 'src/guards/PaymentLoginGuard';
 
 @Controller('/')
 export class CheckoutController {
@@ -21,12 +22,10 @@ export class CheckoutController {
     return this.checkoutService.handlePaymentIntentWebhookEvent(req.rawBody, signature, req)
   }
   
-  @Post('check-payment-status')
-  async checkPaymentStatus(
-    @Body() body: { paymentIntentId: string },
-    @Req() req: any,
-    @Res() res: Response
-  ) {
-    return this.checkoutService.checkPaymentStatus(body.paymentIntentId, req, res);
+  @Get('check-registration-status')
+  @UseGuards(PaymentLoginGuard)
+  checkRegistrationStatus() {
+    // The guard handles everything - no implementation needed here
+    // The response is set by the guard
   }
 }

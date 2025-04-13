@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { AuthenticatedGuard } from 'src/guards/AuthenticatedGuard';
+import { AuthGuard } from 'src/guards/AuthGuard';
 import { GetUserDto } from 'src/models/dto/GetUserDto';
 import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
 import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
@@ -26,26 +26,26 @@ export class UsersController {
   }
 
   @Put('student-to-member')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   extendStudentToMember(@Body() user: StudentToMemberDto): Promise<void> {
     return this.identityService.extendStudentToMember(user)
   }
 
   @Get()
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   getAllUsers(): Promise<GetUserDto[]> {
     return this.usersService.getAllUsers()
   }
 
   @Delete()
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   deleteUser(@Body('id') id: number): Promise<number> {
     return this.usersService.deleteUser(id)
   }
 
 
   @Get('check-complete/:id')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard)
   checkIsIdentityComplete(@Param('id') userId: string): Promise<boolean> {
     return this.identityService.checkIsIdentityComplete(Number(userId));
   }

@@ -8,10 +8,14 @@ import { GetUserDto } from "src/models/dto/GetUserDto";
 import { CheckIfUserExistDto } from "src/models/dto/CheckIfUserExistDto";
 import { ChangePasswordDto } from "src/models/dto/ChangePasswordDto";
 import { hash } from 'bcryptjs';
+import { RedisClient } from "src/clients/RedisClient";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersRepository: UsersRepository) { }
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly redisClient: RedisClient
+  ) { }
 
   async validateUser(user: LoginUserDto): Promise<GetUserDto> {
     const validationResult = await this.usersRepository.getUser(user);
@@ -27,6 +31,14 @@ export class AuthService {
     }
 
     return foundUser;
+  }
+
+  async saveSession(sessionId: string, userData: any): Promise<void> {
+    await this.redisClient.saveSession(sessionId, userData);
+  }
+
+  async deleteSession(sessionId: string): Promise<void> {
+    await this.redisClient.deleteSession(sessionId);
   }
 
   async changePassword(user: User, passwords: ChangePasswordDto): Promise<void> {

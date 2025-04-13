@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from 'src/controllers/authController';
+import { AuthGuard } from 'src/guards/AuthGuard';
+import { LoginGuard } from 'src/guards/LoginGuard';
+import { LogoutGuard } from 'src/guards/LogoutGuard';
 import { User } from 'src/models/User';
 import { UsersRepository } from 'src/repositories/usersRepository';
 import { AuthService } from 'src/services/authService';
@@ -25,7 +28,10 @@ import { CourseModule } from './courseModule';
     UsersService,
     UsersRepository,
     SessionSerializer,
-    LocalStrategy
+    LocalStrategy,
+    LoginGuard,
+    LogoutGuard,
+    AuthGuard
   ],
   exports: [AuthService],
 })
