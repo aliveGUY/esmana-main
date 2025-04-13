@@ -1,18 +1,21 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid2,
   Paper,
   Stack,
   Typography,
 } from "@mui/material";
-import React, { Fragment, useCallback, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import CardPayment from "./CardPayment";
 import { isEmpty, map } from "lodash";
-import { useCreateMembershipPaymentIntentMutation as createPaymentIntentMut } from "../../state/asynchronous";
-import { BASE_URL } from "../../constants/config";
+import {
+  useCreateMembershipPaymentIntentMutation,
+  useCheckRegistrationStatusMutation,
+} from "../../state/asynchronous";
 import {
   CardNumberElement,
   Elements,
@@ -20,11 +23,31 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import useInputFactory from "../../hooks/useInputFactory";
+import useInterval from "../../hooks/useInterval"; // Import the custom hook
 import { loadStripe } from "@stripe/stripe-js";
 import SecurityIcon from "@mui/icons-material/Security";
+import { useNavigate } from "react-router-dom";
 
 const MembershipCheckoutForm = ({ config }) => {
-  const [createPaymentIntent, { data, isLoading }] = createPaymentIntentMut();
+  const [
+    createPaymentIntent,
+    { data: paymentIntentData, isLoading: isPaymentIntentLoading },
+  ] = useCreateMembershipPaymentIntentMutation();
+  const [
+    checkRegistrationStatus,
+    {
+      data: registrationData,
+      isLoading: isRegisterLoading,
+      isError: isRegisterError,
+    },
+  ] = useCheckRegistrationStatusMutation();
+
+  const [paymentIntentId, setPaymentIntentId] = useState(null);
+  const [retries, setRetries] = useState(0);
+  const [isPolling, setIsPolling] = useState(false);
+  const maxRetries = 50; // 15 seconds total (50 * 300ms)
+  const navigate = useNavigate();
+
   const stripe = useStripe();
   const elements = useElements();
   const factory = useInputFactory();
@@ -58,89 +81,63 @@ const MembershipCheckoutForm = ({ config }) => {
     createPaymentIntent(formData);
   };
 
+  // Use the custom interval hook for polling
+  useInterval(
+    () => {
+      if (retries >= maxRetries) {
+        setIsPolling(false);
+        return;
+      }
+
+      if (!isRegisterLoading) {
+        checkRegistrationStatus(paymentIntentId);
+        setRetries((prev) => prev + 1);
+      }
+    },
+    isPolling ? 1000 : null // 300ms when polling, null when not polling
+  );
+
   const handlePaymentConfirmation = useCallback(async () => {
-    if (!stripe || !elements) return;
+    if (!stripe || !elements || !paymentIntentData) return;
 
     const formData = methods.getValues();
     const cardNumberElement = elements.getElement(CardNumberElement);
 
-    const result = await stripe.confirmCardPayment(data.clientSecret, {
-      payment_method: {
-        card: cardNumberElement,
-        billing_details: {
-          name: formData.cardOwner,
+    const result = await stripe.confirmCardPayment(
+      paymentIntentData.clientSecret,
+      {
+        payment_method: {
+          card: cardNumberElement,
+          billing_details: {
+            name: formData.cardOwner,
+          },
         },
-      },
-    });
+      }
+    );
 
     if (result.error) {
-      console.log(result.error.message);
       return;
     }
 
     if (result.paymentIntent.status === "succeeded") {
-      console.log("Payment succeeded!");
-
-      // Start polling for session creation
-      const checkPaymentStatus = async (paymentIntentId, attempt = 1) => {
-        // Limit to 15 attempts (30 seconds)
-        if (attempt > 15) {
-          console.error("Payment verification timeout");
-          // Show error message to user
-          return;
-        }
-
-        try {
-          // Use query parameter instead of request body
-          const response = await fetch(
-            `${BASE_URL}/check-registration-status?paymentIntentId=${encodeURIComponent(
-              paymentIntentId
-            )}`,
-            {
-              method: "GET",
-              credentials: "include", // Important for cookies/session
-            }
-          );
-
-          if (response.ok) {
-            const statusData = await response.json();
-
-            if (statusData.success) {
-              // Session created, redirect to dashboard
-              window.location.href = statusData.redirectUrl || "/dashboard";
-            } else {
-              // Session not created yet, try again in 2 seconds
-              setTimeout(
-                () => checkPaymentStatus(paymentIntentId, attempt + 1),
-                2000
-              );
-            }
-          } else {
-            // Error in request, try again in 2 seconds
-            setTimeout(
-              () => checkPaymentStatus(paymentIntentId, attempt + 1),
-              2000
-            );
-          }
-        } catch (error) {
-          console.error("Error checking payment status:", error);
-          // Try again in 2 seconds
-          setTimeout(
-            () => checkPaymentStatus(paymentIntentId, attempt + 1),
-            2000
-          );
-        }
-      };
-
-      // Start polling with the payment intent ID
-      checkPaymentStatus(result.paymentIntent.id);
+      setPaymentIntentId(result.paymentIntent.id);
+      setRetries(0); // Reset retries
+      setIsPolling(true); // Start polling
     }
-  }, [data, elements, methods, stripe]);
+  }, [paymentIntentData, elements, methods, stripe]);
 
   useEffect(() => {
-    if (isLoading || isEmpty(data)) return;
+    if (isPaymentIntentLoading || isEmpty(paymentIntentData)) return;
     handlePaymentConfirmation();
-  }, [isLoading, data, handlePaymentConfirmation]);
+  }, [isPaymentIntentLoading, paymentIntentData, handlePaymentConfirmation]);
+
+  // Handle successful registration
+  useEffect(() => {
+    if (registrationData?.success) {
+      setIsPolling(false);
+      navigate("/dashboard");
+    }
+  }, [registrationData, navigate]);
 
   return (
     <FormProvider {...methods}>
@@ -154,10 +151,12 @@ const MembershipCheckoutForm = ({ config }) => {
               <Paper sx={{ p: 4 }}>
                 <Stack spacing={4}>
                   {map(config, (section, index) => (
-                    <Fragment>
+                    <Fragment key={index}>
                       <Grid2 container spacing={2}>
-                        {map(section.inputs, (input, index) => (
-                          <Grid2 size={{ xs: 6 }}>{factory(input)}</Grid2>
+                        {map(section.inputs, (input, inputIndex) => (
+                          <Grid2 size={{ xs: 6 }} key={inputIndex}>
+                            {factory(input)}
+                          </Grid2>
                         ))}
                       </Grid2>
                       <Divider />
@@ -165,6 +164,34 @@ const MembershipCheckoutForm = ({ config }) => {
                   ))}
                 </Stack>
               </Paper>
+
+              {/* Add status indicators */}
+              {isPolling && (
+                <Box mt={2} textAlign="center">
+                  <Typography>
+                    Processing your registration... {retries}/{maxRetries}
+                  </Typography>
+                  <CircularProgress size={24} sx={{ mt: 1 }} />
+                </Box>
+              )}
+
+              {retries >= maxRetries && (
+                <Box mt={2} textAlign="center" color="error.main">
+                  <Typography>
+                    Registration is taking longer than expected. Please contact
+                    support.
+                  </Typography>
+                </Box>
+              )}
+
+              {isRegisterError && (
+                <Box mt={2} textAlign="center" color="error.main">
+                  <Typography>
+                    There was an error processing your registration. Please try
+                    again.
+                  </Typography>
+                </Box>
+              )}
             </Stack>
           </Grid2>
           <Grid2 size={{ xs: 4 }}>
@@ -186,9 +213,10 @@ const MembershipCheckoutForm = ({ config }) => {
                 fullWidth
                 variant="contained"
                 type="submit"
+                disabled={isPaymentIntentLoading || isPolling}
                 sx={{ backgroundColor: "#A644E5" }}
               >
-                Submit Order
+                {isPaymentIntentLoading ? "Processing..." : "Submit Order"}
               </Button>
             </Paper>
           </Grid2>

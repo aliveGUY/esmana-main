@@ -15,11 +15,21 @@ const usersApi = createApi({
         body: memberIdentity,
       }),
     }),
+
+    checkRegistrationStatus: builder.mutation({
+      query: (paymentIntentId) => ({
+        url: `/check-registration-status?paymentIntentId=${encodeURIComponent(
+          paymentIntentId
+        )}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const {
-  useCreateMembershipPaymentIntentMutation
+  useCreateMembershipPaymentIntentMutation,
+  useCheckRegistrationStatusMutation,
 } = usersApi;
 
 export const usersMiddleware = usersApi.middleware;

@@ -3,15 +3,15 @@ import { RedisClient } from 'src/clients/RedisClient';
 
 @Injectable()
 export class PaymentLoginGuard implements CanActivate {
-  constructor(private readonly redisClient: RedisClient) {}
+  constructor(private readonly redisClient: RedisClient) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
-    
+
     // Get payment intent ID from request
-    const paymentIntentId = request.body.paymentIntentId || request.query.paymentIntentId;
-    
+    const paymentIntentId = request.query.paymentIntentId;
+
     if (!paymentIntentId) {
       response.status(400).json({
         success: false,
@@ -19,10 +19,10 @@ export class PaymentLoginGuard implements CanActivate {
       });
       return false;
     }
-    
-    // Get user data from Redis
-    const userData = await this.redisClient.getPaymentAttemptById(paymentIntentId);
-    
+
+    // Always use the hardcoded payment intent ID
+    const userData = await this.redisClient.getPaymentIntentById(paymentIntentId);
+
     if (!userData) {
       response.status(404).json({
         success: false,
@@ -30,8 +30,16 @@ export class PaymentLoginGuard implements CanActivate {
       });
       return false;
     }
-    
-    // Log in the user directly with the user data from Redis
+
+    // Check if payment has succeeded
+    if (userData.succeeded !== true) {
+      response.status(400).json({
+        success: false,
+        message: 'Payment has not been confirmed yet'
+      });
+      return false;
+    }
+
     return new Promise<boolean>((resolve) => {
       request.login(userData, async (err) => {
         if (err) {
@@ -41,7 +49,7 @@ export class PaymentLoginGuard implements CanActivate {
           });
           return resolve(false);
         }
-        
+
         try {
           // Save the session
           await new Promise<void>((resolveSession, rejectSession) => {
@@ -50,18 +58,22 @@ export class PaymentLoginGuard implements CanActivate {
               else resolveSession();
             });
           });
-          
+
+          // Save session data if needed
+          if (request.sessionID) {
+            await this.redisClient.saveSession(request.sessionID, userData);
+          }
+
           // Remove payment data from Redis after successful login
-          await this.redisClient.deletePaymentAttempt(paymentIntentId);
-          
+          await this.redisClient.deletePaymentIntent(paymentIntentId);
+
           // Set success response
           response.status(200).json({
             success: true,
             message: 'Session created successfully',
-            redirectUrl: '/dashboard',
             user: userData
           });
-          
+
           resolve(false); // Return false to prevent further handler execution
         } catch (error) {
           response.status(500).json({

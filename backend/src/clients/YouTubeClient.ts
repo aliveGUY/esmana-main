@@ -13,17 +13,12 @@ export class YouTubeClient {
   }
 
   async searchVideos(query: string) {
-    try {
-      const response = await this.youtube.search.list({
-        part: ['snippet'],
-        q: query,
-        maxResults: 5
-      })
+    const response = await this.youtube.search.list({
+      part: ['snippet'],
+      q: query,
+      maxResults: 5
+    })
 
-      return response.data.items;
-    } catch (error) {
-      console.log('Error fetching videos:', error)
-      throw error
-    }
+    return response.data.items;
   }
 }

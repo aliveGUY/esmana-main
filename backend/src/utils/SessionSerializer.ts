@@ -10,25 +10,26 @@ export class SessionSerializer extends PassportSerializer {
   }
 
   serializeUser(user: User | any, done: (err: any, id?: any) => void) {
-    // Check if this is a temporary user (with non-numeric ID)
-    if (typeof user.id !== 'number') {
-      // For temporary users, serialize the whole user object
-      done(null, user);
-    } else {
-      // For regular users, just serialize the ID
-      done(null, user.id);
+    if (!user || typeof user !== 'object') {
+      return done(new Error('Invalid user object'));
     }
+
+    if (user.succeeded === false) {
+      return done(new Error('Payment not successful'));
+    }
+
+    done(null, user);
   }
 
-  async deserializeUser(payload: number | any, done: (err: any, user?: User | null) => void) {
-    // Check if this is a serialized temporary user
-    if (typeof payload === 'object' && payload.id && typeof payload.id !== 'number') {
-      // For temporary users, return the whole object
-      return done(null, payload);
+  async deserializeUser(payload: any, done: (err: any, user?: User | null) => void) {
+    if (!payload || typeof payload !== 'object') {
+      return done(new Error('Invalid payload'));
     }
-    
-    // For regular users, look up by ID
-    const foundUser = await this.authService.findUserById(payload);
-    return foundUser ? done(null, foundUser) : done(null, null);
+
+    if (payload.succeeded === false) {
+      return done(new Error('Payment not successful'));
+    }
+
+    done(null, payload);
   }
 }

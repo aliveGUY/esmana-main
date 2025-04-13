@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { StripeClient } from "src/clients/StripeClient";
-import { CreateMemberIdentityDto } from "src/models/dto/CreateMemberIdentityDto";
-import Stripe from "stripe";
-import { Response } from "express";
 import { RedisClient } from "src/clients/RedisClient";
-import { isEmpty } from "lodash";
+import { CreateUserDto } from "src/models/dto/CreateUserDto";
 
 @Injectable()
 export class CheckoutService {
@@ -14,36 +11,31 @@ export class CheckoutService {
   ) { }
 
 
-  async createMembershipPaymentIntent(memberIdentity: CreateMemberIdentityDto) {
-    return this.stripeClient.createMembershipPaymentIntent(memberIdentity)
-  }
+  async createMembershipPaymentIntent(memberIdentity: CreateUserDto) {
+    const { clientSecret, paymentIntentId } = await this.stripeClient.createMembershipPaymentIntent()
 
-  async handlePaymentIntentWebhookEvent(rawBody: Buffer, signature: string, req: any) {
-    const event = this.stripeClient.constructWebhookEvent(rawBody, signature)
-
-    if (event.type === 'payment_intent.succeeded') {
-      const paymentIntent: Stripe.PaymentIntent = event.data.object;
-      
-      try {
-        // Extract account data from metadata
-        const memberIdentity = JSON.parse(paymentIntent.metadata.name) as CreateMemberIdentityDto;
-        const user = memberIdentity.user;
-        
-        // Save user data to Redis - this will be used directly for login
-        await this.redisClient.savePaymentAttempt(paymentIntent.id, user);
-        console.log(`Saved user data for payment ${paymentIntent.id}`);
-      } catch (error) {
-        console.error('Error processing payment webhook:', error);
-        // Still save basic success info if parsing fails
-        await this.redisClient.savePaymentAttempt(paymentIntent.id, { 
-          success: true,
-          error: 'Failed to parse metadata'
-        });
-      }
+    const potentialSession = {
+      email: memberIdentity.email,
+      phone: memberIdentity.phone,
+      firstName: memberIdentity.firstName,
+      middleName: memberIdentity.middleName,
+      lastName: memberIdentity.lastName,
     }
 
-    return { received: true }
+    // Save with hardcoded ID
+    await this.redisClient.savePaymentIntent(paymentIntentId, potentialSession);
+
+    return { clientSecret }
   }
 
-  // The checkPaymentStatus method is removed as it's now handled by the PaymentLoginGuard
+  async handlePaymentIntentWebhookEvent(rawBody: Buffer, signature: string) {
+    const event = this.stripeClient.constructWebhookEvent(rawBody, signature);
+
+    if (event.type === 'payment_intent.succeeded') {
+      const paymentIntentId = event.data.object.id;
+      await this.redisClient.setPaymentIntentAsSucceeded(paymentIntentId);
+    }
+
+    return { received: true };
+  }
 }
