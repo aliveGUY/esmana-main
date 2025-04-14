@@ -23,10 +23,11 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import useInputFactory from "../../hooks/useInputFactory";
-import useInterval from "../../hooks/useInterval"; // Import the custom hook
+import useInterval from "../../hooks/useInterval";
 import { loadStripe } from "@stripe/stripe-js";
 import SecurityIcon from "@mui/icons-material/Security";
 import { useNavigate } from "react-router-dom";
+import { INPUT_SPREAD_HALF } from "../../constants";
 
 const MembershipCheckoutForm = ({ config }) => {
   const [
@@ -35,17 +36,13 @@ const MembershipCheckoutForm = ({ config }) => {
   ] = useCreateMembershipPaymentIntentMutation();
   const [
     checkRegistrationStatus,
-    {
-      data: registrationData,
-      isLoading: isRegisterLoading,
-      isError: isRegisterError,
-    },
+    { data: registrationData, isLoading: isRegisterLoading },
   ] = useCheckRegistrationStatusMutation();
 
   const [paymentIntentId, setPaymentIntentId] = useState(null);
   const [retries, setRetries] = useState(0);
-  const [isPolling, setIsPolling] = useState(false);
-  const maxRetries = 50; // 15 seconds total (50 * 300ms)
+  const [isLoading, setIsLoading] = useState(false);
+  const maxRetries = 20;
   const navigate = useNavigate();
 
   const stripe = useStripe();
@@ -79,13 +76,18 @@ const MembershipCheckoutForm = ({ config }) => {
 
   const onSubmit = (formData) => {
     createPaymentIntent(formData);
+    setIsLoading(true);
   };
 
-  // Use the custom interval hook for polling
+  const handleInputSizing = ({ spread }) => {
+    if (spread === INPUT_SPREAD_HALF) return { xs: 6 };
+    return { xs: 12 };
+  };
+
   useInterval(
     () => {
       if (retries >= maxRetries) {
-        setIsPolling(false);
+        setIsLoading(false);
         return;
       }
 
@@ -94,7 +96,7 @@ const MembershipCheckoutForm = ({ config }) => {
         setRetries((prev) => prev + 1);
       }
     },
-    isPolling ? 1000 : null // 300ms when polling, null when not polling
+    isLoading ? 1000 : null
   );
 
   const handlePaymentConfirmation = useCallback(async () => {
@@ -121,8 +123,7 @@ const MembershipCheckoutForm = ({ config }) => {
 
     if (result.paymentIntent.status === "succeeded") {
       setPaymentIntentId(result.paymentIntent.id);
-      setRetries(0); // Reset retries
-      setIsPolling(true); // Start polling
+      setRetries(0);
     }
   }, [paymentIntentData, elements, methods, stripe]);
 
@@ -131,10 +132,9 @@ const MembershipCheckoutForm = ({ config }) => {
     handlePaymentConfirmation();
   }, [isPaymentIntentLoading, paymentIntentData, handlePaymentConfirmation]);
 
-  // Handle successful registration
   useEffect(() => {
     if (registrationData?.success) {
-      setIsPolling(false);
+      setIsLoading(false);
       navigate("/dashboard");
     }
   }, [registrationData, navigate]);
@@ -154,44 +154,19 @@ const MembershipCheckoutForm = ({ config }) => {
                     <Fragment key={index}>
                       <Grid2 container spacing={2}>
                         {map(section.inputs, (input, inputIndex) => (
-                          <Grid2 size={{ xs: 6 }} key={inputIndex}>
+                          <Grid2
+                            size={handleInputSizing(input)}
+                            key={inputIndex}
+                          >
                             {factory(input)}
                           </Grid2>
                         ))}
                       </Grid2>
-                      <Divider />
+                      {config.length - 1 !== index && <Divider />}
                     </Fragment>
                   ))}
                 </Stack>
               </Paper>
-
-              {/* Add status indicators */}
-              {isPolling && (
-                <Box mt={2} textAlign="center">
-                  <Typography>
-                    Processing your registration... {retries}/{maxRetries}
-                  </Typography>
-                  <CircularProgress size={24} sx={{ mt: 1 }} />
-                </Box>
-              )}
-
-              {retries >= maxRetries && (
-                <Box mt={2} textAlign="center" color="error.main">
-                  <Typography>
-                    Registration is taking longer than expected. Please contact
-                    support.
-                  </Typography>
-                </Box>
-              )}
-
-              {isRegisterError && (
-                <Box mt={2} textAlign="center" color="error.main">
-                  <Typography>
-                    There was an error processing your registration. Please try
-                    again.
-                  </Typography>
-                </Box>
-              )}
             </Stack>
           </Grid2>
           <Grid2 size={{ xs: 4 }}>
@@ -209,14 +184,21 @@ const MembershipCheckoutForm = ({ config }) => {
                 400 UAH
               </Typography>
               <Button
-                endIcon={<SecurityIcon />}
+                endIcon={!isLoading && <SecurityIcon />}
                 fullWidth
                 variant="contained"
                 type="submit"
-                disabled={isPaymentIntentLoading || isPolling}
+                disabled={isLoading}
                 sx={{ backgroundColor: "#A644E5" }}
               >
-                {isPaymentIntentLoading ? "Processing..." : "Submit Order"}
+                {isLoading ? (
+                  <CircularProgress
+                    color="secondary"
+                    sx={{ width: "26px !important", height: "26px !important" }}
+                  />
+                ) : (
+                  "Submit Order"
+                )}
               </Button>
             </Paper>
           </Grid2>
