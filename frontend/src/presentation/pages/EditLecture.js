@@ -1,11 +1,7 @@
 import React from 'react'
 
 const EditLecture = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div></div>
 }
 
 export default EditLecture

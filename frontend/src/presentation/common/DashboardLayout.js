@@ -1,21 +1,22 @@
-import React, { useCallback, useState } from "react";
-import { Outlet } from "react-router-dom";
-import { Stack, Box, useTheme, useMediaQuery } from "@mui/material";
-import Navigation from "../components/Navigation";
-import TopBarNavigation from "../components/TopBarNavigation";
+import React, { useCallback, useState } from 'react'
+import { Outlet } from 'react-router-dom'
+
+import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
+import Navigation from '../components/Navigation'
+import TopBarNavigation from '../components/TopBarNavigation'
 
 const DashboardLayout = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(isMobile);
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(isMobile)
 
   const burgerToggle = useCallback(() => {
-    setIsNavigationCollapsed((prev) => !prev);
-  }, []);
+    setIsNavigationCollapsed((prev) => !prev)
+  }, [])
 
   const handleClose = useCallback(() => {
-    setIsNavigationCollapsed(true);
-  }, []);
+    setIsNavigationCollapsed(true)
+  }, [])
 
   return (
     <Stack minHeight="100vh">
@@ -27,7 +28,7 @@ const DashboardLayout = () => {
         </Box>
       </Stack>
     </Stack>
-  );
-};
+  )
+}
 
-export default DashboardLayout;
+export default DashboardLayout

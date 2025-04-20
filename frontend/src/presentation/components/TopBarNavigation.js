@@ -1,7 +1,9 @@
-import { Box, IconButton, Stack } from "@mui/material";
-import React from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import NavLogo from "../../static/images/logo-big.png";
+import React from 'react'
+
+import { Box, IconButton, Stack } from '@mui/material'
+
+import MenuIcon from '@mui/icons-material/Menu'
+import NavLogo from '../../static/images/logo-big.png'
 
 const TopBarNavigation = ({ onBurgerClick }) => {
   return (
@@ -15,7 +17,7 @@ const TopBarNavigation = ({ onBurgerClick }) => {
         <img src={NavLogo} alt="Esmana logo" className="logo" />
       </Box>
     </Stack>
-  );
-};
+  )
+}
 
-export default TopBarNavigation;
+export default TopBarNavigation

@@ -1,9 +1,9 @@
-import touchRippleClasses from "@mui/material/ButtonBase/touchRippleClasses";
+import touchRippleClasses from '@mui/material/ButtonBase/touchRippleClasses'
 
 const MuiIconButton = {
   styleOverrides: {
     root: ({ theme }) => ({
-      "&:hover": {
+      '&:hover': {
         backgroundColor: theme.palette.snowFog.main,
       },
 
@@ -13,6 +13,6 @@ const MuiIconButton = {
       },
     }),
   },
-};
+}
 
-export default MuiIconButton;
+export default MuiIconButton

@@ -1,80 +1,81 @@
-import React, { Fragment, useState } from "react";
-import { map } from "lodash";
-import { Grid2, Typography, Stack, Button } from "@mui/material";
-import CheckoutStep from "../components/CheckoutStep";
-import InputFactory from "../components/InputFactory";
+import React, { Fragment, useState } from 'react'
+import { map } from 'lodash'
 
-import LoginImage from "../../static/images/image1_0.jpg";
-import TopBarUnauthorized from "../components/TopBarUnauthorized";
+import { Button, Grid2, Stack, Typography } from '@mui/material'
+import CheckoutStep from '../components/CheckoutStep'
+import InputFactory from '../components/InputFactory'
+import TopBarUnauthorized from '../components/TopBarUnauthorized'
+
+import LoginImage from '../../static/images/image1_0.jpg'
 
 const CheckoutCourses = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1)
 
   const config = [
     {
-      stepName: "Personal",
+      stepName: 'Personal',
       inputs: [
         {
-          name: "first_name",
-          label: "First name",
-          inputType: "textfield",
+          name: 'first_name',
+          label: 'First name',
+          inputType: 'textfield',
         },
         {
-          name: "middle_name",
-          label: "Middle name",
-          inputType: "textfield",
+          name: 'middle_name',
+          label: 'Middle name',
+          inputType: 'textfield',
         },
         {
-          name: "last_name",
-          label: "Last name",
-          inputType: "textfield",
+          name: 'last_name',
+          label: 'Last name',
+          inputType: 'textfield',
         },
         {
-          name: "birth_date",
-          label: "Birth date",
-          inputType: "textfield",
+          name: 'birth_date',
+          label: 'Birth date',
+          inputType: 'textfield',
         },
       ],
     },
     {
-      stepName: "General",
+      stepName: 'General',
       inputs: [
         {
-          name: "email",
-          label: "Email",
-          inputType: "textfield",
+          name: 'email',
+          label: 'Email',
+          inputType: 'textfield',
         },
         {
-          name: "phone_number",
-          label: "Phone number",
-          inputType: "textfield",
+          name: 'phone_number',
+          label: 'Phone number',
+          inputType: 'textfield',
         },
         {
-          name: "password",
-          label: "Password",
-          inputType: "textfield",
+          name: 'password',
+          label: 'Password',
+          inputType: 'textfield',
         },
       ],
     },
     {
-      stepName: "Payment",
+      stepName: 'Payment',
       inputs: [
         {
-          name: "payment",
-          label: "Payment",
-          inputType: "payment",
+          name: 'payment',
+          label: 'Payment',
+          inputType: 'payment',
         },
       ],
     },
-  ];
+  ]
 
   const onCheckoutStepToggle = ({ index }) => {
-    setCurrentStep(index);
-  };
+    setCurrentStep(index)
+  }
 
   const onContinue = () => {
-    setCurrentStep(currentStep + 1);
-  };
+    setCurrentStep(currentStep + 1)
+  }
 
   return (
     <Fragment>
@@ -97,9 +98,7 @@ const CheckoutCourses = () => {
                     {map(item.inputs, (input, index) => (
                       <InputFactory key={index} {...input} />
                     ))}
-                    {index + 1 !== config.length && (
-                      <Button onClick={onContinue}>Continue</Button>
-                    )}
+                    {index + 1 !== config.length && <Button onClick={onContinue}>Continue</Button>}
                   </Stack>
                 </CheckoutStep>
               ))}
@@ -109,18 +108,18 @@ const CheckoutCourses = () => {
         <Grid2
           size={{ xs: 8 }}
           sx={{
-            overflow: "hidden",
-            position: "relative",
+            overflow: 'hidden',
+            position: 'relative',
             img: {
-              position: "absolute",
+              position: 'absolute',
               top: 0,
-              left: "50%",
+              left: '50%',
               bottom: 0,
               right: 0,
-              height: "100%",
-              width: "100%",
-              objectFit: "cover",
-              transform: "translateX(-50%)",
+              height: '100%',
+              width: '100%',
+              objectFit: 'cover',
+              transform: 'translateX(-50%)',
             },
           }}
         >
@@ -128,7 +127,7 @@ const CheckoutCourses = () => {
         </Grid2>
       </Grid2>
     </Fragment>
-  );
-};
+  )
+}
 
-export default CheckoutCourses;
+export default CheckoutCourses

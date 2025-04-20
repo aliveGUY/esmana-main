@@ -1,25 +1,15 @@
-import React from "react";
-import { Collapse, Chip, Button, Stack, Box, Divider } from "@mui/material";
+import React from 'react'
 
-const CheckoutStep = ({
-  step,
-  children,
-  currentStep,
-  totalCount,
-  index,
-  onToggle,
-}) => {
+import { Box, Button, Chip, Collapse, Divider, Stack } from '@mui/material'
+
+const CheckoutStep = ({ step, children, currentStep, totalCount, index, onToggle }) => {
   const handleToggle = () => {
-    onToggle({ index });
-  };
+    onToggle({ index })
+  }
 
   return (
     <Box>
-      <Button
-        sx={{ p: 0, justifyContent: "start", gap: 2 }}
-        onClick={handleToggle}
-        fullWidth
-      >
+      <Button sx={{ p: 0, justifyContent: 'start', gap: 2 }} onClick={handleToggle} fullWidth>
         <Chip label={index} />
         {step.stepName}
       </Button>
@@ -30,7 +20,7 @@ const CheckoutStep = ({
             flexItem
             sx={
               totalCount === index && {
-                borderColor: "transparent",
+                borderColor: 'transparent',
               }
             }
           />
@@ -40,7 +30,7 @@ const CheckoutStep = ({
         </Stack>
       </Collapse>
     </Box>
-  );
-};
+  )
+}
 
-export default CheckoutStep;
+export default CheckoutStep

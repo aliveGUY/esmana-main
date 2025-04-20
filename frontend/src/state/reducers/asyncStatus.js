@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const asyncStatusSlice = createSlice({
-  name: "asyncStatus",
+  name: 'asyncStatus',
   initialState: {
     getSession: {
       isUninitialized: true,
@@ -17,22 +17,19 @@ const asyncStatusSlice = createSlice({
     //   state.getSession.isLoading = true;
     //   state.getSession.isError = false;
     // });
-
     // builder.addMatcher(usersEndpoints.getSession.matchFulfilled, (state) => {
     //   state.getSession.isSucceeded = true;
     //   state.getSession.isLoading = false;
     // });
-
     // builder.addMatcher(usersEndpoints.getSession.matchRejected, (state) => {
     //   state.getSession.isLoading = false;
     //   state.getSession.isError = true;
     // });
-
     // builder.addMatcher(usersEndpoints.login.matchFulfilled, (state) => {
     //   state.getSession.isSucceeded = true;
     //   state.getSession.isError = false;
     // });
   },
-});
+})
 
-export default asyncStatusSlice.reducer;
+export default asyncStatusSlice.reducer

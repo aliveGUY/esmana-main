@@ -1,5 +1,5 @@
-import asyncStatus from "./asyncStatus";
+import asyncStatus from './asyncStatus'
 
 export const reducers = {
   asyncStatus,
-};
+}

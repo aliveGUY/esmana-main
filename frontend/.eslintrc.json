@@ -1,0 +1,100 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:react/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": false,
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
+  "overrides": [{ "files": ["*.ts", "*.tsx"] }],
+  "ignorePatterns": ["*.css, *.svg", "node_modules/", "dist/", "test/", "types/"],
+  "plugins": ["@typescript-eslint", "simple-import-sort", "eslint-plugin-prettier", "react"],
+  "globals": {
+    "AppBoot": true,
+    "process": false,
+    "require": false,
+    "Promise": false,
+    "jest/globals": true
+  },
+  "rules": {
+    "quotes": [2, "single", { "avoidEscape": true }],
+    "camelcase": 0,
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": 1,
+    "jsx-quotes": [2, "prefer-double"],
+    "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
+    "semi": [2, "never"],
+    "no-unused-vars": ["error", { "args": "none" }],
+    "react/prop-types": 0,
+    "react/no-deprecated": 0,
+    "no-trailing-spaces": 2,
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-no-target-blank": 1,
+    "no-useless-escape": 0,
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-empty-function": "warn",
+    "prettier/prettier": ["error"],
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          [
+            "^(react|react-redux|redux|redux-thunk|react-router-dom|react-page-router)$",
+            "^[a-z]",
+            "^@dreamhost(?!/dh-design).*",
+            "@config",
+            "@asynchronous",
+            "^@state(?!/)",
+            "^@mui/system$",
+            "^(@storybook)(/.*|$)",
+            "(\\.\\.\\/)+src/theme"
+          ],
+          ["^@?\\w"],
+          ["^@hook(.*)$", "(\\.\\.\\/)+hook$"],
+          ["^@mui/material/(.*)$"],
+          ["^@lib(.*)$", "(\\.\\.\\/)+lib$"],
+          ["^@state(?!/action)$"],
+          ["^(@action|@state/action)(.*)"],
+          ["^@state/(?!action$)"],
+          ["^@constants(.*)$", "(\\.\\.\\/)+constants$"],
+          [
+            "^@mui/material*",
+            "^@dreamhost/dh-design*",
+            "^(@components|@common|@pages)(/.*|$)",
+            "^(@stories)(/.*|$)",
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$",
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$"
+          ],
+          [
+            "^@mui/icons-material*",
+            "^@dreamhost/dh-design/icons*",
+            "^@customIcons(.*)$",
+            "^@icons(.*)$",
+            "^@static(.*)$",
+            "(\\.\\.\\/)+static"
+          ],
+
+          ["@styles(.*)$", "^.+\\.s?css$"],
+          ["^\\u0000", "^"]
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  }
+}

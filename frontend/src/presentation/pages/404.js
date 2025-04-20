@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react'
 
 const NotFoundPage = () => {
-  return <div>ERROR 404</div>;
-};
+  return <div>ERROR 404</div>
+}
 
-export default NotFoundPage;
+export default NotFoundPage

@@ -1,13 +1,10 @@
-import {
-  FormControl,
-  Typography,
-  TextField as MuiTextField,
-} from "@mui/material";
-import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import React from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
+
+import { FormControl, TextField as MuiTextField, Typography } from '@mui/material'
 
 const Password = ({ name, label, placeholder }) => {
-  const { control } = useFormContext();
+  const { control } = useFormContext()
 
   return (
     <Controller
@@ -15,24 +12,14 @@ const Password = ({ name, label, placeholder }) => {
       name={name}
       render={({ field }) => (
         <FormControl fullWidth>
-          <Typography
-            variant="body2"
-            component="label"
-            htmlFor={name}
-            sx={{ mb: 0.5 }}
-          >
+          <Typography variant="body2" component="label" htmlFor={name} sx={{ mb: 0.5 }}>
             {label}
           </Typography>
-          <MuiTextField
-            id={name}
-            type="password"
-            placeholder={placeholder}
-            {...field}
-          />
+          <MuiTextField id={name} type="password" placeholder={placeholder} {...field} />
         </FormControl>
       )}
     />
-  );
-};
+  )
+}
 
-export default Password;
+export default Password

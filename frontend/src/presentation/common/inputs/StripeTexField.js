@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import React from 'react'
+
+import { Box, Typography } from '@mui/material'
 
 const StripeTexField = ({ children, label }) => {
   return (
@@ -9,7 +10,7 @@ const StripeTexField = ({ children, label }) => {
       </Typography>
       <Box
         sx={{
-          border: "1px solid #ced4da",
+          border: '1px solid #ced4da',
           borderRadius: 1,
           padding: 2,
         }}
@@ -17,7 +18,7 @@ const StripeTexField = ({ children, label }) => {
         {children}
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default StripeTexField;
+export default StripeTexField
