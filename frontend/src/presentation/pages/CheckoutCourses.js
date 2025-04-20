@@ -5,7 +5,7 @@ import CheckoutStep from "../components/CheckoutStep";
 import InputFactory from "../components/InputFactory";
 
 import LoginImage from "../../static/images/image1_0.jpg";
-import TopBarNavigation from "../common/TopBarNavigation";
+import TopBarUnauthorized from "../components/TopBarUnauthorized";
 
 const CheckoutCourses = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -78,7 +78,7 @@ const CheckoutCourses = () => {
 
   return (
     <Fragment>
-      <TopBarNavigation />
+      <TopBarUnauthorized />
       <Grid2 container minHeight="calc(100vh - 64px)">
         <Grid2 size={{ xs: 4 }}>
           <Stack p={4} spacing={2}>

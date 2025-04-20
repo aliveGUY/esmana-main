@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import React from "react";
 import NavLogo from "../../static/images/logo-big.png";
 
-const TopBarNavigation = () => {
+const TopBarUnauthorized = () => {
   return (
     <Stack
       sx={{ backgroundColor: "#2b6cb0", position: "sticky", top: 0, zIndex: 1 }}
@@ -14,4 +14,4 @@ const TopBarNavigation = () => {
   );
 };
 
-export default TopBarNavigation;
+export default TopBarUnauthorized;

@@ -135,7 +135,7 @@ const MembershipCheckoutForm = ({ config }) => {
   useEffect(() => {
     if (registrationData?.success) {
       setIsLoading(false);
-      navigate("/dashboard");
+      navigate("/dashboard/profile");
     }
   }, [registrationData, navigate]);
 

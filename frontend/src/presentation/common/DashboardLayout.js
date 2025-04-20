@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Grid2, Divider } from "@mui/material";
+import { Stack, Box, useTheme, useMediaQuery } from "@mui/material";
 import Navigation from "../components/Navigation";
+import TopBarNavigation from "../components/TopBarNavigation";
 
 const DashboardLayout = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(isMobile);
+
+  const burgerToggle = useCallback(() => {
+    setIsNavigationCollapsed((prev) => !prev);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsNavigationCollapsed(true);
+  }, []);
+
   return (
-    <Grid2 container minHeight="100vh">
-      <Grid2 size={{ xs: 2 }}>
-        <Navigation />
-      </Grid2>
-      <Divider orientation="vertical" flexItem />
-      <Grid2 size="grow">
-        <Outlet />
-      </Grid2>
-    </Grid2>
+    <Stack minHeight="100vh">
+      <TopBarNavigation onBurgerClick={burgerToggle} />
+      <Stack direction="row" flex={1}>
+        <Navigation isCollapsed={isNavigationCollapsed} onClose={handleClose} />
+        <Box flex={1}>
+          <Outlet />
+        </Box>
+      </Stack>
+    </Stack>
   );
 };
 

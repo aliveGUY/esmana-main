@@ -3,18 +3,18 @@ import { Grid2, Typography, TextField, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import LoginImage from "../../static/images/image1_0.jpg";
-import TopBarNavigation from "../common/TopBarNavigation";
+import TopBarUnauthorized from "../components/TopBarUnauthorized";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const onLogin = () => {
-    navigate("dashboard");
+    navigate("dashboard/profile");
   };
 
   return (
     <Fragment>
-      <TopBarNavigation />
+      <TopBarUnauthorized />
       <Grid2 container minHeight="calc(100vh - 64px)">
         <Grid2
           size={{ xs: 8 }}

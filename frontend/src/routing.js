@@ -1,5 +1,4 @@
 import React from "react";
-import Home from "./presentation/pages/Home";
 import Profile from "./presentation/pages/Profile";
 import Users from "./presentation/pages/Users";
 import Courses from "./presentation/pages/Courses";
@@ -37,12 +36,8 @@ const routing = [
     element: <DashboardLayout />,
     children: [
       {
-        index: true,
-        title: "Esmana - Apply to school",
-        element: <Home />,
-      },
-      {
         path: "profile",
+        index: true,
         title: "Esmana - Apply to school",
         element: <Profile />,
       },

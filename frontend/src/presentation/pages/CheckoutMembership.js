@@ -83,8 +83,8 @@ const CheckoutMembership = () => {
         {
           inputType: INPUT_TYPE_TEXTFIELD,
           name: "student card id",
-          label: "Student card id",
-          placeholder: "Enter your student card id",
+          label: "Photo of student card",
+          placeholder: "Photo of student card",
           spread: INPUT_SPREAD_HALF,
         },
         {
@@ -115,8 +115,8 @@ const CheckoutMembership = () => {
         {
           inputType: INPUT_TYPE_TEXTFIELD,
           name: "diplomaNumber",
-          label: "Diploma number",
-          placeholder: "Enter your diploma number",
+          label: "Photo of diploma",
+          placeholder: "Enter your photo of diploma",
           spread: INPUT_SPREAD_HALF,
         },
       ],
