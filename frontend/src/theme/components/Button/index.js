@@ -6,22 +6,25 @@ const MuiButton = {
   styleOverrides: {
     root: {
       border: '2px solid transparent',
+      textTransform: 'capitalize',
       borderRadius: '12px',
       fontSize: '16px',
+      fontWeight: 'bold',
+      color: 'white',
 
       [`& .${svgIconClasses.root}, & .${buttonClasses.startIcon}>*:nth-of-type(1)`]: {
         fontSize: '16px',
         transition: 'font-size .3s',
-        color: 'black',
       },
 
       variants: [
         {
           props: { variant: 'sidenav' },
           style: ({ theme }) => ({
-            textTransform: 'capitalize',
             justifyContent: 'left',
             transition: 'color .3s, border-color .3s',
+            fontWeight: 'normal',
+            color: 'black',
 
             [`& .${touchRippleClasses.root} .${touchRippleClasses.ripple}`]: {
               color: theme.palette.stormWave.light,
@@ -30,6 +33,10 @@ const MuiButton = {
 
             [`& .${buttonClasses.startIcon}`]: {
               transition: 'margin .3s',
+            },
+
+            [`& .${svgIconClasses.root}, & .${buttonClasses.startIcon}>*:nth-of-type(1)`]: {
+              color: 'black',
             },
           }),
         },
@@ -61,6 +68,38 @@ const MuiButton = {
             [`& .${buttonClasses.startIcon}`]: {
               marginRight: 0,
               marginLeft: '2px',
+            },
+          }),
+        },
+        {
+          props: { variant: 'outlined' },
+          style: ({ theme }) => ({
+            borderColor: theme.palette.stormWave.main,
+            color: theme.palette.stormWave.main,
+            backgroundColor: 'white',
+
+            '&:hover': {
+              backgroundColor: theme.palette.snowFog.main,
+            },
+          }),
+        },
+        {
+          props: { variant: 'error' },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.error.main,
+
+            '&:hover': {
+              backgroundColor: theme.palette.error.light,
+            },
+          }),
+        },
+        {
+          props: { variant: 'primary' },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.primary.main,
+
+            '&:hover': {
+              backgroundColor: theme.palette.primary.light,
             },
           }),
         },
