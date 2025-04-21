@@ -1,7 +1,7 @@
 import React from 'react'
 
 const CourseMarketing = () => {
-  return <div></div>
+  return <div>Marketing course page</div>
 }
 
 export default CourseMarketing
