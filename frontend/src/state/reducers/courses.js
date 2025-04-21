@@ -58,7 +58,7 @@ const coursesSlice = createSlice({
       },
     ],
   },
-  reducers: {},
+  // reducers: {},
 });
 
 export const {} = coursesSlice.actions;
