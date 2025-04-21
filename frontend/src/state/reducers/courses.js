@@ -61,5 +61,5 @@ const coursesSlice = createSlice({
   // reducers: {},
 });
 
-export const {} = coursesSlice.actions;
+// export const {} = coursesSlice.actions;
 export default coursesSlice.reducer;
