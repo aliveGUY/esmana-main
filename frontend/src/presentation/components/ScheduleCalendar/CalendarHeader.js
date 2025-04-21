@@ -1,0 +1,62 @@
+import { Box, Stack, Typography } from "@mui/material";
+import { map } from "lodash";
+import React, { Fragment } from "react";
+import { WEEK } from "../../../constants/calendar";
+
+const CalendarHeader = ({ week }) => {
+  const today = new Date();
+  const _day = WEEK[today.getDay()];
+  const _date = today.getDate();
+
+  const isToday = (day, date) => {
+    return day === _day && _date === date;
+  };
+
+  return (
+    <Fragment>
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          backgroundColor: "white",
+          zIndex: 1,
+        }}
+      ></Box>
+      {map(week, ({ day, date }) => {
+        return (
+          <Stack
+            alignItems="center"
+            spacing={1}
+            sx={{
+              borderLeft: "1px solid #4F8096",
+              pt: 2,
+              pb: 1,
+              position: "sticky",
+              top: 0,
+              backgroundColor: "white",
+              zIndex: 1,
+            }}
+          >
+            <Typography fontSize={14} color="stormWave.main">
+              {day}
+            </Typography>
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              sx={{
+                width: 24,
+                height: 24,
+                backgroundColor: isToday(day, date) ? "#FE00003C" : "white",
+                borderRadius: 99,
+              }}
+            >
+              <Typography fontSize={14}>{date}</Typography>
+            </Stack>
+          </Stack>
+        );
+      })}
+    </Fragment>
+  );
+};
+
+export default CalendarHeader;
