@@ -10,7 +10,6 @@ import Login from "./presentation/pages/Login";
 import Profile from "./presentation/pages/Profile";
 import ResetPassword from "./presentation/pages/ResetPassword";
 import Users from "./presentation/pages/Users";
-import { element } from "prop-types";
 import CourseMarketing from "./presentation/pages/CourseMarketing";
 
 const routing = [

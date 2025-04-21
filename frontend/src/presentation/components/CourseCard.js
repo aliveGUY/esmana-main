@@ -14,7 +14,7 @@ const CourseCard = ({
 
   const redirect = useCallback(() => {
     navigate("/dashboard/course-details/0");
-  }, []);
+  }, [navigate]);
 
   return (
     <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
