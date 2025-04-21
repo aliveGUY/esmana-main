@@ -66,7 +66,6 @@ const CourseCard = ({
             "&::after": {
               transition: "opacity .3s",
               content: '""',
-              zIndex: 1,
               top: 0,
               bottom: 0,
               left: 0,

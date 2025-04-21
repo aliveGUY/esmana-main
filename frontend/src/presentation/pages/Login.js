@@ -42,7 +42,7 @@ const Login = () => {
             <Typography variant="h4">Login</Typography>
             <TextField />
             <TextField />
-            <Button variant="primary " onClick={onLogin}>
+            <Button variant="primary" onClick={onLogin}>
               Login
             </Button>
           </Stack>
