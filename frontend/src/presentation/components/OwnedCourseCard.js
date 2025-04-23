@@ -1,19 +1,12 @@
-import React, { Fragment, useCallback } from "react";
-import LoginImage from "../../static/images/image1_0.jpg";
-import { Box, Divider, Grid2, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid2, Paper, Stack, Typography } from "@mui/material";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  highlightCourse,
-  removeHighlightedCourse,
-} from "../../state/reducers/courses";
-import { useDispatch } from "react-redux";
+import LoginImage from "../../static/images/image1_0.jpg";
 
-const CourseCard = ({ course }) => {
+const OwnedCourseCard = ({ course }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const { title, description } = course;
-  const price = 20000;
   const lecturesCount = 20;
   const hoursCount = 40;
 
@@ -21,20 +14,10 @@ const CourseCard = ({ course }) => {
     navigate("/dashboard/course-details/0");
   }, [navigate]);
 
-  const handleCourseHighlight = () => {
-    dispatch(highlightCourse(course));
-  };
-
-  const handleRemoveHighlightedCourse = () => {
-    dispatch(removeHighlightedCourse());
-  };
-
   return (
     <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
       <Paper
         onClick={redirect}
-        onMouseEnter={handleCourseHighlight}
-        onMouseLeave={handleRemoveHighlightedCourse}
         sx={{
           height: 400,
           overflow: "hidden",
@@ -120,12 +103,6 @@ const CourseCard = ({ course }) => {
               <Typography>{lecturesCount} Lectures</Typography>
               <Typography>{hoursCount} Hours</Typography>
             </Stack>
-            <Fragment>
-              <Divider />
-              <Typography fontSize={24} fontWeight="bold" textAlign="end">
-                {price} UAH
-              </Typography>
-            </Fragment>
           </Box>
         </Box>
       </Paper>
@@ -133,4 +110,4 @@ const CourseCard = ({ course }) => {
   );
 };
 
-export default CourseCard;
+export default OwnedCourseCard;

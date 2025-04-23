@@ -6,6 +6,8 @@ import SectionWrapper from "../common/SectionWrapper";
 import CourseCard from "../components/CourseCard";
 import ScheduleCalendar from "../components/ScheduleCalendar";
 import { useSelector } from "react-redux";
+import OwnedCourseCard from "../components/OwnedCourseCard";
+import ScheduleList from "../components/ScheduleList";
 
 const Courses = () => {
   const { ownedCourses, availableCourses } = useSelector(
@@ -18,29 +20,21 @@ const Courses = () => {
       <Stack sx={{ px: 3 }} spacing={2}>
         <SectionWrapper>
           <Paper sx={{ p: 3 }}>
-            <ScheduleCalendar />
+            <Stack direction="row">
+              <ScheduleList />
+              <ScheduleCalendar />
+            </Stack>
           </Paper>
         </SectionWrapper>
 
         <SectionWrapper>
           <Box pb={10}>
             <Grid2 container spacing={3}>
-              {map(ownedCourses, (course) => (
-                <CourseCard
-                  title={course.title}
-                  description={course.description}
-                  lecturesCount={20}
-                  hoursCount={40}
-                />
+              {map(ownedCourses, (course, index) => (
+                <OwnedCourseCard key={index} course={course} />
               ))}
-              {map(availableCourses, (course) => (
-                <CourseCard
-                  title={course.title}
-                  description={course.description}
-                  price={30000}
-                  lecturesCount={20}
-                  hoursCount={40}
-                />
+              {map(availableCourses, (course, index) => (
+                <CourseCard key={index} course={course} />
               ))}
             </Grid2>
           </Box>

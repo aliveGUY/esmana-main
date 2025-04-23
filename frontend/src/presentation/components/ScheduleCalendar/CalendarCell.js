@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { isEmpty, map } from "lodash";
+import { Box, useTheme } from "@mui/material";
+import { map } from "lodash";
 import React from "react";
 
 const monthNameToIndex = {
@@ -17,22 +17,60 @@ const monthNameToIndex = {
   December: 11,
 };
 
-const EventFactory = ({ event }) => {
+const parseLectures = (lectures, cellDate) => {
+  if (!lectures) return [];
+
+  return lectures
+    .map((lecture) => {
+      const start = new Date(lecture.startTime);
+      const end = new Date(lecture.endTime);
+
+      const isMatchingDate = cellDate.getDate() === start.getDate();
+      const isMatchingDay = cellDate.getDay() === start.getDay();
+      if (!isMatchingDate || !isMatchingDay) return;
+
+      const isInCell = start <= cellDate && end >= cellDate;
+
+      const isFirstCell = cellDate.getTime() === start.getTime();
+      const isLastCell = cellDate.getTime() === end.getTime();
+
+      return isInCell
+        ? {
+            ...lecture,
+            isFirstCell,
+            isLastCell,
+          }
+        : null;
+    })
+    .filter(Boolean);
+};
+
+const HighlightedLectureFactory = ({ event }) => {
+  const theme = useTheme();
   const { isLastCell, isFirstCell } = event;
   let borderRadius = 0;
+  let borderTop = null;
+  let borderBottom = null;
+  const borderStyle = `2px dashed ${theme.palette.ternary.main}`;
 
   if (isFirstCell) {
     borderRadius = "99px 99px 0 0";
+    borderTop = borderStyle;
   }
 
   if (isLastCell) {
-    borderRadius = "0 0 12px 12px";
+    borderBottom = borderStyle;
+    borderRadius = "0 0 99px 99px";
   }
 
   return (
     <Box
       sx={{
-        backgroundColor: "blue",
+        backgroundColor: theme.palette.ternary.light,
+        borderLeft: borderStyle,
+        borderRight: borderStyle,
+        borderTop,
+        borderBottom,
         position: "absolute",
         top: 0,
         bottom: 0,
@@ -44,48 +82,59 @@ const EventFactory = ({ event }) => {
   );
 };
 
-const CalendarCell = ({ day, hour, ownedCourses }) => {
+const OwnedLectureFactory = ({ event }) => {
+  const theme = useTheme();
+  const { isLastCell, isFirstCell } = event;
+  let borderRadius = 0;
+
+  if (isFirstCell) {
+    borderRadius = "99px 99px 0 0";
+  }
+
+  if (isLastCell) {
+    borderRadius = "0 0 99px 99px";
+  }
+
+  return (
+    <Box
+      sx={{
+        backgroundColor: theme.palette.stormWave.main + "50", // 80% opacity
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 4,
+        right: 4,
+        borderRadius,
+      }}
+    />
+  );
+};
+
+const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
   const monthIndex = monthNameToIndex[day.month];
 
-  const parsedHour =
-    typeof hour === "string" ? parseInt(hour.split(":")[0], 10) : hour;
+  const parsedHour = parseInt(hour.split(":")[0], 10);
+  const parsedMinutes = parseInt(hour.split(":")[1], 10);
 
   const cellDate = new Date(
     day.year,
     monthIndex,
     day.date,
     parsedHour,
-    0,
+    parsedMinutes,
     0,
     0
   );
 
-  const lecturesInHour = ownedCourses
-    .flatMap((course) => course.lectures)
-    .map((lecture) => {
-      const start = new Date(lecture.startTime);
-      const end = new Date(lecture.endTime);
+  const lecturesInHour = parseLectures(
+    ownedCourses.flatMap((course) => course.lectures),
+    cellDate
+  );
 
-      const isInCell = start <= cellDate && end > cellDate;
-
-      const isFirstCell = cellDate.getTime() === start.getTime();
-      const isLastCell =
-        new Date(end.getTime() - 30 * 60 * 1000).getTime() ===
-        cellDate.getTime();
-
-      return isInCell
-        ? {
-            ...lecture,
-            isFirstCell,
-            isLastCell,
-          }
-        : null;
-    })
-    .filter(Boolean);
-
-  if (!isEmpty(lecturesInHour)) {
-    console.log({ lecturesInHour, cellDate, day, hour });
-  }
+  const highlightedLectures = parseLectures(
+    highlightedCourse?.lectures,
+    cellDate
+  );
 
   return (
     <Box
@@ -94,8 +143,11 @@ const CalendarCell = ({ day, hour, ownedCourses }) => {
         height: "100%",
       }}
     >
-      {map(lecturesInHour, (event) => (
-        <EventFactory event={event} />
+      {map(highlightedLectures, (event, index) => (
+        <HighlightedLectureFactory key={index} event={event} />
+      ))}
+      {map(lecturesInHour, (event, index) => (
+        <OwnedLectureFactory key={index} event={event} />
       ))}
     </Box>
   );

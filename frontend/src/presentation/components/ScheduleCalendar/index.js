@@ -1,6 +1,6 @@
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { map } from "lodash";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CalendarRow from "./CalendarRow";
 import CalendarHeader from "./CalendarHeader";
 import { HOURS, MONTHS, WEEK } from "../../../constants/calendar";
@@ -37,8 +37,11 @@ const ScheduleCalendar = () => {
   const [anchorDate, setAnchorDate] = useState(new Date());
   const week = getWeekFromDate(anchorDate);
   const month = MONTHS[anchorDate.getMonth()];
+  const calendarRef = useRef();
 
-  const { ownedCourses } = useSelector((state) => state.courses);
+  const { ownedCourses, highlightedCourse } = useSelector(
+    (state) => state.courses
+  );
 
   const swipeRight = () => {
     setAnchorDate((prev) => {
@@ -56,8 +59,22 @@ const ScheduleCalendar = () => {
     });
   };
 
+  useEffect(() => {
+    if (!calendarRef.current) return;
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const currentMinutes = currentTime.getMinutes() / 30 > 0 ? "00" : "30";
+
+    const targetElement = calendarRef.current.querySelector(
+      `#hour${currentHour}-${currentMinutes}`
+    );
+    if (targetElement) {
+      targetElement.scrollIntoView({ block: "center" });
+    }
+  }, [calendarRef]);
+
   return (
-    <Box sx={{ maxWidth: 600 }}>
+    <Box sx={{ maxWidth: 400 }}>
       <Stack direction="row">
         <Stack direction="row" spacing={1}>
           <IconButton onClick={swipeLeft}>
@@ -72,16 +89,23 @@ const ScheduleCalendar = () => {
         </Typography>
       </Stack>
       <Box
+        ref={calendarRef}
         sx={{
-          overflow: "auto",
           display: "grid",
           gridTemplateColumns: "repeat(8, 1fr)",
-          maxHeight: 300,
+          maxHeight: 400,
+          overflow: "auto",
         }}
       >
         <CalendarHeader week={week} />
-        {map(HOURS, (hour) => (
-          <CalendarRow hour={hour} week={week} ownedCourses={ownedCourses} />
+        {map(HOURS, (hour, index) => (
+          <CalendarRow
+            key={index}
+            hour={hour}
+            week={week}
+            ownedCourses={ownedCourses}
+            highlightedCourse={highlightedCourse}
+          />
         ))}
       </Box>
     </Box>

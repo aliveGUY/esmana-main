@@ -19,42 +19,43 @@ const CalendarHeader = ({ week }) => {
           position: "sticky",
           top: 0,
           backgroundColor: "white",
+          borderBottom: "1px solid #4F8096",
           zIndex: 1,
         }}
       ></Box>
-      {map(week, ({ day, date }) => {
-        return (
+      {map(week, ({ day, date }, index) => (
+        <Stack
+          key={index}
+          alignItems="center"
+          spacing={1}
+          sx={{
+            borderLeft: "1px solid #4F8096",
+            borderBottom: "1px solid #4F8096",
+            pt: 2,
+            pb: 1,
+            position: "sticky",
+            top: 0,
+            backgroundColor: "white",
+            zIndex: 1,
+          }}
+        >
+          <Typography fontSize={14} color="stormWave.main">
+            {day}
+          </Typography>
           <Stack
+            justifyContent="center"
             alignItems="center"
-            spacing={1}
             sx={{
-              borderLeft: "1px solid #4F8096",
-              pt: 2,
-              pb: 1,
-              position: "sticky",
-              top: 0,
-              backgroundColor: "white",
-              zIndex: 1,
+              width: 24,
+              height: 24,
+              backgroundColor: isToday(day, date) ? "#FE00003C" : "white",
+              borderRadius: 99,
             }}
           >
-            <Typography fontSize={14} color="stormWave.main">
-              {day}
-            </Typography>
-            <Stack
-              justifyContent="center"
-              alignItems="center"
-              sx={{
-                width: 24,
-                height: 24,
-                backgroundColor: isToday(day, date) ? "#FE00003C" : "white",
-                borderRadius: 99,
-              }}
-            >
-              <Typography fontSize={14}>{date}</Typography>
-            </Stack>
+            <Typography fontSize={14}>{date}</Typography>
           </Stack>
-        );
-      })}
+        </Stack>
+      ))}
     </Fragment>
   );
 };

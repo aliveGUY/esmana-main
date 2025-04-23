@@ -8,6 +8,7 @@ const day = today.getDate();
 const coursesSlice = createSlice({
   name: "courses",
   initialState: {
+    highlightedCourse: null,
     ownedCourses: [
       {
         title: 'Міжнародна фахова школа "Медицина сну"',
@@ -19,8 +20,16 @@ const coursesSlice = createSlice({
             description:
               "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
             price: 2000,
-            startTime: new Date(year, month, day, 16, 0),
-            endTime: new Date(year, month, day, 20, 0),
+            startTime: new Date(year, month, day + 1, 16, 0),
+            endTime: new Date(year, month, day + 1, 18, 0),
+          },
+          {
+            title: "Медицина сну: історія та розвиток",
+            description:
+              "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
+            price: 2000,
+            startTime: new Date(year, month, day, 17, 0),
+            endTime: new Date(year, month, day, 21, 0),
           },
         ],
       },
@@ -36,8 +45,16 @@ const coursesSlice = createSlice({
             description:
               "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
             price: 2000,
-            startTime: new Date("2020-05-12T16:50:21"),
-            endTime: new Date("2020-05-12T20:50:21"),
+            startTime: new Date(year, month, day + 1, 13, 0),
+            endTime: new Date(year, month, day + 1, 15, 0),
+          },
+          {
+            title: "Медицина сну: історія та розвиток",
+            description:
+              "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
+            price: 2000,
+            startTime: new Date(year, month, day, 13, 0),
+            endTime: new Date(year, month, day, 17, 0),
           },
         ],
       },
@@ -51,15 +68,31 @@ const coursesSlice = createSlice({
             description:
               "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
             price: 2000,
-            startTime: new Date("2020-05-12T16:50:21"),
-            endTime: new Date("2020-05-12T20:50:21"),
+            startTime: new Date(year, month, day + 1, 17, 0),
+            endTime: new Date(year, month, day + 1, 20, 0),
+          },
+          {
+            title: "Медицина сну: історія та розвиток",
+            description:
+              "Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ",
+            price: 2000,
+            startTime: new Date(year, month, day, 16, 0),
+            endTime: new Date(year, month, day, 20, 0),
           },
         ],
       },
     ],
   },
-  // reducers: {},
+  reducers: {
+    highlightCourse: (state, action) => {
+      state.highlightedCourse = action.payload;
+    },
+    removeHighlightedCourse: (state) => {
+      state.highlightedCourse = null;
+    },
+  },
 });
 
-// export const {} = coursesSlice.actions;
+export const { highlightCourse, removeHighlightedCourse } =
+  coursesSlice.actions;
 export default coursesSlice.reducer;
