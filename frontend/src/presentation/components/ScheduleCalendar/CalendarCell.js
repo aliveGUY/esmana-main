@@ -27,7 +27,7 @@ const parseLectures = (lectures, cellDate) => {
 
       const isMatchingDate = cellDate.getDate() === start.getDate();
       const isMatchingDay = cellDate.getDay() === start.getDay();
-      if (!isMatchingDate || !isMatchingDay) return;
+      if (!isMatchingDate || !isMatchingDay) return null;
 
       const isInCell = start <= cellDate && end >= cellDate;
 
