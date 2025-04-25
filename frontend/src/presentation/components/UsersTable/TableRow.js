@@ -16,7 +16,7 @@ const TableRow = ({ user }) => {
   return (
     <Fragment>
       <Stack sx={{ ...rowStyles, justifyContent: 'center' }} alignItems="center" direction="row">
-        <Checkbox />
+        <Checkbox size="small" />
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
         <Typography whiteSpace="nowrap">{user.name}</Typography>

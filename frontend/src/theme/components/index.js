@@ -1,4 +1,5 @@
 import MuiButton from './Button'
+import MuiCheckbox from './Checkbox'
 import MuiChip from './Chip'
 import MuiIconButton from './IconButton'
 import MuiPaper from './Paper'
@@ -12,6 +13,7 @@ const components = {
   MuiTypography,
   MuiTextField,
   MuiChip,
+  MuiCheckbox,
 }
 
 export default components
