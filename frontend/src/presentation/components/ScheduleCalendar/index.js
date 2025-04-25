@@ -12,9 +12,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 function getWeekFromDate(inputDate) {
   const date = new Date(inputDate)
-  const dayIndex = date.getDay() // 0 (Sun) to 6 (Sat)
+  const dayIndex = date.getDay()
 
-  // Start of the week (Sunday)
   const weekStart = new Date(date)
   weekStart.setDate(date.getDate() - dayIndex)
 
@@ -72,7 +71,7 @@ const ScheduleCalendar = () => {
   }, [calendarRef])
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
+    <Box sx={{ maxWidth: 400, display: { xs: 'none', md: 'block' } }}>
       <Stack direction="row">
         <Stack direction="row" spacing={1}>
           <IconButton onClick={swipeLeft}>

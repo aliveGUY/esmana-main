@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useMatch } from 'react-router-dom'
-import { isNull, map } from 'lodash'
+import { map } from 'lodash'
 
 import { Box, Button as MuiButton, Stack, Tooltip, useMediaQuery, useTheme } from '@mui/material'
 import MobileFlyoutMenu from '../common/MobileFlyoutMenu'
@@ -12,18 +12,15 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import PersonIcon from '@mui/icons-material/Person'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
 
-const NavLink = ({ path, name, defaultIcon, isCollapsed, activeIcon, onClick }) => {
-  const match = useMatch(path)
-  const isInactive = isNull(match)
-
+const NavLink = ({ path, name, defaultIcon, isCollapsed, selected, activeIcon, onClick }) => {
   return (
     <Tooltip title={isCollapsed && name} arrow placement="right" enterDelay={1000}>
       <MuiButton
         component={Link}
         to={path}
-        startIcon={isInactive ? defaultIcon : activeIcon}
+        startIcon={selected ? activeIcon : defaultIcon}
         variant="sidenav"
-        isInactive={isInactive}
+        isInactive={!selected}
         isCollapsed={isCollapsed}
         onClick={onClick}
       >
@@ -37,24 +34,33 @@ const Navigation = ({ isCollapsed, onClose }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
+  const courseMarketing = useMatch('/dashboard/course-details/:id')
+  const courses = useMatch('/dashboard/courses')
+  const course = useMatch('/dashboard/course/:id')
+  const users = useMatch('/dashboard/users')
+  const profile = useMatch('/dashboard/profile')
+
   const config = [
     {
       name: 'Profile',
       path: '/dashboard/profile',
       defaultIcon: <PersonOutlinedIcon />,
       activeIcon: <PersonIcon />,
+      selected: profile,
     },
     {
       name: 'Users',
       path: '/dashboard/users',
       defaultIcon: <PeopleAltOutlinedIcon />,
       activeIcon: <PeopleAltIcon />,
+      selected: users,
     },
     {
       name: 'Courses',
       path: '/dashboard/courses',
       defaultIcon: <AutoStoriesOutlinedIcon />,
       activeIcon: <AutoStoriesIcon />,
+      selected: courseMarketing || courses || course,
     },
   ]
 

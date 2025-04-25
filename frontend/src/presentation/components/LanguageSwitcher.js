@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from 'react'
+import { find, map } from 'lodash'
 
 import { IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material'
 import { languageUtils } from '../../i18n'
-
-import { find, map } from 'lodash'
 
 function LanguageSwitcher() {
   const [anchorEl, setAnchorEl] = useState(null)

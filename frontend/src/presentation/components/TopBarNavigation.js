@@ -27,7 +27,7 @@ const TopBarNavigation = ({ onBurgerClick }) => {
             <MenuIcon fontSize="inherit" />
           </IconButton>
         </Box>
-        <Box sx={{ img: { height: 56 } }} pt={1}>
+        <Box sx={{ img: { height: { xs: 42, md: 56 } } }} pt={1}>
           <img src={NavLogo} alt="Esmana logo" className="logo" />
         </Box>
       </Stack>

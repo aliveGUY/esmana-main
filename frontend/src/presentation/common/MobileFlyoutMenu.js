@@ -20,7 +20,7 @@ const MobileFlyoutMenu = ({ isCollapsed, onClose, children }) => {
           pointerEvents: isCollapsed ? 'none' : 'auto',
           backgroundColor: isCollapsed ? 'transparent' : theme.palette.stormWave.dark + '50', // 50 === 80% opacity
           transition: 'background-color .2s',
-          zIndex: 2,
+          zIndex: 11,
         }}
       />
       <Slide direction="right" in={!isCollapsed} mountOnEnter unmountOnExit>
@@ -33,7 +33,7 @@ const MobileFlyoutMenu = ({ isCollapsed, onClose, children }) => {
             boxShadow: '',
             backgroundColor: 'white',
             width: 250,
-            zIndex: 2,
+            zIndex: 11,
           }}
         >
           <Stack direction="row" justifyContent="end" pt={1} pr={1}>
