@@ -19,7 +19,7 @@ const Hero = ({ title, mobileDescription, description }) => {
           {description}
         </Typography>
         <Stack direction={{ md: 'row-reverse' }} justifyContent="center" spacing={2}>
-          <Button variant="contained">{t('Join')}</Button>
+          <Button variant="primary">{t('Join')}</Button>
           <Button variant="outlined">{t('View Lectures')}</Button>
         </Stack>
       </Stack>

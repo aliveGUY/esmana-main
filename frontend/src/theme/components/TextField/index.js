@@ -1,29 +1,33 @@
+import inputBaseClasses from '@mui/material/InputBase/inputBaseClasses'
+import filledInputClasses from '@mui/material/FilledInput/filledInputClasses'
+import inputAdornmentClasses from '@mui/material/InputAdornment/inputAdornmentClasses'
+
 const MuiTextField = {
   styleOverrides: {
     root: ({ theme }) => ({
       width: '100%',
 
-      '& .MuiInputBase-root': {
+      [`& .${inputBaseClasses.root}`]: {
         paddingLeft: '12px',
         borderRadius: '8px',
         backgroundColor: theme.palette.snowFog.main,
       },
 
-      '& .MuiInputBase-input': {
+      [`& .${inputBaseClasses.input}`]: {
         paddingLeft: '4px',
         paddingTop: '11px',
         paddingBottom: '10px',
       },
 
-      '& .MuiInputBase-root:hover input::placeholder': {
+      [`& .${inputBaseClasses.root}:hover input::placeholder`]: {
         fontWeight: 'bold',
       },
 
-      '& .MuiInputBase-input::placeholder': {
+      [`& .${inputBaseClasses.input}::placeholder`]: {
         color: theme.palette.stormWave.main,
       },
 
-      '& .MuiInputAdornment-root': {
+      [`& .${inputAdornmentClasses.root}`]: {
         paddingTop: '2px',
         marginTop: '0px !important',
         color: theme.palette.stormWave.main,
@@ -33,19 +37,19 @@ const MuiTextField = {
         {
           props: { variant: 'filled' },
           style: {
-            '& .MuiFilledInput-root::before': {
+            [`& .${filledInputClasses.root}::before`]: {
               borderBottom: 'none !important',
             },
 
-            '& .MuiFilledInput-root::after': {
+            [`& .${filledInputClasses.root}::after`]: {
               borderBottom: 'none !important',
             },
 
-            '& .MuiFilledInput-root:hover': {
+            [`& .${filledInputClasses.root}:hover`]: {
               backgroundColor: theme.palette.snowFog.main,
             },
 
-            '& .MuiFilledInput-root.Mui-focused': {
+            [`& .${filledInputClasses.focused}`]: {
               backgroundColor: theme.palette.snowFog.main,
             },
           },

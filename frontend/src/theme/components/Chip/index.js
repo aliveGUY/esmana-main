@@ -1,3 +1,5 @@
+import chipClasses from '@mui/material/Chip/chipClasses'
+
 const MuiChip = {
   styleOverrides: {
     root: ({ theme }) => ({
@@ -7,7 +9,7 @@ const MuiChip = {
       width: 'max-content',
       maxWidth: 'unset',
 
-      '& .MuiChip-label': {
+      [`& .${chipClasses.label}`]: {
         paddingLeft: '24px',
         paddingRight: '24px',
         textOverflow: 'unset',

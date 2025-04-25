@@ -1,9 +1,10 @@
-import { Box, Button, Divider, Stack, Switch, Typography } from '@mui/material'
+import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import SectionWrapper from '../../common/SectionWrapper'
 import { map } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import Checkbox from '../../common/inputs/Checkbox'
+import Switch from '../../common/inputs/Switch'
 
 const LectureItem = ({ lecture, isAllLectures }) => {
   const { description, title, startTime, endTime, price } = lecture
@@ -27,7 +28,7 @@ const LectureItem = ({ lecture, isAllLectures }) => {
   })
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" spacing={2}>
       <Box display={isAllLectures ? 'none' : 'block'}>
         <Checkbox checked={true} />
       </Box>
@@ -61,8 +62,8 @@ const SummaryCard = ({ isAllLectures, onToggle }) => {
 
   return (
     <Box sx={{ position: { xs: 'sticky', md: 'relative' }, bottom: 0, backgroundColor: 'white' }} width="100%" flex={1}>
-      <Box sx={{ position: { md: 'sticky' }, top: 64 }}>
-        <Stack direction={{ xs: 'row', md: 'column-reverse' }} justifyContent="space-between">
+      <Box sx={{ position: { md: 'sticky' }, top: 64 }} p={1}>
+        <Stack direction={{ xs: 'row', md: 'column-reverse' }} sx={{ mb: 2 }} justifyContent="space-between">
           <Typography variant="title" fontWeight={700}>
             6k UAH
           </Typography>
@@ -71,7 +72,7 @@ const SummaryCard = ({ isAllLectures, onToggle }) => {
             <Typography display={{ xs: 'none', md: 'block' }} fontWeight="bold">
               Summary
             </Typography>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
               <Typography display={{ md: 'none' }}>All Lectures</Typography>
               <Typography display={{ xs: 'none', md: 'block' }}>Join to all lectures</Typography>
               <Switch checked={isAllLectures} onClick={onToggle} />
@@ -81,7 +82,9 @@ const SummaryCard = ({ isAllLectures, onToggle }) => {
             </Typography>
           </Stack>
         </Stack>
-        <Button variant="contained">{t('Purchase')}</Button>
+        <Button variant="contained" color="secondary" fullWidth>
+          {t('Purchase')}
+        </Button>
       </Box>
     </Box>
   )

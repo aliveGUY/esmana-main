@@ -1,5 +1,7 @@
 import CheckIcon from '@mui/icons-material/Check'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import svgIconClasses from '@mui/material/SvgIcon/svgIconClasses'
+import checkboxClasses from '@mui/material/Checkbox/checkboxClasses'
 
 const MuiCheckbox = {
   defaultProps: {
@@ -22,13 +24,13 @@ const MuiCheckbox = {
         backgroundColor: theme.palette.snowFog.main,
       },
 
-      '.MuiSvgIcon-root': {
+      [`.${svgIconClasses.root}`]: {
         opacity: 0,
         transition: 'opacity 0.2s ease-in-out',
         color: theme.palette.stormWave.main,
       },
 
-      '&.Mui-checked .MuiSvgIcon-root': {
+      [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
         opacity: 1,
       },
     }),
