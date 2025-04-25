@@ -1,25 +1,26 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { map } from "lodash";
-import React, { Fragment } from "react";
-import { WEEK } from "../../../constants/calendar";
+import React, { Fragment } from 'react'
+import { map } from 'lodash'
+
+import { Box, Stack, Typography } from '@mui/material'
+import { WEEK } from '../../../constants/calendar'
 
 const CalendarHeader = ({ week }) => {
-  const today = new Date();
-  const _day = WEEK[today.getDay()];
-  const _date = today.getDate();
+  const today = new Date()
+  const _day = WEEK[today.getDay()]
+  const _date = today.getDate()
 
   const isToday = (day, date) => {
-    return day === _day && _date === date;
-  };
+    return day === _day && _date === date
+  }
 
   return (
     <Fragment>
       <Box
         sx={{
-          position: "sticky",
+          position: 'sticky',
           top: 0,
-          backgroundColor: "white",
-          borderBottom: "1px solid #4F8096",
+          backgroundColor: 'white',
+          borderBottom: '1px solid #4F8096',
           zIndex: 1,
         }}
       ></Box>
@@ -29,13 +30,13 @@ const CalendarHeader = ({ week }) => {
           alignItems="center"
           spacing={1}
           sx={{
-            borderLeft: "1px solid #4F8096",
-            borderBottom: "1px solid #4F8096",
+            borderLeft: '1px solid #4F8096',
+            borderBottom: '1px solid #4F8096',
             pt: 2,
             pb: 1,
-            position: "sticky",
+            position: 'sticky',
             top: 0,
-            backgroundColor: "white",
+            backgroundColor: 'white',
             zIndex: 1,
           }}
         >
@@ -48,7 +49,7 @@ const CalendarHeader = ({ week }) => {
             sx={{
               width: 24,
               height: 24,
-              backgroundColor: isToday(day, date) ? "#FE00003C" : "white",
+              backgroundColor: isToday(day, date) ? '#FE00003C' : 'white',
               borderRadius: 99,
             }}
           >
@@ -57,7 +58,7 @@ const CalendarHeader = ({ week }) => {
         </Stack>
       ))}
     </Fragment>
-  );
-};
+  )
+}
 
-export default CalendarHeader;
+export default CalendarHeader

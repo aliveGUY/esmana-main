@@ -1,18 +1,17 @@
-import { Box, Grid2, Paper, Stack } from "@mui/material";
-import React from "react";
-import SearchHeader from "../components/SearchHeader";
-import { map } from "lodash";
-import SectionWrapper from "../common/SectionWrapper";
-import CourseCard from "../components/CourseCard";
-import ScheduleCalendar from "../components/ScheduleCalendar";
-import { useSelector } from "react-redux";
-import OwnedCourseCard from "../components/OwnedCourseCard";
-import ScheduleList from "../components/ScheduleList";
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { map } from 'lodash'
+
+import { Box, Grid2, Paper, Stack } from '@mui/material'
+import SectionWrapper from '../common/SectionWrapper'
+import CourseCard from '../components/CourseCard'
+import OwnedCourseCard from '../components/OwnedCourseCard'
+import ScheduleCalendar from '../components/ScheduleCalendar'
+import ScheduleList from '../components/ScheduleList'
+import SearchHeader from '../components/SearchHeader'
 
 const Courses = () => {
-  const { ownedCourses, availableCourses } = useSelector(
-    (state) => state.courses
-  );
+  const { ownedCourses, availableCourses } = useSelector((state) => state.courses)
 
   return (
     <Stack>
@@ -41,7 +40,7 @@ const Courses = () => {
         </SectionWrapper>
       </Stack>
     </Stack>
-  );
-};
+  )
+}
 
-export default Courses;
+export default Courses

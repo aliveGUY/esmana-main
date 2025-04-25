@@ -13,9 +13,8 @@ import routing from './routing'
 import theme from './theme'
 
 import './static/styles/index.scss'
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+import './i18n'
 
 const Routing = () => useRoutes(routing)
 

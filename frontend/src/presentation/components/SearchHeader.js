@@ -1,4 +1,6 @@
 import React from 'react'
+import { isEmpty } from 'lodash'
+
 import {
   Box,
   Button,
@@ -11,11 +13,11 @@ import {
   useTheme,
 } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import SortIcon from '@mui/icons-material/Sort'
+
 import AddIcon from '@mui/icons-material/Add'
-import { isEmpty } from 'lodash'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
+import SortIcon from '@mui/icons-material/Sort'
 
 const SearchHeader = ({ title, buttonText }) => {
   const theme = useTheme()
@@ -59,7 +61,7 @@ const SearchHeader = ({ title, buttonText }) => {
   }
 
   return (
-    <Box sx={{ backgroundColor: 'white', pt: 2, pb: 1, px: 2 }}>
+    <Box sx={{ backgroundColor: 'white', pt: 2, pb: 3, px: 2 }}>
       <SectionWrapper>
         <Stack spacing={3}>
           <Stack direction="row" alignItems="center" spacing={3}>

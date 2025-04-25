@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { Avatar, Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material'
-import PersonIcon from '@mui/icons-material/Person'
 import SectionWrapper from '../common/SectionWrapper'
+
+import PersonIcon from '@mui/icons-material/Person'
 
 const Profile = () => {
   const theme = useTheme()

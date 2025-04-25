@@ -2,11 +2,10 @@ import React, { Fragment, useState } from 'react'
 import { map } from 'lodash'
 
 import { Button, Grid2, Stack, Typography } from '@mui/material'
+import LoginImage from '../../static/images/image1_0.jpg'
 import CheckoutStep from '../components/CheckoutStep'
 import InputFactory from '../components/InputFactory'
 import TopBarUnauthorized from '../components/TopBarUnauthorized'
-
-import LoginImage from '../../static/images/image1_0.jpg'
 
 const CheckoutCourses = () => {
   const [currentStep, setCurrentStep] = useState(1)

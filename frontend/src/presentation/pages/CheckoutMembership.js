@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Box, Stack, Typography } from '@mui/material'
 import {
   INPUT_SPREAD_FULL,
   INPUT_SPREAD_HALF,
@@ -8,12 +9,9 @@ import {
   INPUT_TYPE_TEXTAREA,
   INPUT_TYPE_TEXTFIELD,
 } from '../../constants'
-
-import { Box, Stack, Typography } from '@mui/material'
+import NavLogo from '../../static/images/logo-big.png'
 import SectionWrapper from '../common/SectionWrapper'
 import MembershipCheckoutForm from '../components/MembershipCheckoutForm'
-
-import NavLogo from '../../static/images/logo-big.png'
 
 const CheckoutMembership = () => {
   const config = [

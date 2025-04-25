@@ -1,0 +1,18 @@
+{
+  "course_join_button": "Join",
+  "course_subtitle": "Sleep: physiology, diagnostics, treatment. Theory and practice for all age groups.",
+  "course_title": "International Professional School \"Sleep Medicine\" 2025",
+  "course_view_content_button": "View Content",
+  "features.autoDetection": "Automatic Language Detection",
+  "features.easySwitch": "Easy Language Switching",
+  "features.jsonStorage": "JSON File Storage",
+  "features.title": "Features",
+  "flag_alt": "Flag",
+  "gradient_alt": "Gradient",
+  "language_en": "English",
+  "language_uk": "Ukrainian",
+  "languages.current": "Current language: {{lng}}",
+  "languages.title": "Languages",
+  "welcome.description": "Welcome to our application",
+  "welcome.title": "Welcome"
+}

@@ -1,4 +1,5 @@
 import MuiButton from './Button'
+import MuiChip from './Chip'
 import MuiIconButton from './IconButton'
 import MuiPaper from './Paper'
 import MuiTextField from './TextField'
@@ -10,6 +11,7 @@ const components = {
   MuiPaper,
   MuiTypography,
   MuiTextField,
+  MuiChip,
 }
 
 export default components

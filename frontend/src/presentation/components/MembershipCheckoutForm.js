@@ -6,9 +6,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { CardNumberElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 
-import { INPUT_SPREAD_HALF } from '../../constants'
-
 import { Box, Button, CircularProgress, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
+import { INPUT_SPREAD_HALF } from '../../constants'
 import useInputFactory from '../../hooks/useInputFactory'
 import useInterval from '../../hooks/useInterval'
 import { useCheckRegistrationStatusMutation, useCreateMembershipPaymentIntentMutation } from '../../state/asynchronous'

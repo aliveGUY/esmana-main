@@ -1,0 +1,92 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "allowImportExportEverywhere": false,
+    "requireConfigFile": false,
+    "codeFrame": false,
+    "babelOptions": {
+      "parserOpts": {
+        "plugins": ["jsx"]
+      }
+    },
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
+  },
+  "plugins": ["eslint-plugin-react", "simple-import-sort", "eslint-plugin-prettier"],
+  "ignorePatterns": ["node_modules/", "dist/", "test/"],
+  "globals": {
+    "AppBoot": true,
+    "process": false,
+    "require": false,
+    "Promise": false
+  },
+  "rules": {
+    "quotes": [2, "single", { "avoidEscape": true }],
+    "camelcase": 0,
+    "no-console": 1,
+    "no-debugger": 1,
+    "jsx-quotes": [2, "prefer-double"],
+    "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
+    "semi": [2, "never"],
+    "no-unused-vars": ["error", { "args": "none" }],
+    "react/prop-types": 0,
+    "react/no-deprecated": 0,
+    "no-trailing-spaces": 2,
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-no-target-blank": 1,
+    "no-useless-escape": 0,
+    "no-empty-function": "warn",
+    "prettier/prettier": ["error"],
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          [
+            "^(react|react-redux|redux|redux-thunk|react-router-dom|react-page-router)$",
+            "^[a-z]",
+            "^@dreamhost(?!/dh-design).*",
+            "@config",
+            "@asynchronous",
+            "^@state(?!/)"
+          ],
+          ["^@?\\w", "^"],
+          ["^@hook(.*)$"],
+          ["^@mui/material/(.*)$"],
+          ["^@lib(.*)$"],
+          ["^(@action|@state/action)(.*)"],
+          ["^@state/(?!action$)"],
+          ["^@constants(.*)$"],
+          [
+            "^@mui/material*",
+            "^@dreamhost/dh-design*",
+            "^(@components|@common|@pages)(/.*|$)",
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$",
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$"
+          ],
+          ["^@mui/icons-material*", "^@dreamhost/dh-design/icons*", "^@static(.*)$"],
+          ["@styles(.*)$", "^.+\\.s?css$"],
+          ["^\\u0000", "^"]
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  }
+}

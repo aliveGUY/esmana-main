@@ -1,33 +1,31 @@
-import React, { Fragment, useCallback } from "react";
-import LoginImage from "../../static/images/image1_0.jpg";
-import { Box, Divider, Grid2, Paper, Stack, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import {
-  highlightCourse,
-  removeHighlightedCourse,
-} from "../../state/reducers/courses";
-import { useDispatch } from "react-redux";
+import React, { Fragment, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
+import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
+import LoginImage from '../../static/images/image1_0.jpg'
 
 const CourseCard = ({ course }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const { title, description } = course;
-  const price = 20000;
-  const lecturesCount = 20;
-  const hoursCount = 40;
+  const { title, description } = course
+  const price = 20000
+  const lecturesCount = 20
+  const hoursCount = 40
 
   const redirect = useCallback(() => {
-    navigate("/dashboard/course-details/0");
-  }, [navigate]);
+    navigate('/dashboard/course-details/0')
+  }, [navigate])
 
   const handleCourseHighlight = () => {
-    dispatch(highlightCourse(course));
-  };
+    dispatch(highlightCourse(course))
+  }
 
   const handleRemoveHighlightedCourse = () => {
-    dispatch(removeHighlightedCourse());
-  };
+    dispatch(removeHighlightedCourse())
+  }
 
   return (
     <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
@@ -37,24 +35,24 @@ const CourseCard = ({ course }) => {
         onMouseLeave={handleRemoveHighlightedCourse}
         sx={{
           height: 400,
-          overflow: "hidden",
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
+          overflow: 'hidden',
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
 
-          "&:hover .image": {
-            height: "20%",
+          '&:hover .image': {
+            height: '20%',
 
-            "&::after": {
+            '&::after': {
               opacity: 1,
             },
           },
-          "&:hover .body": {
-            height: "80%",
+          '&:hover .body': {
+            height: '80%',
 
-            "& .details": {
-              transform: "translateY(100%)",
-              boxShadow: "none",
+            '& .details': {
+              transform: 'translateY(100%)',
+              boxShadow: 'none',
             },
           },
         }}
@@ -62,33 +60,32 @@ const CourseCard = ({ course }) => {
         <Box
           className="image"
           sx={{
-            transition: "height .3s",
-            height: "50%",
-            overflow: "hidden",
-            position: "relative",
+            transition: 'height .3s',
+            height: '50%',
+            overflow: 'hidden',
+            position: 'relative',
             img: {
-              position: "absolute",
+              position: 'absolute',
               top: 0,
-              left: "50%",
+              left: '50%',
               bottom: 0,
               right: 0,
-              height: "100%",
-              width: "100%",
-              objectFit: "cover",
-              transform: "translateX(-50%)",
+              height: '100%',
+              width: '100%',
+              objectFit: 'cover',
+              transform: 'translateX(-50%)',
             },
 
-            "&::after": {
-              transition: "opacity .3s",
+            '&::after': {
+              transition: 'opacity .3s',
               content: '""',
               top: 0,
               bottom: 0,
               left: 0,
-              position: "absolute",
+              position: 'absolute',
               right: 0,
               opacity: 0,
-              background:
-                "linear-gradient(0deg,rgba(179, 158, 220, 1) 0%, rgba(0, 0, 0, 0) 100%);",
+              background: 'linear-gradient(0deg,rgba(179, 158, 220, 1) 0%, rgba(0, 0, 0, 0) 100%);',
             },
           }}
         >
@@ -98,21 +95,21 @@ const CourseCard = ({ course }) => {
           className="body"
           sx={{
             px: 2,
-            display: "grid",
-            gridTemplateRows: "auto 1fr auto",
-            transition: "height .3s",
-            height: "50%",
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr auto',
+            transition: 'height .3s',
+            height: '50%',
           }}
         >
           <Typography fontWeight="bold">{title}</Typography>
-          <Typography sx={{ overflow: "hidden" }} color="stormWave.main">
+          <Typography sx={{ overflow: 'hidden' }} color="stormWave.main">
             {description}
           </Typography>
           <Box
             className="details"
             sx={{
-              boxShadow: "0px -20px 90px 20px #FFF",
-              transition: "transform .3s",
+              boxShadow: '0px -20px 90px 20px #FFF',
+              transition: 'transform .3s',
               pb: 2,
             }}
           >
@@ -130,7 +127,7 @@ const CourseCard = ({ course }) => {
         </Box>
       </Paper>
     </Grid2>
-  );
-};
+  )
+}
 
-export default CourseCard;
+export default CourseCard

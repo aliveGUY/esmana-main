@@ -1,0 +1,18 @@
+{
+  "course_join_button": "Доєднатись",
+  "course_subtitle": "Сон: фізіологія, діагностика, лікування. Теорія та практика для всіх вікових груп.",
+  "course_title": "Міжнародна фахова школа \"Медицина сну\" 2025",
+  "course_view_content_button": "Перелянути зміст",
+  "features.autoDetection": "Автоматичне визначення мови",
+  "features.easySwitch": "Легке перемикання",
+  "features.jsonStorage": "Зберігання в JSON файлах",
+  "features.title": "Особливості",
+  "flag_alt": "Прапор",
+  "gradient_alt": "Градієнт",
+  "language_en": "Англійська",
+  "language_uk": "Українська",
+  "languages.current": "Поточна мова: {{lng}}",
+  "languages.title": "Мови",
+  "welcome.description": "Ласкаво просимо до нашого додатку",
+  "welcome.title": "Вітаємо"
+}

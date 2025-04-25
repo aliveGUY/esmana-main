@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Box, Stack } from '@mui/material'
-
 import NavLogo from '../../static/images/logo-big.png'
 
 const TopBarUnauthorized = () => {

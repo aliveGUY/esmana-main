@@ -5,7 +5,6 @@ import {
   INPUT_TYPE_TEXTAREA,
   INPUT_TYPE_TEXTFIELD,
 } from '../constants'
-
 import Checkbox from '../presentation/common/inputs/Checkbox'
 import Password from '../presentation/common/inputs/Password'
 import RadioButton from '../presentation/common/inputs/RadioButton'

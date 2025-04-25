@@ -77,7 +77,15 @@ const Navigation = ({ isCollapsed, onClose }) => {
         transition: 'width .3s',
       }}
     >
-      <Stack spacing={1} px={1} py={2}>
+      <Stack
+        spacing={1}
+        px={1}
+        py={2}
+        sx={{
+          position: 'sticky',
+          top: 64,
+        }}
+      >
         {map(config, (item, index) => (
           <NavLink key={index} isCollapsed={isCollapsed} {...item} />
         ))}
