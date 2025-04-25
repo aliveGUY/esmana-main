@@ -15,10 +15,6 @@ const CourseCard = ({ course }) => {
   const lecturesCount = 20
   const hoursCount = 40
 
-  const redirect = useCallback(() => {
-    navigate('/dashboard/course-details/0')
-  }, [navigate])
-
   const handleCourseHighlight = () => {
     dispatch(highlightCourse(course))
   }
@@ -26,6 +22,11 @@ const CourseCard = ({ course }) => {
   const handleRemoveHighlightedCourse = () => {
     dispatch(removeHighlightedCourse())
   }
+
+  const redirect = useCallback(() => {
+    handleRemoveHighlightedCourse()
+    navigate('/dashboard/course-details/0')
+  }, [navigate])
 
   return (
     <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
