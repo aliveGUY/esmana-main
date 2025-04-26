@@ -1,0 +1,8 @@
+export const KOST = 'KOST'
+export const SHEVCHENO = 'SHEVCHENO'
+export const HNYLOSKURENKO = 'HNYLOSKURENKO'
+export const HAITOVICH = 'HAITOVICH'
+export const GUK = 'GUK'
+export const TARASUK = 'TARASUK'
+export const HLYBOVA = 'HLYBOVA'
+export const ALUSEF = 'ALUSEF'

@@ -6,6 +6,7 @@ import Checkbox from '../../common/inputs/Checkbox'
 const TableHeader = () => {
   const rowStyles = {
     px: 2,
+    py: 1,
   }
   return (
     <Fragment>

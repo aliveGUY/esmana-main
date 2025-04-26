@@ -99,6 +99,9 @@ const Lectures = ({ lectures }) => {
 
   return (
     <SectionWrapper>
+      <Typography textAlign="center" fontSize={24} fontWeight="bold" py={2}>
+        Lectures
+      </Typography>
       <Stack direction={{ md: 'row' }} spacing={4}>
         <Stack spacing={2} width="100%" flex={2}>
           {map(lectures, (lecture, index) => (
