@@ -16,7 +16,7 @@ const Courses = () => {
   return (
     <Stack>
       <SearchHeader title="Courses" />
-      <Stack sx={{ px: 3 }} spacing={2}>
+      <Stack sx={{ px: 3 }} spacing={3}>
         <SectionWrapper>
           <Paper sx={{ p: 3 }}>
             <Stack direction="row">
@@ -28,7 +28,7 @@ const Courses = () => {
 
         <SectionWrapper>
           <Box pb={10}>
-            <Grid2 container spacing={3}>
+            <Grid2 container spacing={2}>
               {map(ownedCourses, (course, index) => (
                 <OwnedCourseCard key={index} course={course} />
               ))}

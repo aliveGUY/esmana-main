@@ -1,4 +1,4 @@
-import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
+import { Box, Grid2, Paper, Stack, Typography, useTheme } from '@mui/material'
 import { map } from 'lodash'
 import React from 'react'
 import SectionWrapper from '../../common/SectionWrapper'
@@ -7,6 +7,7 @@ import usePredefinedAvatar from '../../../hooks/usePredefinedAvatar'
 const Lector = ({ lector }) => {
   const { avatar, name, title, qualification } = lector
   const AvatarPng = usePredefinedAvatar(avatar)
+  const theme = useTheme()
 
   return (
     <Paper>
@@ -19,7 +20,12 @@ const Lector = ({ lector }) => {
             height: '0%',
           },
 
+          '& .details': {
+            textAlign: 'center',
+          },
+
           '&:hover .details': {
+            textAlign: 'left',
             height: '100%',
           },
 
@@ -28,10 +34,27 @@ const Lector = ({ lector }) => {
           },
         }}
       >
-        <Box height="50%" className="image" sx={{ overflow: 'hidden', transition: 'height .3s' }}>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          height={{ xs: '70%', md: '50%' }}
+          className="image"
+          sx={{
+            overflow: 'hidden',
+            transition: 'height .3s',
+            backgroundColor: theme.palette.snowFog.light,
+            img: {
+              height: { xs: 220, md: 150 },
+            },
+          }}
+        >
           <img src={AvatarPng} />
-        </Box>
-        <Box height="50%" className="details" sx={{ p: 2, transition: 'height .3s', overflowY: 'auto' }}>
+        </Stack>
+        <Box
+          height={{ xs: '30%', md: '50%' }}
+          className="details"
+          sx={{ p: 2, transition: 'height .3s', overflowY: 'auto' }}
+        >
           <Typography fontWeight="bold">{name}</Typography>
           <Typography color="stormWave.main">{title}</Typography>
           <Typography className="qualification" display="none">
@@ -46,7 +69,7 @@ const Lector = ({ lector }) => {
 const Lectors = ({ lectors }) => {
   return (
     <SectionWrapper>
-      <Typography textAlign="center" fontSize={24} fontWeight="bold" py={2}>
+      <Typography textAlign="center" fontSize={24} fontWeight="bold" pt={5} pb={2}>
         Lectors
       </Typography>
       <Box

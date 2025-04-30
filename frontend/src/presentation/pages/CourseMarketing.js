@@ -7,6 +7,7 @@ import Hero from '../components/Marketing/Hero'
 import Image from '../components/Marketing/Image'
 import Lectures from '../components/Marketing/Lectures'
 import Lectors from '../components/Marketing/Lectors'
+import Conditions from '../components/Marketing/Conditions'
 
 const CourseMarketing = () => {
   const { id } = useParams()
@@ -19,6 +20,7 @@ const CourseMarketing = () => {
       <Image />
       <Lectures lectures={lectures} />
       <Lectors lectors={lectors} />
+      <Conditions />
     </Stack>
   )
 }

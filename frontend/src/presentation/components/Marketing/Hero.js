@@ -3,24 +3,31 @@ import { useTranslation } from 'react-i18next'
 import SectionWrapper from '../../common/SectionWrapper'
 import { Button, Stack, Typography } from '@mui/material'
 
-const Hero = ({ title, mobileDescription, description }) => {
+const Hero = () => {
   const { t } = useTranslation()
 
   return (
     <SectionWrapper>
-      <Stack>
-        <Typography fontWeight="bold" fontSize={24} textAlign="center">
-          {title}
-        </Typography>
-        <Typography display={{ xs: 'block' }} textAlign="center" color="stormWave.main" px="6px">
-          {mobileDescription}
-        </Typography>
-        <Typography display={{ xs: 'none', md: 'block' }} textAlign="center" color="stormWave.main" px="6px">
-          {description}
-        </Typography>
-        <Stack direction={{ md: 'row-reverse' }} justifyContent="center" spacing={2}>
-          <Button variant="primary">{t('Join')}</Button>
-          <Button variant="outlined">{t('View Lectures')}</Button>
+      <Stack spacing={2} sx={{ py: 5, px: 1 }}>
+        <Stack spacing={{ md: 2 }}>
+          <Typography fontWeight="bold" fontSize={{ xs: 23, md: 56 }} lineHeight="normal" textAlign="center">
+            International Professional School
+            <br />
+            "Sleep Medicine" 2025
+          </Typography>
+          <Typography display={{ md: 'none' }} textAlign="center" color="stormWave.main" px="6px">
+            Sleep: Physiology, Diagnostics, Treatment. <br />
+            Theory and Practice for All Age Groups.
+          </Typography>
+          <Typography display={{ xs: 'none', md: 'block' }} textAlign="center" color="stormWave.main" px="6px">
+            Key aspects of physiology, diagnosis, and treatment of sleep
+            <br /> disorders. Current scientific knowledge and practical skills
+            <br /> for effective work with patients of various ages.
+          </Typography>
+        </Stack>
+        <Stack direction={{ xs: 'column', md: 'row-reverse' }} justifyContent="center" spacing={{ xs: 1, md: 2 }}>
+          <Button variant="primary">{t('Purchase Course')}</Button>
+          <Button variant="outlined">{t('View Program')}</Button>
         </Stack>
       </Stack>
     </SectionWrapper>

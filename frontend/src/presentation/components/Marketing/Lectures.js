@@ -28,12 +28,10 @@ const LectureItem = ({ lecture, isAllLectures }) => {
   })
 
   return (
-    <Stack direction="row" spacing={2}>
-      <Box display={isAllLectures ? 'none' : 'block'}>
-        <Checkbox checked={true} />
-      </Box>
+    <Stack direction="row" spacing={2} alignItems="center" sx={{ px: 1 }}>
+      {!isAllLectures && <Checkbox checked={true} />}
       <Stack direction={{ md: 'row' }} width="100%" justifyContent={{ md: 'space-between' }}>
-        <Stack direction={{ md: 'row-reverse' }} spacing={2}>
+        <Stack direction={{ md: 'row-reverse' }} spacing={2} alignItems={{ md: 'center' }}>
           <Stack>
             <Typography fontWeight="bold">{title}</Typography>
             <Typography display={{ xs: 'none', md: 'block' }}>{description}</Typography>
@@ -72,13 +70,15 @@ const SummaryCard = ({ isAllLectures, onToggle }) => {
             <Typography display={{ xs: 'none', md: 'block' }} fontWeight="bold">
               Summary
             </Typography>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-              <Typography display={{ md: 'none' }}>All Lectures</Typography>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography display={{ xs: 'none', md: 'block' }}>Join to all lectures</Typography>
+              <Typography display={{ md: 'none' }} mr={1}>
+                All Lectures
+              </Typography>
               <Switch checked={isAllLectures} onClick={onToggle} />
             </Stack>
             <Typography display={{ xs: 'none', md: 'block' }} color="stormWave.main">
-              Discount info
+              -10% discount for members only
             </Typography>
           </Stack>
         </Stack>
@@ -99,8 +99,8 @@ const Lectures = ({ lectures }) => {
 
   return (
     <SectionWrapper>
-      <Typography textAlign="center" fontSize={24} fontWeight="bold" py={2}>
-        Lectures
+      <Typography textAlign="center" fontSize={24} fontWeight="bold" pt={5} pb={2}>
+        Course Program
       </Typography>
       <Stack direction={{ md: 'row' }} spacing={4}>
         <Stack spacing={2} width="100%" flex={2}>
