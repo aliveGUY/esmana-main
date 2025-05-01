@@ -125,6 +125,7 @@ const LectureNavigation = ({ lectures }) => {
         borderRadius: '12px',
         px: 1,
         py: 2,
+        height: 'min-content',
       }}
     >
       {map(lectures, (lecture) => (

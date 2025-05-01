@@ -12,13 +12,13 @@ const LectureContent = () => {
   const { description, title, materials } = find(lectures, (lecture) => lecture.id === Number(lectureId))
 
   return (
-    <Stack>
+    <Stack sx={{ pr: 2, pb: 5 }}>
       <Stack
         justifyContent="center"
         alignItems="center"
         sx={{
           backgroundColor: 'snowFog.main',
-          height: 140,
+          height: 240,
           borderRadius: '24px',
         }}
       >
@@ -35,6 +35,13 @@ const LectureContent = () => {
           <Typography>Meeting will start at 12.04.2025 14:00</Typography>
           <Button variant="primary">Join Lecture</Button>
         </Box>
+      </Stack>
+
+      <Stack height="100%"></Stack>
+
+      <Stack direction="row" justifyContent="space-between">
+        <Button variant="outlined">Previous</Button>
+        <Button variant="primary">Next</Button>
       </Stack>
     </Stack>
   )

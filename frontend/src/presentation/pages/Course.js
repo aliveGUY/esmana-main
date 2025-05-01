@@ -7,6 +7,7 @@ import { Box, Button } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const Course = () => {
   const { courseId } = useParams()
@@ -19,7 +20,9 @@ const Course = () => {
         sx={{
           display: 'grid',
           gridTemplateColumns: '300px 1fr',
+          gridTemplateRows: 'auto 1fr',
           gap: 2,
+          height: '100%',
         }}
       >
         <Box
@@ -27,7 +30,7 @@ const Course = () => {
             gridColumn: '1 / -1',
           }}
         >
-          <Button to="/dashboard/courses" component={Link} variant="outlined">
+          <Button startIcon={<ArrowBackIcon />} to="/dashboard/courses" component={Link} variant="outlined">
             Back
           </Button>
         </Box>
