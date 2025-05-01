@@ -1,3 +1,13 @@
+import {
+  ALUSEF,
+  GUK,
+  HAITOVICH,
+  HLYBOVA,
+  HNYLOSKURENKO,
+  KOST,
+  SHEVCHENO,
+  TARASUK,
+} from '../constants/predefinedAvatars'
 import Lector1Png from '../static/images/Lector_1.png'
 import Lector2Png from '../static/images/Lector_2.png'
 import Lector3Png from '../static/images/Lector_3.png'
@@ -6,17 +16,6 @@ import Lector5Png from '../static/images/Lector_5.png'
 import Lector6Png from '../static/images/Lector_6.png'
 import Lector7Png from '../static/images/Lector_7.png'
 import Lector8Png from '../static/images/Lector_8.png'
-
-import {
-  KOST,
-  SHEVCHENO,
-  HNYLOSKURENKO,
-  HAITOVICH,
-  GUK,
-  TARASUK,
-  HLYBOVA,
-  ALUSEF,
-} from '../constants/predefinedAvatars'
 
 function usePredefinedAvatar(avatar) {
   const avatars = {

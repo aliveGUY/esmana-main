@@ -1,8 +1,9 @@
-import { Box, Grid2, Paper, Stack, Typography, useTheme } from '@mui/material'
-import { map } from 'lodash'
 import React from 'react'
-import SectionWrapper from '../../common/SectionWrapper'
+import { map } from 'lodash'
+
+import { Box, Grid2, Paper, Stack, Typography, useTheme } from '@mui/material'
 import usePredefinedAvatar from '../../../hooks/usePredefinedAvatar'
+import SectionWrapper from '../../common/SectionWrapper'
 
 const Lector = ({ lector }) => {
   const { avatar, name, title, qualification } = lector

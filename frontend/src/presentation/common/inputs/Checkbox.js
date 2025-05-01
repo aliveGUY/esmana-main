@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { Checkbox as MuiCheckbox, useMediaQuery } from '@mui/material'
 import { useTheme } from '@emotion/react'
+
+import { Checkbox as MuiCheckbox, useMediaQuery } from '@mui/material'
 
 const Checkbox = ({ name, label, placeholder }) => {
   const theme = useTheme()

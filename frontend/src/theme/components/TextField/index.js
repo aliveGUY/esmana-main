@@ -1,6 +1,6 @@
-import inputBaseClasses from '@mui/material/InputBase/inputBaseClasses'
 import filledInputClasses from '@mui/material/FilledInput/filledInputClasses'
 import inputAdornmentClasses from '@mui/material/InputAdornment/inputAdornmentClasses'
+import inputBaseClasses from '@mui/material/InputBase/inputBaseClasses'
 
 const MuiTextField = {
   styleOverrides: {

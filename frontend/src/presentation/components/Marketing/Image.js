@@ -1,8 +1,8 @@
 import React from 'react'
 
+import { Box } from '@mui/material'
 import GradientPng from '../../../static/images/marketing-background.png'
 import FlagPng from '../../../static/images/marketing-flag.png'
-import { Box } from '@mui/material'
 
 const Image = () => {
   return (

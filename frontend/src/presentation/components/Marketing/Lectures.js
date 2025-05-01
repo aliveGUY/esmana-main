@@ -1,10 +1,11 @@
-import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import SectionWrapper from '../../common/SectionWrapper'
 import { map } from 'lodash'
 import { useTranslation } from 'react-i18next'
+
+import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import Checkbox from '../../common/inputs/Checkbox'
 import Switch from '../../common/inputs/Switch'
+import SectionWrapper from '../../common/SectionWrapper'
 
 const LectureItem = ({ lecture, isAllLectures }) => {
   const { description, title, startTime, endTime, price } = lecture

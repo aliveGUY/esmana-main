@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import {
+  ALUSEF,
+  GUK,
+  HAITOVICH,
+  HLYBOVA,
+  HNYLOSKURENKO,
   KOST,
   SHEVCHENO,
-  HNYLOSKURENKO,
-  HAITOVICH,
-  GUK,
   TARASUK,
-  HLYBOVA,
-  ALUSEF,
 } from '../../constants/predefinedAvatars'
 
 const today = new Date()
@@ -26,18 +27,64 @@ const coursesSlice = createSlice({
           'Ключові аспекти фізіології, діагностики та лікування розладів сну. Актуальні наукові знання та практичні навички для ефективної роботи з пацієнтами різного віку',
         lectures: [
           {
-            title: 'Медицина сну: історія та розвиток',
+            id: 0,
+            title: '1 Медицина сну: історія та розвиток',
             description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
             price: 2000,
-            startTime: new Date(year, month, day + 1, 16, 0),
-            endTime: new Date(year, month, day + 1, 18, 0),
+            startTime: new Date(year, month, day + 1, 13, 0),
+            endTime: new Date(year, month, day + 1, 15, 0),
+            status: {
+              completed: true,
+            },
+            materials: {
+              test: [
+                {
+                  question: 'question example',
+                  options: ['option 1', 'option 2', 'option 3'],
+                },
+              ],
+            },
           },
           {
-            title: 'Медицина сну: історія та розвиток',
+            id: 1,
+            title: '2 Медицина сну: історія та розвиток',
             description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
             price: 2000,
-            startTime: new Date(year, month, day, 17, 0),
-            endTime: new Date(year, month, day, 21, 0),
+            startTime: new Date(year, month, day, 13, 0),
+            endTime: new Date(year, month, day, 17, 0),
+            status: {
+              completed: false,
+            },
+            materials: {
+              test: [
+                {
+                  question: 'question example',
+                  options: ['option 1', 'option 2', 'option 3'],
+                },
+              ],
+            },
+          },
+          {
+            id: 2,
+            title: '3 Медицина сну: історія та розвиток',
+            description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
+            price: 2000,
+            startTime: new Date(year, month, day + 1, 13, 0),
+            endTime: new Date(year, month, day + 1, 15, 0),
+            status: null,
+            materials: null,
+          },
+          {
+            id: 3,
+            title: '4 Медицина сну: історія та розвиток',
+            description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
+            price: 2000,
+            startTime: new Date(year, month, day, 13, 0),
+            endTime: new Date(year, month, day, 17, 0),
+            status: {
+              completed: false,
+            },
+            materials: null,
           },
         ],
       },
@@ -50,18 +97,64 @@ const coursesSlice = createSlice({
         mobileDescription: 'Сон: фізіологія, діагностика, лікування. Теорія та практика для всіх вікових груп.',
         lectures: [
           {
+            id: 0,
             title: 'Медицина сну: історія та розвиток',
             description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
             price: 2000,
             startTime: new Date(year, month, day + 1, 13, 0),
             endTime: new Date(year, month, day + 1, 15, 0),
+            status: {
+              completed: true,
+            },
+            materials: {
+              test: [
+                {
+                  question: 'question example',
+                  options: ['option 1', 'option 2', 'option 3'],
+                },
+              ],
+            },
           },
           {
+            id: 1,
             title: 'Медицина сну: історія та розвиток',
             description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
             price: 2000,
             startTime: new Date(year, month, day, 13, 0),
             endTime: new Date(year, month, day, 17, 0),
+            status: {
+              completed: false,
+            },
+            materials: {
+              test: [
+                {
+                  question: 'question example',
+                  options: ['option 1', 'option 2', 'option 3'],
+                },
+              ],
+            },
+          },
+          {
+            id: 2,
+            title: 'Медицина сну: історія та розвиток',
+            description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
+            price: 2000,
+            startTime: new Date(year, month, day + 1, 13, 0),
+            endTime: new Date(year, month, day + 1, 15, 0),
+            status: null,
+            materials: null,
+          },
+          {
+            id: 3,
+            title: 'Медицина сну: історія та розвиток',
+            description: 'Розвиток сомнології як науки, її ключові досягнення та сучасні тенденції ',
+            price: 2000,
+            startTime: new Date(year, month, day, 13, 0),
+            endTime: new Date(year, month, day, 17, 0),
+            status: {
+              completed: false,
+            },
+            materials: null,
           },
         ],
         lectors: [

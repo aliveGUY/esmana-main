@@ -1,8 +1,10 @@
-import { Stack, Typography } from '@mui/material'
 import React from 'react'
-import WatchLaterIcon from '@mui/icons-material/WatchLater'
-import FlagIcon from '@mui/icons-material/Flag'
+
+import { Stack, Typography } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
+
+import FlagIcon from '@mui/icons-material/Flag'
+import WatchLaterIcon from '@mui/icons-material/WatchLater'
 
 const Conditions = () => {
   return (

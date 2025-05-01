@@ -60,7 +60,7 @@ const routing = [
         element: <CourseMarketing />,
       },
       {
-        path: 'course/:id',
+        path: 'course/:courseId/:lectureId',
         title: '',
         element: <Course />,
       },

@@ -1,7 +1,8 @@
+import checkboxClasses from '@mui/material/Checkbox/checkboxClasses'
+import svgIconClasses from '@mui/material/SvgIcon/svgIconClasses'
+
 import CheckIcon from '@mui/icons-material/Check'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import svgIconClasses from '@mui/material/SvgIcon/svgIconClasses'
-import checkboxClasses from '@mui/material/Checkbox/checkboxClasses'
 
 const MuiCheckbox = {
   defaultProps: {

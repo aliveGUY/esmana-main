@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import SectionWrapper from '../../common/SectionWrapper'
+
 import { Button, Stack, Typography } from '@mui/material'
+import SectionWrapper from '../../common/SectionWrapper'
 
 const Hero = () => {
   const { t } = useTranslation()

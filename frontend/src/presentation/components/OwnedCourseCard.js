@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { find, isNull } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import LoginImage from '../../static/images/image1_0.jpg'
@@ -7,12 +8,13 @@ import LoginImage from '../../static/images/image1_0.jpg'
 const OwnedCourseCard = ({ course }) => {
   const navigate = useNavigate()
 
-  const { title, description } = course
+  const { title, description, lectures } = course
   const lecturesCount = 20
   const hoursCount = 40
+  const firstOwnedLecture = find(lectures, (lecture) => !isNull(lecture.status) && !lecture.status.completed)
 
   const redirect = useCallback(() => {
-    navigate('/dashboard/course/0')
+    navigate(`/dashboard/course/0/${firstOwnedLecture.id}`)
   }, [navigate])
 
   return (

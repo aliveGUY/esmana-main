@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 
 import { Stack } from '@mui/material'
+import Conditions from '../components/Marketing/Conditions'
 import Hero from '../components/Marketing/Hero'
 import Image from '../components/Marketing/Image'
-import Lectures from '../components/Marketing/Lectures'
 import Lectors from '../components/Marketing/Lectors'
-import Conditions from '../components/Marketing/Conditions'
+import Lectures from '../components/Marketing/Lectures'
 
 const CourseMarketing = () => {
   const { id } = useParams()
