@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { find } from 'lodash'
 import { useParams } from 'react-router'
 import { Link } from 'react-router'
 
@@ -7,13 +8,14 @@ import { Box, Button } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const Course = () => {
-  const { courseId } = useParams()
+  const { lectureId, courseId } = useParams()
   const { ownedCourses } = useSelector((state) => state.courses)
   const { lectures } = ownedCourses[courseId]
-
+  const lecture = find(lectures, (lecture) => lecture.id === Number(lectureId))
   return (
     <SectionWrapper>
       <Box
@@ -35,7 +37,7 @@ const Course = () => {
           </Button>
         </Box>
         <LectureNavigation lectures={lectures} />
-        <LectureContent />
+        <LectureContent lecture={lecture} />
       </Box>
     </SectionWrapper>
   )

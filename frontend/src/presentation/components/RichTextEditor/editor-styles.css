@@ -1,0 +1,267 @@
+.rich-text-editor-container {
+  background-color: #fff;
+  border-radius: 4px;
+  font-family: 'Arial', sans-serif;
+  color: #202124;
+  overflow: hidden;
+}
+
+/* Editor Content Area */
+.rich-text-editor-content {
+  min-height: 300px;
+  line-height: 1.5;
+  font-size: 16px;
+  outline: none;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Direct styling for the contenteditable div - this is the root of the editor */
+[contenteditable="true"][data-lexical-editor="true"] {
+  min-height: 300px !important;
+  width: 100% !important;
+  outline: none !important;
+  cursor: text !important;
+  font-family: 'Arial', sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  color: #202124 !important;
+  caret-color: #1a73e8 !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+[contenteditable="true"][data-lexical-editor="true"]:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2) !important;
+}
+
+/* Ensure proper tab indentation display */
+[contenteditable="true"][data-lexical-editor="true"] p {
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
+  min-height: 1.5em !important;
+}
+
+[contenteditable="true"][data-lexical-editor="true"] p.tab-indented {
+  padding-left: 40px !important;
+}
+
+[contenteditable="true"][data-lexical-editor="true"] p.tab-indented-2 {
+  padding-left: 80px !important;
+}
+
+/* Placeholder */
+.rich-text-editor-placeholder {
+  color: #5f6368;
+  font-size: 16px;
+  position: absolute;
+  pointer-events: none;
+  top: 20px;
+  left: 20px;
+}
+
+/* Toolbar */
+.rich-text-editor-toolbar {
+  background-color: #f1f3f4;
+  border-bottom: 1px solid #dadce0;
+  padding: 6px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 2px;
+  margin-right: 8px;
+  padding-right: 8px;
+  border-right: 1px solid #dadce0;
+}
+
+.toolbar-group:last-child {
+  border-right: none;
+}
+
+.toolbar-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #444746;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  padding: 4px;
+  transition: background-color 0.2s;
+}
+
+.toolbar-button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.toolbar-button.active {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: #1a73e8;
+}
+
+/* Text Formatting */
+.editor-text-bold,
+[contenteditable="true"][data-lexical-editor="true"] strong,
+[contenteditable="true"][data-lexical-editor="true"] b,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-bold {
+  font-weight: 700 !important;
+}
+
+.editor-text-italic,
+[contenteditable="true"][data-lexical-editor="true"] em,
+[contenteditable="true"][data-lexical-editor="true"] i,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-italic {
+  font-style: italic !important;
+}
+
+.editor-text-underline,
+[contenteditable="true"][data-lexical-editor="true"] u,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-underline {
+  text-decoration: underline !important;
+}
+
+.editor-text-strikethrough,
+[contenteditable="true"][data-lexical-editor="true"] s,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-strikethrough {
+  text-decoration: line-through !important;
+}
+
+.editor-text-underline-strikethrough,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-underline-strikethrough {
+  text-decoration: underline line-through !important;
+}
+
+/* Headings */
+.editor-heading-h1,
+[contenteditable="true"][data-lexical-editor="true"] h1,
+[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h1 {
+  font-size: 32px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  margin-top: 20px !important;
+  margin-bottom: 6px !important;
+  color: #202124 !important;
+  display: block !important;
+}
+
+.editor-heading-h2,
+[contenteditable="true"][data-lexical-editor="true"] h2,
+[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h2 {
+  font-size: 24px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  margin-top: 18px !important;
+  margin-bottom: 6px !important;
+  color: #202124 !important;
+  display: block !important;
+}
+
+.editor-heading-h3,
+[contenteditable="true"][data-lexical-editor="true"] h3,
+[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h3 {
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  margin-top: 16px !important;
+  margin-bottom: 4px !important;
+  color: #202124 !important;
+  display: block !important;
+}
+
+/* Paragraph */
+.editor-paragraph {
+  margin-bottom: 8px !important;
+}
+
+/* Lists */
+.editor-list-ol {
+  padding-left: 24px !important;
+  margin: 8px 0 !important;
+  list-style-type: decimal !important;
+}
+
+.editor-list-ul {
+  padding-left: 24px !important;
+  margin: 8px 0 !important;
+  list-style-type: disc !important;
+}
+
+.editor-listitem {
+  margin: 6px 0 !important;
+}
+
+.editor-nested-listitem {
+  list-style-position: inside !important;
+  margin-left: 16px !important;
+}
+
+/* Quote */
+.editor-quote,
+[contenteditable="true"][data-lexical-editor="true"] blockquote,
+[contenteditable="true"][data-lexical-editor="true"] .editor-quote {
+  border-left: 3px solid #dadce0 !important;
+  color: #5f6368 !important;
+  font-style: italic !important;
+  margin: 10px 0 !important;
+  padding-left: 16px !important;
+  display: block !important;
+}
+
+/* Link */
+.editor-link {
+  color: #1a73e8 !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+
+.editor-link:hover {
+  text-decoration: none !important;
+}
+
+/* Table */
+.editor-table {
+  border-collapse: collapse !important;
+  margin: 12px 0 !important;
+  width: 100% !important;
+}
+
+.editor-table-cell {
+  border: 1px solid #dadce0 !important;
+  padding: 6px 8px !important;
+  min-width: 60px !important;
+  vertical-align: top !important;
+}
+
+.editor-table-row {
+  height: 24px !important;
+}
+
+/* Text Alignment */
+.editor-text-left,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-left {
+  text-align: left !important;
+}
+
+.editor-text-center,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-center {
+  text-align: center !important;
+}
+
+.editor-text-right,
+[contenteditable="true"][data-lexical-editor="true"] .editor-text-right {
+  text-align: right !important;
+}
+
+/* Selection */
+::selection {
+  background-color: #e8f0fe;
+}
