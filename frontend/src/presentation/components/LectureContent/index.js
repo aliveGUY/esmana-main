@@ -14,16 +14,16 @@ const LectureContent = ({ lecture }) => {
   const isPurchased = !isNull(status)
 
   return (
-    <Stack sx={{ pr: 2, pb: 5 }} spacing={3}>
+    <Stack sx={{ pb: 5 }} spacing={3}>
       <LectureVideo embeddedVideo={materials?.embeddedVideo} isPurchased={isPurchased} />
 
-      <Stack direction="row" sx={{ mb: 4 }}>
-        <Box width="100%">
+      <Stack direction={{ md: 'row' }}>
+        <Box width="100%" mb={{ xs: 2, md: 0 }}>
           <Typography fontWeight="bold">{title}</Typography>
           <Typography>{description}</Typography>
         </Box>
         <Box>
-          <Typography sx={{ color: '#5f6368', mb: 1 }}>Meeting will start at 12.04.2025 14:00</Typography>
+          <Typography sx={{ color: 'stormWave.main', mb: 1 }}>Meeting will start at 12.04.2025 14:00</Typography>
           <Button variant="primary">Join Lecture</Button>
         </Box>
       </Stack>

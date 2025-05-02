@@ -10,7 +10,7 @@ const LectureTopControls = ({ lecture }) => {
   const isNotPurchased = isNull(lecture.status)
 
   return (
-    <Stack direction="row" justifyContent="space-between" sx={{ pr: 2 }}>
+    <Stack direction="row" justifyContent="space-between">
       <Button startIcon={<ArrowBackIcon />} to="/dashboard/courses" component={Link} variant="outlined">
         Back
       </Button>

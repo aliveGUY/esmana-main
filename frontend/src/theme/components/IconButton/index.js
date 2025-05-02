@@ -24,6 +24,19 @@ const MuiIconButton = {
             },
           }),
         },
+        {
+          props: { variant: 'outlined' },
+          style: ({ theme }) => ({
+            border: '2px solid',
+            borderColor: theme.palette.stormWave.main,
+            color: theme.palette.stormWave.main,
+            backgroundColor: 'white',
+
+            '&:hover': {
+              backgroundColor: theme.palette.snowFog.main,
+            },
+          }),
+        },
       ],
     }),
   },

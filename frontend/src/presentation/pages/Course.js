@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { find } from 'lodash'
 import { useParams } from 'react-router'
 
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
@@ -20,10 +20,11 @@ const Course = () => {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: '300px 1fr',
-          gridTemplateRows: 'auto 1fr',
+          gridTemplateColumns: { xs: '1fr', md: '300px 1fr' },
+          gridTemplateRows: { xs: 'auto auto 1fr', md: 'auto 1fr' },
           gap: 2,
           height: '100%',
+          px: 2,
         }}
       >
         <Box sx={{ gridColumn: '1 / -1' }}>
