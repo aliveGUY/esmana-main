@@ -21,6 +21,7 @@ const mockedCourseText1 =
 
 const mockedCourseText2 =
   '{"root":{"children":[{"children":[{"children":[{"detail":0,"format":1,"mode":"normal","style":"","text":"SUBJECT OF THE AGREEMENT","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"textFormat":1,"value":1}],"direction":"ltr","format":"","indent":0,"type":"list","version":1,"listType":"number","start":1,"tag":"ol"},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"1.1 The contractor undertakes to provide the customer with the services specified in clause 1.2 in the manner and under the conditions specified in this Agreement. The customer undertakes to pay the contractor in accordance with the terms of this Agreement.","type":"text","version":1}],"direction":"ltr","format":"justify","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1,"textFormat":1}}'
+
 const coursesSlice = createSlice({
   name: 'courses',
   initialState: {
@@ -42,11 +43,26 @@ const coursesSlice = createSlice({
               completed: true,
             },
             materials: {
+              embeddedVideo: 'https://www.youtube.com/embed/5_XWE5lRv-k',
               richText: mockedCourseText1,
               test: [
                 {
-                  question: 'question example',
-                  options: ['option 1', 'option 2', 'option 3'],
+                  question: 'Question example 1',
+                  correctAnswers: [0],
+                  options: [
+                    { value: 0, text: 'option 1' },
+                    { value: 2, text: 'option 2' },
+                    { value: 3, text: 'option 3' },
+                  ],
+                },
+                {
+                  question: 'Question example 1',
+                  correctAnswers: [0],
+                  options: [
+                    { value: 0, text: 'option 1' },
+                    { value: 2, text: 'option 2' },
+                    { value: 3, text: 'option 3' },
+                  ],
                 },
               ],
             },
@@ -62,11 +78,26 @@ const coursesSlice = createSlice({
               completed: false,
             },
             materials: {
+              embeddedVideo: null,
               richText: mockedCourseText2,
               test: [
                 {
-                  question: 'question example',
-                  options: ['option 1', 'option 2', 'option 3'],
+                  question: 'Question example 1',
+                  correctAnswers: [0],
+                  options: [
+                    { value: 0, text: 'option 1' },
+                    { value: 2, text: 'option 2' },
+                    { value: 3, text: 'option 3' },
+                  ],
+                },
+                {
+                  question: 'Question example 1',
+                  correctAnswers: [0],
+                  options: [
+                    { value: 0, text: 'option 1' },
+                    { value: 2, text: 'option 2' },
+                    { value: 3, text: 'option 3' },
+                  ],
                 },
               ],
             },

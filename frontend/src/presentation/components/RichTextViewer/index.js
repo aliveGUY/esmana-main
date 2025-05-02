@@ -86,7 +86,7 @@ const RichTextViewer = ({ content }) => {
     <div className="rich-text-viewer">
       <LexicalComposer initialConfig={editorConfig}>
         <div className="rich-text-editor-container">
-          <div className="rich-text-editor-content">
+          <div className="rich-text-editor-content rich-text-viewer-content">
             <RichTextPlugin
               contentEditable={<ContentEditable className="outline-none" />}
               placeholder={<div className="rich-text-editor-placeholder">No content available</div>}

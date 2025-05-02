@@ -261,6 +261,15 @@
   text-align: right !important;
 }
 
+/* Rich Text Viewer specific styles */
+.rich-text-viewer-content {
+  min-height: unset !important;
+}
+
+.rich-text-viewer-content [contenteditable="true"][data-lexical-editor="true"] {
+  min-height: unset !important;
+}
+
 /* Selection */
 ::selection {
   background-color: #e8f0fe;

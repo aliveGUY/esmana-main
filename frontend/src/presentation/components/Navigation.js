@@ -36,7 +36,7 @@ const Navigation = ({ isCollapsed, onClose }) => {
 
   const courseMarketing = useMatch('/dashboard/course-details/:id')
   const courses = useMatch('/dashboard/courses')
-  const course = useMatch('/dashboard/course/:id')
+  const course = useMatch('/dashboard/course/:courseId/:lectureId')
   const users = useMatch('/dashboard/users')
   const profile = useMatch('/dashboard/profile')
 
