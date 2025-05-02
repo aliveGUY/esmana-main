@@ -4,6 +4,7 @@ import { useParams } from 'react-router'
 
 import { Box, Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import LectureItem from './LectureItem'
+
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 

@@ -24,7 +24,6 @@ const Course = () => {
           gridTemplateRows: { xs: 'auto auto 1fr', md: 'auto 1fr' },
           gap: 2,
           height: '100%',
-          px: 2,
         }}
       >
         <Box sx={{ gridColumn: '1 / -1' }}>

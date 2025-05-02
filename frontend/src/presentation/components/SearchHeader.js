@@ -12,12 +12,34 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import CheckboxCollection from '../common/CheckboxCollection'
+import LargePopover from '../common/LargePopover'
 import SectionWrapper from '../common/SectionWrapper'
 
 import AddIcon from '@mui/icons-material/Add'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
 import SortIcon from '@mui/icons-material/Sort'
+
+const FilterAction = () => {
+  return (
+    <LargePopover content={<CheckboxCollection />}>
+      <IconButton>
+        <FilterAltIcon />
+      </IconButton>
+    </LargePopover>
+  )
+}
+
+const SortAction = () => {
+  return (
+    <LargePopover content={<CheckboxCollection />}>
+      <IconButton>
+        <SortIcon />
+      </IconButton>
+    </LargePopover>
+  )
+}
 
 const SearchHeader = ({ title, buttonText }) => {
   const theme = useTheme()
@@ -27,16 +49,12 @@ const SearchHeader = ({ title, buttonText }) => {
     return (
       <Stack px={2} pt={3} pb={2} spacing={2}>
         <Stack direction="row" alignItems="center">
-          <IconButton>
-            <FilterAltIcon />
-          </IconButton>
+          <FilterAction />
           <Typography flex={1} variant="title" fontWeight="bold" textAlign="center">
             {title}
           </Typography>
           {isEmpty(buttonText) ? (
-            <IconButton>
-              <SortIcon />
-            </IconButton>
+            <SortAction />
           ) : (
             <IconButton variant="primary">
               <AddIcon sx={{ color: 'white' }} />
@@ -90,12 +108,8 @@ const SearchHeader = ({ title, buttonText }) => {
             )}
           </Stack>
           <Stack direction="row" spacing={2}>
-            <IconButton>
-              <SortIcon />
-            </IconButton>
-            <IconButton>
-              <FilterAltIcon />
-            </IconButton>
+            <SortAction />
+            <FilterAction />
           </Stack>
         </Stack>
       </SectionWrapper>

@@ -105,7 +105,7 @@ const LectureItem = ({ lecture }) => {
             textOverflow="ellipsis"
             overflow="hidden"
             whiteSpace="nowrap"
-            maxWidth={{ xs: '25px', md: 'none' }}
+            maxWidth={{ xs: '250px', md: 'none' }}
           >
             {title}
           </Typography>
