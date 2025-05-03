@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { $getRoot } from 'lexical'
+import React, { useEffect } from 'react'
 
 import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
@@ -57,14 +56,8 @@ const ContentUpdater = ({ content }) => {
 
   useEffect(() => {
     if (editor && content) {
-      try {
-        // Parse the serialized state
-        const editorState = editor.parseEditorState(JSON.parse(content))
-        // Set the editor state
-        editor.setEditorState(editorState)
-      } catch (error) {
-        console.error('Error updating viewer content:', error)
-      }
+      const editorState = editor.parseEditorState(JSON.parse(content))
+      editor.setEditorState(editorState)
     }
   }, [editor, content])
 
@@ -76,9 +69,6 @@ const RichTextViewer = ({ content }) => {
     namespace: 'RichViewer',
     theme,
     editable: false,
-    onError(error) {
-      console.error(error)
-    },
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }
 

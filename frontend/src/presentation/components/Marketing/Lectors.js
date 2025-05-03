@@ -1,7 +1,7 @@
 import React from 'react'
 import { map } from 'lodash'
 
-import { Box, Grid2, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Paper, Stack, Typography, useTheme } from '@mui/material'
 import usePredefinedAvatar from '../../../hooks/usePredefinedAvatar'
 import SectionWrapper from '../../common/SectionWrapper'
 

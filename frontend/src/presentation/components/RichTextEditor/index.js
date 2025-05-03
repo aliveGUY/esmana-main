@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React from 'react'
 
 import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
@@ -59,9 +59,6 @@ const RichTextEditor = ({ initialContent, onChange, readOnly = false }) => {
   const editorConfig = {
     namespace: 'RichEditor',
     theme,
-    onError(error) {
-      console.error(error)
-    },
     editable: !readOnly,
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }

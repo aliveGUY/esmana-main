@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { find, map } from 'lodash'
 import { useParams } from 'react-router'
 
-import { Box, Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import LectureItem from './LectureItem'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -26,19 +26,24 @@ const LectureNavigation = ({ lectures }) => {
         backgroundColor: 'snowFog.main',
         borderRadius: '12px',
         height: 'min-content',
-        px: { xs: 2, md: 1 },
+        px: 1,
         pt: { xs: 2, md: 1 },
         pb: { md: 1 },
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center" display={{ md: 'none' }} sx={{ mb: 2 }}>
-        <Typography
-          fontWeight="bold"
-          whiteSpace="nowrap"
-          textOverflow="ellipsis"
-          overflow="hidden"
-          maxWidth={{ xs: '250px' }}
-        >
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{
+          display: { xs: 'grid', md: 'none' },
+          gridTemplateColumns: '1fr auto',
+          gap: 1,
+          mb: 2,
+          px: 1,
+        }}
+      >
+        <Typography fontWeight="bold" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
           {lecture.title}
         </Typography>
         <IconButton variant="outlined" onClick={handleToggle}>
@@ -47,7 +52,7 @@ const LectureNavigation = ({ lectures }) => {
       </Stack>
 
       <Collapse in={!isMobile || isExpanded}>
-        <Stack spacing={1}>
+        <Stack spacing={1} sx={{ pb: 2 }}>
           {map(lectures, (lecture) => (
             <LectureItem lecture={lecture} />
           ))}

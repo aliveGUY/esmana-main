@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
   $createParagraphNode,
-  $getRoot,
   $getSelection,
   $isElementNode,
   $isRangeSelection,
@@ -136,38 +135,34 @@ const ToolbarPlugin = () => {
     const selection = $getSelection()
     if (!$isRangeSelection(selection)) return
 
-    try {
-      // Check text format
-      const anchorNode = selection.anchor.getNode()
-      const headingNode = $getNearestNodeOfType(anchorNode, HeadingNode)
-      const quoteNode = $getNearestNodeOfType(anchorNode, QuoteNode)
-      const listNode = $getNearestNodeOfType(anchorNode, ListNode)
-      const linkNode = $getNearestNodeOfType(anchorNode, LinkNode)
+    // Check text format
+    const anchorNode = selection.anchor.getNode()
+    const headingNode = $getNearestNodeOfType(anchorNode, HeadingNode)
+    const quoteNode = $getNearestNodeOfType(anchorNode, QuoteNode)
+    const listNode = $getNearestNodeOfType(anchorNode, ListNode)
+    const linkNode = $getNearestNodeOfType(anchorNode, LinkNode)
 
-      // Get the parent element to check for alignment
-      const parentElement = anchorNode.getParent()
+    // Get the parent element to check for alignment
+    const parentElement = anchorNode.getParent()
 
-      // Check for alignment classes
-      const format = parentElement ? parentElement.getFormat() : ''
+    // Check for alignment classes
+    const format = parentElement ? parentElement.getFormat() : ''
 
-      setActiveFormats({
-        bold: selection.hasFormat('bold'),
-        italic: selection.hasFormat('italic'),
-        underline: selection.hasFormat('underline'),
-        h1: $isHeadingNode(headingNode) && headingNode.getTag() === 'h1',
-        h2: $isHeadingNode(headingNode) && headingNode.getTag() === 'h2',
-        h3: $isHeadingNode(headingNode) && headingNode.getTag() === 'h3',
-        quote: Boolean(quoteNode),
-        ul: $isListNode(listNode) && listNode.getTag() === 'ul',
-        ol: $isListNode(listNode) && listNode.getTag() === 'ol',
-        link: Boolean($isLinkNode(linkNode)),
-        alignLeft: format === 'left',
-        alignCenter: format === 'center',
-        alignRight: format === 'right',
-      })
-    } catch (error) {
-      console.error('Error updating toolbar:', error)
-    }
+    setActiveFormats({
+      bold: selection.hasFormat('bold'),
+      italic: selection.hasFormat('italic'),
+      underline: selection.hasFormat('underline'),
+      h1: $isHeadingNode(headingNode) && headingNode.getTag() === 'h1',
+      h2: $isHeadingNode(headingNode) && headingNode.getTag() === 'h2',
+      h3: $isHeadingNode(headingNode) && headingNode.getTag() === 'h3',
+      quote: Boolean(quoteNode),
+      ul: $isListNode(listNode) && listNode.getTag() === 'ul',
+      ol: $isListNode(listNode) && listNode.getTag() === 'ol',
+      link: Boolean($isLinkNode(linkNode)),
+      alignLeft: format === 'left',
+      alignCenter: format === 'center',
+      alignRight: format === 'right',
+    })
   }, [])
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 
 import { Box, Popover, useMediaQuery, useTheme } from '@mui/material'
 import MobileFlyoutMenu from './MobileFlyoutMenu'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { isNull } from 'lodash'
 
-import { Box, Button, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import LectureVideo from '../LectureVideo'
 import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'

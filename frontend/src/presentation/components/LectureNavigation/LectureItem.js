@@ -98,19 +98,18 @@ const LectureItem = ({ lecture }) => {
       onMouseDown={onRippleStart}
       onMouseUp={onRippleStop}
     >
-      <Box width="100%">
-        <Stack direction="row" justifyContent="space-between" spacing={2}>
-          <Typography
-            fontWeight="bold"
-            textOverflow="ellipsis"
-            overflow="hidden"
-            whiteSpace="nowrap"
-            maxWidth={{ xs: '250px', md: 'none' }}
-          >
-            {title}
-          </Typography>
-          {icon}
-        </Stack>
+      <Box
+        width="100%"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
+          gap: 1,
+        }}
+      >
+        <Typography fontWeight="bold" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+          {title}
+        </Typography>
+        {icon}
       </Box>
 
       <Stack direction="row" justifyContent="space-between" display={{ xs: 'none', md: 'flex' }} sx={{ pt: 1 }}>

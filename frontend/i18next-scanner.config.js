@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 
 module.exports = {
   input: ['src/**/*.{js,jsx}', '!src/**/*.spec.{js,jsx}', '!**/node_modules/**'],

@@ -14,6 +14,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
           height: 240,
           borderRadius: '24px',
           backgroundColor: 'snowFog.main',
+          p: 2,
         }}
       >
         <Box
@@ -26,7 +27,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
         >
           <LockIcon />
         </Box>
-        <Typography color="stormWave.main" fontWeight="medium">
+        <Typography color="stormWave.main" fontWeight="medium" textAlign="center">
           Please purchase this lecture to see more content
         </Typography>
       </Stack>
@@ -42,9 +43,10 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
           height: 240,
           borderRadius: '24px',
           backgroundColor: 'snowFog.main',
+          p: 2,
         }}
       >
-        <Typography color="stormWave.main" fontWeight="medium">
+        <Typography color="stormWave.main" fontWeight="medium" textAlign="center">
           No Video is Available
         </Typography>
       </Stack>
@@ -65,7 +67,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
-        allowfullscreen
+        allowFullScreen="true"
       ></iframe>
     </Box>
   )
