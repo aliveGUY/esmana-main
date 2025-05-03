@@ -28,8 +28,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
-            cacheDirectory: true,
-            cacheCompression: false,
+            cacheDirectory: false, // Disable caching to avoid findCacheDir errors
           }
         }
       },

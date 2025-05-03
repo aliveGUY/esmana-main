@@ -7,7 +7,7 @@ import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
 
-import GoogleMeetSvg from '../../../static/images/google-meet.svg'
+import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 
 const LectureContent = ({ lecture }) => {
   const { description, title, materials, status } = lecture
@@ -25,7 +25,17 @@ const LectureContent = ({ lecture }) => {
         </Box>
         <Box>
           <Typography sx={{ color: 'stormWave.main', mb: 1 }}>Meeting will start at 12.04.2025 14:00</Typography>
-          <Button variant="secondary" fullWidth endIcon={<GoogleMeetSvg />}>
+          <Button
+            variant="secondary"
+            fullWidth
+            endIcon={
+              <Stack justifyContent="center" alignItems="center">
+                <Box sx={{ height: 24, svg: { width: 26, height: 24, backgroundColor: 'white', borderRadius: '8px' } }}>
+                  <GoogleMeetSvg />
+                </Box>
+              </Stack>
+            }
+          >
             Join Lecture
           </Button>
         </Box>

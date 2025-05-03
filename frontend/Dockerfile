@@ -1,5 +1,4 @@
-# Build stage
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -9,20 +8,14 @@ RUN apk add --no-cache bash git
 # Copy package.json and yarn.lock first to leverage Docker cache
 COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
+# Install dependencies (without --frozen-lockfile to allow updates)
+RUN yarn install
 
 # Copy the rest of the application
 COPY . .
 
-# Build the application
-RUN yarn build
+# Expose port 3000 for development server
+EXPOSE 3000
 
-# Install serve for production
-RUN yarn global add serve
-
-# Expose port 80
-EXPOSE 80
-
-# Start the server
-CMD ["serve", "-s", "build", "-l", "80"]
+# Start development server
+CMD ["yarn", "start"]
