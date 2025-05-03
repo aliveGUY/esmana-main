@@ -1,4 +1,3 @@
-import React from 'react'
 
 import DashboardLayout from './presentation/common/DashboardLayout'
 import NotFoundPage from './presentation/pages/404'

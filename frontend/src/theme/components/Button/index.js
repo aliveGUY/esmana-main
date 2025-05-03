@@ -103,6 +103,16 @@ const MuiButton = {
             },
           }),
         },
+        {
+          props: { variant: 'secondary' },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.secondary.main,
+
+            '&:hover': {
+              backgroundColor: theme.palette.secondary.light,
+            },
+          }),
+        },
       ],
     },
   },

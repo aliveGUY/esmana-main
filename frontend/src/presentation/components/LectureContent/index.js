@@ -1,4 +1,3 @@
-import React from 'react'
 import { isNull } from 'lodash'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
@@ -7,6 +6,8 @@ import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
+
+import GoogleMeetSvg from '../../../static/images/google-meet.svg'
 
 const LectureContent = ({ lecture }) => {
   const { description, title, materials, status } = lecture
@@ -24,7 +25,9 @@ const LectureContent = ({ lecture }) => {
         </Box>
         <Box>
           <Typography sx={{ color: 'stormWave.main', mb: 1 }}>Meeting will start at 12.04.2025 14:00</Typography>
-          <Button variant="primary">Join Lecture</Button>
+          <Button variant="secondary" fullWidth endIcon={<GoogleMeetSvg />}>
+            Join Lecture
+          </Button>
         </Box>
       </Stack>
 

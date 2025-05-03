@@ -1,2 +1,2 @@
-*lock*
+# *lock* - Commented out to allow yarn.lock to be included
 .eslintrc.json

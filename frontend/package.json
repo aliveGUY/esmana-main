@@ -29,17 +29,17 @@
     "react-i18next": "15.5.1",
     "react-redux": "9.2.0",
     "react-router-dom": "7.1.5",
-    "react-scripts": "5.0.1",
-    "redux": "5.0.1",
-    "web-vitals": "2.1.4"
+    "redux": "5.0.1"
   },
   "scripts": {
-    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
-    "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject",
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "analyze": "ANALYZE=true webpack --config webpack.prod.js",
+    "serve:prod": "npx serve -s build",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx,js,jsx}\" && npx prettier \"**/*.{ts,tsx,js,jsx,scss,css,json}\" --write",
-    "scan:i18n": "npx i18next-scanner --config i18next-scanner.config.js"
+    "scan:i18n": "npx i18next-scanner --config i18next-scanner.config.js",
+    "clean": "rm -rf build"
   },
   "browserslist": {
     "production": [
@@ -55,10 +55,11 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.23.3",
-    "@testing-library/dom": "10.4.0",
-    "@testing-library/jest-dom": "6.6.3",
-    "@testing-library/react": "16.2.0",
-    "@testing-library/user-event": "13.5.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
+    "@svgr/webpack": "^8.1.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "compression-webpack-plugin": "^11.1.0",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "esbuild-loader": "4.0.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
@@ -70,6 +71,12 @@
     "i18next-scanner": "4.6.0",
     "locize": "3.2.2",
     "prettier": "3.2.5",
-    "sass": "1.85.0"
+    "react-refresh": "^0.17.0",
+    "sass": "1.85.0",
+    "terser-webpack-plugin": "^5.3.14",
+    "url-loader": "^4.1.1",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^6.0.1",
+    "webpack-merge": "^6.0.1"
   }
 }

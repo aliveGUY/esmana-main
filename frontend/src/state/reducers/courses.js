@@ -44,25 +44,18 @@ const coursesSlice = createSlice({
             },
             materials: {
               embeddedVideo: 'https://www.youtube.com/embed/5_XWE5lRv-k',
+              meetingLink: 'https://meet.google.com/duh-tkwr-iog',
               richText: mockedCourseText1,
               test: [
                 {
                   question: 'Question example 1',
                   correctAnswers: [0],
-                  options: [
-                    { value: 0, text: 'option 1' },
-                    { value: 2, text: 'option 2' },
-                    { value: 3, text: 'option 3' },
-                  ],
+                  options: ['option 1', 'option 2', 'option 3'],
                 },
                 {
                   question: 'Question example 1',
                   correctAnswers: [0],
-                  options: [
-                    { value: 0, text: 'option 1' },
-                    { value: 2, text: 'option 2' },
-                    { value: 3, text: 'option 3' },
-                  ],
+                  options: ['option 1', 'option 2', 'option 3'],
                 },
               ],
             },
@@ -78,26 +71,19 @@ const coursesSlice = createSlice({
               completed: false,
             },
             materials: {
+              meetingLink: 'https://meet.google.com/duh-tkwr-iog',
               embeddedVideo: null,
               richText: mockedCourseText2,
               test: [
                 {
                   question: 'Question example 1',
                   correctAnswers: [0],
-                  options: [
-                    { value: 0, text: 'option 1' },
-                    { value: 2, text: 'option 2' },
-                    { value: 3, text: 'option 3' },
-                  ],
+                  options: ['option 1', 'option 2', 'option 3'],
                 },
                 {
                   question: 'Question example 1',
                   correctAnswers: [0],
-                  options: [
-                    { value: 0, text: 'option 1' },
-                    { value: 2, text: 'option 2' },
-                    { value: 3, text: 'option 3' },
-                  ],
+                  options: ['option 1', 'option 2', 'option 3'],
                 },
               ],
             },
