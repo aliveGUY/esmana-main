@@ -1,13 +1,12 @@
 import { isNull } from 'lodash'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
+import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 import LectureVideo from '../LectureVideo'
 import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
-
-import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 
 const LectureContent = ({ lecture }) => {
   const { description, title, materials, status } = lecture

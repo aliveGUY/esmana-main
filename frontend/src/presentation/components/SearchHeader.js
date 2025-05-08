@@ -41,7 +41,7 @@ const SortAction = () => {
   )
 }
 
-const SearchHeader = ({ title, buttonText }) => {
+const SearchHeader = ({ title, buttonText, onPrimaryActionClick }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -56,7 +56,7 @@ const SearchHeader = ({ title, buttonText }) => {
           {isEmpty(buttonText) ? (
             <SortAction />
           ) : (
-            <IconButton variant="primary">
+            <IconButton variant="primary" onClick={onPrimaryActionClick}>
               <AddIcon sx={{ color: 'white' }} />
             </IconButton>
           )}
@@ -102,7 +102,7 @@ const SearchHeader = ({ title, buttonText }) => {
               />
             </Box>
             {buttonText && (
-              <Button variant="primary" endIcon={<AddIcon />}>
+              <Button variant="primary" endIcon={<AddIcon />} onClick={onPrimaryActionClick}>
                 {buttonText}
               </Button>
             )}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { map } from 'lodash'
 
 import { Box, Grid2, Paper, Stack } from '@mui/material'
@@ -12,10 +13,16 @@ import SearchHeader from '../components/SearchHeader'
 
 const Courses = () => {
   const { ownedCourses, availableCourses } = useSelector((state) => state.courses)
+  const navigate = useNavigate()
+
+  const handleRedirect = () => {
+    console.log('TEST')
+    navigate('/dashboard/course/new')
+  }
 
   return (
     <Stack>
-      <SearchHeader title="Courses" />
+      <SearchHeader title="Courses" buttonText="Create Course" onPrimaryActionClick={handleRedirect} />
       <Stack sx={{ px: 3 }} spacing={3}>
         <SectionWrapper>
           <Paper sx={{ p: 3 }}>

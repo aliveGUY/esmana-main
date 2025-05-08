@@ -1,7 +1,7 @@
 import React from 'react'
 
 const CreateLecture = () => {
-  return <div></div>
+  return <div>CreateLecture</div>
 }
 
 export default CreateLecture

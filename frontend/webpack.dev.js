@@ -1,8 +1,8 @@
-const { merge } = require('webpack-merge');
-const common = require('./webpack.common.js');
-const path = require('path');
-const webpack = require('webpack');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { merge } = require('webpack-merge')
+const common = require('./webpack.common.js')
+const path = require('path')
+const webpack = require('webpack')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 module.exports = merge(common, {
   mode: 'development',
@@ -33,9 +33,9 @@ module.exports = merge(common, {
         chunks: false,
         modules: false,
         reasons: false,
-        children: false
+        children: false,
       },
-    }
+    },
   },
   optimization: {
     runtimeChunk: 'single',
@@ -54,4 +54,4 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
   ],
-});
+})

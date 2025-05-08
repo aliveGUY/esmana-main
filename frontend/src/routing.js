@@ -1,4 +1,3 @@
-
 import DashboardLayout from './presentation/common/DashboardLayout'
 import NotFoundPage from './presentation/pages/404'
 import CheckoutCourses from './presentation/pages/CheckoutCourses'
@@ -6,6 +5,8 @@ import CheckoutMembership from './presentation/pages/CheckoutMembership'
 import Course from './presentation/pages/Course'
 import CourseMarketing from './presentation/pages/CourseMarketing'
 import Courses from './presentation/pages/Courses'
+import CreateCourse from './presentation/pages/CreateCourse'
+import CreateLecture from './presentation/pages/CreateLecture'
 import ForgotPassword from './presentation/pages/ForgotPassword'
 import Login from './presentation/pages/Login'
 import Profile from './presentation/pages/Profile'
@@ -57,6 +58,16 @@ const routing = [
         path: 'course-details/:id',
         title: '',
         element: <CourseMarketing />,
+      },
+      {
+        path: 'course/new',
+        title: '',
+        element: <CreateCourse />,
+      },
+      {
+        path: 'course/new/lecture/new',
+        title: '',
+        element: <CreateLecture />,
       },
       {
         path: 'course/:courseId/:lectureId',
