@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
+import { Link } from 'react-router-dom'
 
 const LectureItem = () => {
   return (
@@ -30,7 +31,9 @@ const LecturesSection = () => {
           <Stack sx={{ p: 2 }} spacing={2}>
             <Stack justifyContent="space-between" direction="row">
               <Typography fontWeight="bold">Lectures</Typography>
-              <Button variant="primary">Add Lecture</Button>
+              <Button variant="primary" to="/dashboard/course/new/lecture/new" component={Link}>
+                Add Lecture
+              </Button>
             </Stack>
             <Stack
               sx={{

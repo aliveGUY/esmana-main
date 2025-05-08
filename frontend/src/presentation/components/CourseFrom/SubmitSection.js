@@ -9,8 +9,12 @@ const SubmitSection = () => {
       <SectionWrapper>
         <Paper>
           <Stack p={2} direction="row" justifyContent="end" spacing={2}>
-            <Button variant="outlined">Cancel</Button>
-            <Button variant="primary">Submit</Button>
+            <Button type="button" variant="outlined">
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary">
+              Submit
+            </Button>
           </Stack>
         </Paper>
       </SectionWrapper>
