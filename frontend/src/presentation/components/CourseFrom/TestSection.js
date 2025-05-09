@@ -1,16 +1,7 @@
 import React, { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { includes, map } from 'lodash'
 
 import { Box, Button, Checkbox, IconButton, Paper, Stack, TextField, Typography } from '@mui/material'
-import {
-  addBprOption,
-  addBprQuestion,
-  removeBprOption,
-  removeBprQuestion,
-  removeBprQuestionAnswer,
-  setBprQuestionAnswer,
-} from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 import AddIcon from '@mui/icons-material/Add'
@@ -42,7 +33,7 @@ const AddItemInput = ({ label, onSubmit }) => {
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            Submit
+            Add
           </Button>
         </Stack>
       </Stack>
@@ -58,19 +49,17 @@ const AddItemInput = ({ label, onSubmit }) => {
   )
 }
 
-const Option = ({ option, answers, questionId }) => {
-  const dispatch = useDispatch()
-
+const Option = ({ option, answers, questionId, onRemoveOption, onRemoveQuestionAnswer, onSetQuestionAnswer }) => {
   const handleToggle = (e) => {
     if (e.target.checked) {
-      dispatch(setBprQuestionAnswer({ questionId, option }))
+      onSetQuestionAnswer({ questionId, option })
     } else {
-      dispatch(removeBprQuestionAnswer({ questionId, option }))
+      onRemoveQuestionAnswer({ questionId, option })
     }
   }
 
   const handleRemoveOption = () => {
-    dispatch(removeBprOption({ questionId, option }))
+    onRemoveOption({ questionId, option })
   }
 
   return (
@@ -84,16 +73,22 @@ const Option = ({ option, answers, questionId }) => {
   )
 }
 
-const Question = ({ data }) => {
+const Question = ({
+  data,
+  onAddOption,
+  onRemoveQuestion,
+  onRemoveOption,
+  onRemoveQuestionAnswer,
+  onSetQuestionAnswer,
+}) => {
   const { question, options, answers, id } = data
-  const dispatch = useDispatch()
 
   const handleAddOption = (data) => {
-    dispatch(addBprOption({ questionId: id, option: data }))
+    onAddOption({ questionId: id, option: data })
   }
 
   const handleRemoveQuestion = () => {
-    dispatch(removeBprQuestion(id))
+    onRemoveQuestion(id)
   }
 
   return (
@@ -106,7 +101,14 @@ const Question = ({ data }) => {
       </Stack>
       <Stack sx={{ pl: 2 }} spacing={1}>
         {map(options, (option) => (
-          <Option option={option} answers={answers} questionId={id} />
+          <Option
+            option={option}
+            answers={answers}
+            questionId={id}
+            onRemoveOption={onRemoveOption}
+            onRemoveQuestionAnswer={onRemoveQuestionAnswer}
+            onSetQuestionAnswer={onSetQuestionAnswer}
+          />
         ))}
         <AddItemInput label="Add Option" onSubmit={handleAddOption} />
       </Stack>
@@ -114,27 +116,36 @@ const Question = ({ data }) => {
   )
 }
 
-const TestSection = () => {
-  const bprEvaluation = useSelector((state) => state.courseForm.bprEvaluation)
-  const dispatch = useDispatch()
-
-  const handleAddQuestion = (data) => {
-    dispatch(addBprQuestion(data))
-  }
-
+const TestSection = ({
+  title,
+  data = [],
+  onAddOption,
+  onAddQuestion,
+  onRemoveOption,
+  onRemoveQuestion,
+  onRemoveQuestionAnswer,
+  onSetQuestionAnswer,
+}) => {
   return (
     <Box px={2}>
       <SectionWrapper>
         <Paper>
           <Box p={2}>
             <Typography fontWeight="bold" pb={3}>
-              BPR evaluation
+              {title}
             </Typography>
             <Stack spacing={2}>
-              {map(bprEvaluation, (question) => (
-                <Question data={question} />
+              {map(data, (question) => (
+                <Question
+                  data={question}
+                  onAddOption={onAddOption}
+                  onRemoveOption={onRemoveOption}
+                  onRemoveQuestion={onRemoveQuestion}
+                  onRemoveQuestionAnswer={onRemoveQuestionAnswer}
+                  onSetQuestionAnswer={onSetQuestionAnswer}
+                />
               ))}
-              <AddItemInput label="Add Question" onSubmit={handleAddQuestion} />
+              <AddItemInput label="Add Question" onSubmit={onAddQuestion} />
             </Stack>
           </Box>
         </Paper>

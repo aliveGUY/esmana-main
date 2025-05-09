@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { TimePicker } from '@mui/x-date-pickers/TimePicker'
-
-import { Box, Paper, Stack, TextField } from '@mui/material'
+import { Box, Paper, Stack } from '@mui/material'
+import DatePicker from '../../common/inputs/DatePicker'
+import TextField from '../../common/inputs/TextField'
+import TimePicker from '../../common/inputs/TimePicker'
 import SectionWrapper from '../../common/SectionWrapper'
 
 const LectureDetailsInputSection = () => {
@@ -14,9 +14,9 @@ const LectureDetailsInputSection = () => {
           <Box p={2}>
             <Stack spacing={2}>
               <TextField name="price" label="Price" />
-              <DatePicker label="Basic date picker" />
-              <TimePicker label="Basic time picker" />
-              <TimePicker label="Basic time picker" />
+              <DatePicker name="date" label="Date" />
+              <TimePicker name="startHour" label="Starting hour" />
+              <TimePicker name="endHour" label="Ending hour" />
             </Stack>
           </Box>
         </Paper>

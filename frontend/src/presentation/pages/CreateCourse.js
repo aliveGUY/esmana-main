@@ -1,7 +1,16 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Stack } from '@mui/material'
+import {
+  addBprOption,
+  addBprQuestion,
+  removeBprOption,
+  removeBprQuestion,
+  removeBprQuestionAnswer,
+  setBprQuestionAnswer,
+} from '../../state/reducers/courseForm'
 import CertificatesSection from '../components/CourseFrom/CertificatesSection'
 import GeneralCourseInputSection from '../components/CourseFrom/GeneralCourseInputSection'
 import ImageInputSection from '../components/CourseFrom/ImageInputSection'
@@ -11,6 +20,9 @@ import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
 
 const CreateCourse = () => {
+  const dispatch = useDispatch()
+  const courseForm = useSelector((state) => state.courseForm)
+
   const methods = useForm({
     defaultValues: {
       thumbnail: '',
@@ -19,14 +31,39 @@ const CreateCourse = () => {
       active: false,
       participationCertificate: '',
       bprCertificate: '',
-      bprEvaluation: [],
       students: [],
-      lectures: [],
     },
   })
 
   const onSubmit = (data) => {
+    data.bprEvaluation = courseForm.bprEvaluation
+    data.lectures = courseForm.lectures
+
     console.log({ data })
+  }
+
+  const handleAddBprOption = ({ questionId, option }) => {
+    dispatch(addBprOption({ questionId, option }))
+  }
+
+  const handleAddBprQuestion = (data) => {
+    dispatch(addBprQuestion(data))
+  }
+
+  const handleRemoveBprOption = ({ questionId, option }) => {
+    dispatch(removeBprOption({ questionId, option }))
+  }
+
+  const handleRemoveBprQuestion = (questionId) => {
+    dispatch(removeBprQuestion(questionId))
+  }
+
+  const handleRemoveBprQuestionAnswer = ({ questionId, option }) => {
+    dispatch(removeBprQuestionAnswer({ questionId, option }))
+  }
+
+  const handleSetBprQuestionAnswer = ({ questionId, option }) => {
+    dispatch(setBprQuestionAnswer({ questionId, option }))
   }
 
   return (
@@ -35,10 +72,19 @@ const CreateCourse = () => {
         <Stack spacing={2} sx={{ pb: 5 }}>
           <ImageInputSection />
           <GeneralCourseInputSection />
-          <LecturesSection />
-          <PeopleSection />
+          <LecturesSection data={courseForm.lectures} />
+          <PeopleSection title="Students" actionText="Add Student" />
           <CertificatesSection />
-          <TestSection />
+          <TestSection
+            title="BPR evaluation"
+            data={courseForm.bprEvaluation}
+            onAddOption={handleAddBprOption}
+            onAddQuestion={handleAddBprQuestion}
+            onRemoveOption={handleRemoveBprOption}
+            onRemoveQuestion={handleRemoveBprQuestion}
+            onRemoveQuestionAnswer={handleRemoveBprQuestionAnswer}
+            onSetQuestionAnswer={handleSetBprQuestionAnswer}
+          />
           <SubmitSection />
         </Stack>
       </form>

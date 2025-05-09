@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import generateRandomString from '../../utlis/generateRandomString'
+import generateRandomString from '../../utils/generateRandomString'
 
 const courseFormSlice = createSlice({
   name: 'courseForm',
@@ -61,6 +61,25 @@ const courseFormSlice = createSlice({
       const question = state.bprEvaluation.find((q) => q.id === questionId)
       question.answers = question.answers.filter((answer) => answer !== option)
     },
+
+    addLecture: (state, { payload }) => {
+      const temporaryId = generateRandomString(10)
+      payload.id = temporaryId
+      state.lectures.push(payload)
+    },
+
+    editLecture: (state, { payload }) => {
+      const { lectureId, lecture } = payload
+      const lectureIndex = state.lectures.findIndex((l) => l.id === lectureId)
+
+      if (lectureIndex !== -1) {
+        state.lectures[lectureIndex] = {
+          ...state.lectures[lectureIndex],
+          ...lecture,
+          id: lectureId,
+        }
+      }
+    },
   },
 })
 
@@ -71,5 +90,7 @@ export const {
   removeBprOption,
   setBprQuestionAnswer,
   removeBprQuestionAnswer,
+  addLecture,
+  editLecture,
 } = courseFormSlice.actions
 export default courseFormSlice.reducer

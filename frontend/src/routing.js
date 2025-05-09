@@ -7,6 +7,7 @@ import CourseMarketing from './presentation/pages/CourseMarketing'
 import Courses from './presentation/pages/Courses'
 import CreateCourse from './presentation/pages/CreateCourse'
 import CreateLecture from './presentation/pages/CreateLecture'
+import EditLectureDraft from './presentation/pages/EditLectureDraft'
 import ForgotPassword from './presentation/pages/ForgotPassword'
 import Login from './presentation/pages/Login'
 import Profile from './presentation/pages/Profile'
@@ -68,6 +69,11 @@ const routing = [
         path: 'course/new/lecture/new',
         title: '',
         element: <CreateLecture />,
+      },
+      {
+        path: 'course/new/lecture/:id',
+        title: '',
+        element: <EditLectureDraft />,
       },
       {
         path: 'course/:courseId/:lectureId',

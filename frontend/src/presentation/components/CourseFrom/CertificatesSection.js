@@ -9,7 +9,8 @@ const CertificatesSection = () => {
       <SectionWrapper>
         <Paper>
           <Box p={2}>
-            <Button variant="primary">Select Certificate</Button>
+            <Button variant="primary">Select BPR Certificate</Button>
+            <Button variant="primary">Select Participation Certificate</Button>
           </Box>
         </Paper>
       </SectionWrapper>

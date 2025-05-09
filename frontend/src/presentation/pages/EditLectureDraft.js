@@ -1,13 +1,13 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { find } from 'lodash'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
 import useLectureEvaluationFromControls from '../../hooks/useLectureEvaluationFromControls'
-import { addLecture } from '../../state/reducers/courseForm'
-import { convertLectureDatesFormToStorage } from '../../utils/lectureDates'
-import SectionWrapper from '../common/SectionWrapper'
+import { editLecture } from '../../state/reducers/courseForm'
+import { convertLectureDatesFormToStorage, convertLectureDatesStorageToForm } from '../../utils/lectureDates'
 import GeneralLectureInputSection from '../components/CourseFrom/GeneralLectureInputSection'
 import LectureDetailsInputSection from '../components/CourseFrom/LectureDetailsInputSection'
 import LectureMaterialSection from '../components/CourseFrom/LectureMaterialSection'
@@ -18,9 +18,12 @@ import VideoSection from '../components/CourseFrom/VideoSection'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-const CreateLecture = () => {
-  const dispatch = useDispatch()
+const EditLectureDraft = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const lectures = useSelector((state) => state.courseForm.lectures)
+  const lecture = find(lectures, (lecture) => lecture.id === id)
 
   const {
     lectureEvaluation,
@@ -30,17 +33,22 @@ const CreateLecture = () => {
     handleRemoveOption,
     handleAddQuestion,
     handleAddOption,
-  } = useLectureEvaluationFromControls()
+  } = useLectureEvaluationFromControls(lecture?.materials?.evaluation)
+
+  const { date, startHour, endHour } = convertLectureDatesStorageToForm({
+    startHour: lecture?.startHour,
+    endHour: lecture?.endHour,
+  })
 
   const methods = useForm({
     defaultValues: {
       embeddedVideo: '',
-      title: '',
-      description: '',
-      price: '',
-      date: '',
-      startHour: '',
-      endHour: '',
+      title: lecture?.title,
+      description: lecture?.description,
+      price: lecture?.price,
+      date: date,
+      startHour: startHour,
+      endHour: endHour,
       richText: {
         uk: '',
         en: '',
@@ -55,7 +63,7 @@ const CreateLecture = () => {
       endHour: data.endHour,
     })
 
-    const payload = {
+    const lecture = {
       title: data.title,
       description: data.description,
       price: data.price,
@@ -68,19 +76,25 @@ const CreateLecture = () => {
       },
     }
 
-    dispatch(addLecture(payload))
+    dispatch(editLecture({ lectureId: id, lecture }))
     navigate('/dashboard/course/new')
   }
+
+  useEffect(() => {
+    if (!lecture) {
+      navigate('/dashboard/course/new')
+    }
+  }, [lecture])
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <Stack spacing={2} sx={{ pb: 5 }}>
-          <SectionWrapper>
+          <Box>
             <Button startIcon={<ArrowBackIcon />} to="/dashboard/course/new" component={Link} variant="outlined">
               Back
             </Button>
-          </SectionWrapper>
+          </Box>
           <VideoSection />
           <GeneralLectureInputSection />
           <LectureDetailsInputSection />
@@ -104,4 +118,4 @@ const CreateLecture = () => {
   )
 }
 
-export default CreateLecture
+export default EditLectureDraft

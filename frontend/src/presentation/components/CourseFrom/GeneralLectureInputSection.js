@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { Box, Paper, Stack, TextField } from '@mui/material'
+import { Box, Paper, Stack } from '@mui/material'
+import TextField from '../../common/inputs/TextField'
 import SectionWrapper from '../../common/SectionWrapper'
 
 const GeneralLectureInputSection = () => {
