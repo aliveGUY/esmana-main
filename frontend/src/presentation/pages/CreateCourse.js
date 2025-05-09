@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 import { Stack } from '@mui/material'
 import CertificatesSection from '../components/CourseFrom/CertificatesSection'
-import GeneralInputSection from '../components/CourseFrom/GeneralInputSection'
+import GeneralCourseInputSection from '../components/CourseFrom/GeneralCourseInputSection'
 import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import PeopleSection from '../components/CourseFrom/PeopleSection'
@@ -13,6 +13,7 @@ import TestSection from '../components/CourseFrom/TestSection'
 const CreateCourse = () => {
   const methods = useForm({
     defaultValues: {
+      thumbnail: '',
       title: '',
       description: '',
       active: false,
@@ -33,7 +34,7 @@ const CreateCourse = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <Stack spacing={2} sx={{ pb: 5 }}>
           <ImageInputSection />
-          <GeneralInputSection />
+          <GeneralCourseInputSection />
           <LecturesSection />
           <PeopleSection />
           <CertificatesSection />

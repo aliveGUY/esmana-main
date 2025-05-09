@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
-import { Link } from 'react-router-dom'
 
 const LectureItem = () => {
   return (

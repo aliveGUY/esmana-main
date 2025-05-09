@@ -33,6 +33,15 @@ const MuiTextField = {
         color: theme.palette.stormWave.main,
       },
 
+      '& .MuiInputLabel-root[data-shrink="false"]': {
+        transform: 'translate(14px, 11px) scale(1)',
+      },
+
+      '& .MuiOutlinedInput-root': {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+
       variants: [
         {
           props: { variant: 'filled' },
