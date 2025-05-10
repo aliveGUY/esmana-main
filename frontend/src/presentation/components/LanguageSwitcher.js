@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { find, map } from 'lodash'
 
 import { IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material'
+import { ENGLISH, UKRAINIAN } from '../../constants'
 import { languageUtils } from '../../i18n'
 
 function LanguageSwitcher() {
@@ -11,12 +12,12 @@ function LanguageSwitcher() {
     {
       emoji: '🇺🇦',
       title: 'Українська',
-      value: 'uk',
+      value: UKRAINIAN,
     },
     {
       emoji: '🇬🇧',
       title: 'English',
-      value: 'en',
+      value: ENGLISH,
     },
   ]
 

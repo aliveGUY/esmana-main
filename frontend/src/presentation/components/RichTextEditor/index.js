@@ -14,12 +14,12 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 
+import { Box } from '@mui/material'
 import TabPlugin from './TabPlugin.js'
 import ToolbarPlugin from './ToolbarPlugin.js'
 
 import './editor-styles.css'
 
-// Google Docs-inspired theme
 const theme = {
   paragraph: 'editor-paragraph',
   heading: {
@@ -47,7 +47,6 @@ const theme = {
     strikethrough: 'editor-text-strikethrough',
     underlineStrikethrough: 'editor-text-underline-strikethrough',
   },
-  // Text alignment classes
   alignment: {
     left: 'editor-text-left',
     center: 'editor-text-center',
@@ -55,7 +54,7 @@ const theme = {
   },
 }
 
-const RichTextEditor = ({ initialContent, onChange, readOnly = false }) => {
+const RichTextEditor = ({ content, onChange, readOnly = false }) => {
   const editorConfig = {
     namespace: 'RichEditor',
     theme,
@@ -63,37 +62,39 @@ const RichTextEditor = ({ initialContent, onChange, readOnly = false }) => {
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }
 
-  // Add initial state if provided
-  if (initialContent) {
-    editorConfig.editorState = initialContent
+  if (content) {
+    editorConfig.editorState = content
   }
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
-      <div className="rich-text-editor-container">
+      <Box
+        sx={{
+          border: '1px solid',
+          borderColor: 'stormWave.main',
+          borderRadius: '12px',
+        }}
+      >
         {!readOnly && <ToolbarPlugin />}
-        <div className="rich-text-editor-content">
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="outline-none" />}
-            placeholder={<div className="rich-text-editor-placeholder">Enter some text...</div>}
-            ErrorBoundary={LexicalErrorBoundary}
+        <RichTextPlugin
+          contentEditable={<ContentEditable className="outline-none" />}
+          placeholder={<div className="rich-text-editor-placeholder">Enter some text...</div>}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <HistoryPlugin />
+        {!readOnly && <AutoFocusPlugin />}
+        <ListPlugin />
+        <LinkPlugin />
+        {!readOnly && <TabPlugin />}
+        {onChange && (
+          <OnChangePlugin
+            onChange={(editorState) => {
+              const serializedState = JSON.stringify(editorState.toJSON())
+              onChange(serializedState)
+            }}
           />
-          <HistoryPlugin />
-          {!readOnly && <AutoFocusPlugin />}
-          <ListPlugin />
-          <LinkPlugin />
-          {!readOnly && <TabPlugin />}
-          {onChange && (
-            <OnChangePlugin
-              onChange={(editorState) => {
-                // Serialize the editor state to JSON
-                const serializedState = JSON.stringify(editorState.toJSON())
-                onChange(serializedState)
-              }}
-            />
-          )}
-        </div>
-      </div>
+        )}
+      </Box>
     </LexicalComposer>
   )
 }

@@ -50,6 +50,14 @@ const MuiIconButton = {
             },
           }),
         },
+        {
+          props: { variant: 'richText' },
+          style: ({ theme }) => ({
+            '&.active': {
+              backgroundColor: theme.palette.snowFog.dark,
+            },
+          }),
+        },
       ],
     }),
   },

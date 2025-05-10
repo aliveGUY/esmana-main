@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { UKRAINIAN, ENGLISH } = require('./src/constants')
 
 module.exports = {
   input: ['src/**/*.{js,jsx}', '!src/**/*.spec.{js,jsx}', '!**/node_modules/**'],
@@ -11,12 +12,12 @@ module.exports = {
       list: ['t'],
       extensions: ['.js', '.jsx'],
     },
-    lngs: ['en', 'uk'],
+    lngs: [ENGLISH, UKRAINIAN],
     ns: ['common'],
-    defaultLng: 'en',
+    defaultLng: ENGLISH,
     defaultNs: 'common',
     defaultValue: function (lng, ns, key) {
-      return lng === 'en' ? key : ''
+      return lng === ENGLISH ? key : ''
     },
     resource: {
       loadPath: 'locales/{{lng}}/{{ns}}.json',
