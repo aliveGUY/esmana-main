@@ -1,55 +1,55 @@
 import {
   Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  ManyToMany,
-  OneToOne,
-  JoinTable,
-  JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from "typeorm";
 import { Course } from "./Course";
-import { User } from "./User";
-import { TempLectureResources } from "./TempLectureResources";
+import { LectureMaterials } from "./LectureMaterials";
+import { LectureStudent } from "./LectureStudent";
+import { LectureLector } from "./LectureLector";
 
 @Entity({ name: "lecture" })
 export class Lecture {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'title', type: "varchar", length: 255, nullable: false })
+  @Column({ name: "title", type: "varchar", length: 255 })
   title: string;
 
-  @Column({ name: 'start_time', type: "datetime", nullable: false })
+  @Column({ name: "description", type: "text" })
+  description: string;
+
+  @Column({ name: "price", type: "decimal", precision: 10, scale: 2 })
+  price: number;
+
+  @Column({ name: "start_time", type: "timestamp" })
   startTime: Date;
 
-  @Column({ name: 'end_time', type: "datetime", nullable: false })
+  @Column({ name: "end_time", type: "timestamp" })
   endTime: Date;
 
-  @Column({ name: 'video_link', type: "varchar", length: 500, nullable: true })
-  videoLink: string;
+  @OneToOne(() => LectureMaterials, materials => materials.lecture, { nullable: true, cascade: true })
+  materials: LectureMaterials;
+  
+  @OneToMany(() => LectureStudent, lectureStudent => lectureStudent.lecture)
+  students: LectureStudent[];
 
-  @ManyToMany(() => User)
-  @JoinTable({
-    name: "lecture_speakers",
-    joinColumn: { name: "lecture_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "speaker_id", referencedColumnName: "id" }
-  })
-  speakers: User[];
+  @OneToMany(() => LectureLector, lectureLector => lectureLector.lecture)
+  lectors: LectureLector[];
 
-  @ManyToOne(() => Course, (course) => course.lectures, { nullable: false, onDelete: "CASCADE" })
+  @ManyToOne(() => Course, course => course.lectures)
   @JoinColumn({ name: "course_id" })
   course: Course;
 
-  @OneToOne(() => TempLectureResources, (tempResources) => tempResources.lecture, { cascade: true, onDelete: "CASCADE" })
-  @JoinColumn({ name: "temp_lecture_resources_id" })
-  tempResources: TempLectureResources;
-
-  @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 }

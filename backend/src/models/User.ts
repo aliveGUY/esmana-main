@@ -5,14 +5,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Index,
-  OneToOne,
-  JoinColumn,
   OneToMany
 } from "typeorm";
-import { Identity } from "./Identity";
 import { ERoles } from "./enums/ERoles";
 import { Exclude } from 'class-transformer';
-import { Notification } from "./Notification";
+import { LectureStudent } from "./LectureStudent";
+import { LectureLector } from "./LectureLector";
 
 @Entity({ name: "user" })
 export class User {
@@ -48,16 +46,16 @@ export class User {
   })
   role: ERoles;
 
-  @OneToOne(() => Identity, (identity) => identity.user, { cascade: true })
-  @JoinColumn({ name: "identity_id" })
-  identity: Identity;
-
-  @OneToMany(() => Notification, notification => notification.user, { cascade: true })
-  notifications: Notification[];
 
   @CreateDateColumn({ name: 'created_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)" })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', type: "timestamp", precision: 6, default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
   updatedAt: Date;
+
+  @OneToMany(() => LectureStudent, lectureStudent => lectureStudent.user)
+  lecturesAsStudent: LectureStudent[];
+
+  @OneToMany(() => LectureLector, lectureLector => lectureLector.user)
+  lecturesAsLector: LectureLector[];
 }

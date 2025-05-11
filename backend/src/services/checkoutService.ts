@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { StripeClient } from "src/clients/StripeClient";
 import { RedisClient } from "src/clients/RedisClient";
-import { CreateUserDto } from "src/models/dto/CreateUserDto";
 
 @Injectable()
 export class CheckoutService {
@@ -15,7 +14,7 @@ export class CheckoutService {
   }
 
 
-  async createMembershipPaymentIntent(memberIdentity: CreateUserDto) {
+  async createMembershipPaymentIntent(memberIdentity) {
     const { clientSecret, paymentIntentId } = await this.stripeClient.createMembershipPaymentIntent()
 
     const potentialSession = {

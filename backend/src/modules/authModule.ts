@@ -11,16 +11,14 @@ import { AuthService } from 'src/services/authService';
 import { UsersService } from 'src/services/usersService';
 import { LocalStrategy } from 'src/utils/LocalStrategy';
 import { SessionSerializer } from 'src/utils/SessionSerializer';
-import { IdentityModule } from './identityModule';
 import { UsersModule } from './usersModule';
-import { NotificationModule } from './notificationModule';
-import { CourseModule } from './courseModule';
+import { RedisModule } from './redisModule';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ session: true }),
-    UsersModule, IdentityModule, NotificationModule, CourseModule
+    UsersModule, RedisModule
   ],
   controllers: [AuthController],
   providers: [

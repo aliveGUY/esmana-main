@@ -1,28 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEmpty } from 'lodash';
-import { CheckIfUserExistDto } from 'src/models/dto/CheckIfUserExistDto';
-import { CreateMemberIdentityDto } from 'src/models/dto/CreateMemberIdentityDto';
-import { CreateStudentIdentityDto } from 'src/models/dto/CreateStudentIdentityDto';
-import { CreateUserDto } from 'src/models/dto/CreateUserDto';
-import { GetUserDto } from 'src/models/dto/GetUserDto';
-import { LoginUserDto } from 'src/models/dto/LoginUserDto';
-import { MemberRegistrationDto } from 'src/models/dto/MemberRegistrationDto';
-import { StudentRegistrationDto } from 'src/models/dto/StudentRegistrationDto';
-import { Identity } from 'src/models/Identity';
 import { User } from 'src/models/User';
 import { Like, Repository } from 'typeorm';
-import { IdentityRepository } from './identityRepository';
 
 
 @Injectable()
 export class UsersRepository {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
-    private readonly identityRepository: IdentityRepository,
+    @InjectRepository(User) private readonly users: Repository<User>
   ) { }
 
-  async getAllUsers(): Promise<GetUserDto[]> {
+  async getAllUsers(): Promise<any[]> {
     return this.users.find()
   }
 
@@ -30,7 +19,7 @@ export class UsersRepository {
     await this.users.delete(id)
   }
 
-  async getUser(user: LoginUserDto): Promise<User | null> {
+  async getUser(user): Promise<User | null> {
     return this.users
       .createQueryBuilder("user")
       .where("user.email = :phoneOrEmail OR user.phone = :phoneOrEmail", {
@@ -44,7 +33,7 @@ export class UsersRepository {
     return this.users.findOne({ where: { id } })
   }
 
-  async checkIfUserExists(user: CheckIfUserExistDto): Promise<boolean> {
+  async checkIfUserExists(user): Promise<boolean> {
     const matchingUser = await this.users
       .createQueryBuilder("user")
       .where("user.email = :email OR user.phone = :phone", {
@@ -56,7 +45,7 @@ export class UsersRepository {
     return !isEmpty(matchingUser)
   }
 
-  async searchForUserByEmail(partialEmail: string): Promise<GetUserDto[]> {
+  async searchForUserByEmail(partialEmail: string): Promise<any[]> {
     return await this.users.find({
       select: ['email', 'id'],
       where: {
@@ -70,8 +59,8 @@ export class UsersRepository {
 
   }
 
-  async registerMember(dto: MemberRegistrationDto): Promise<GetUserDto> {
-    const newUser: CreateUserDto = {
+  async registerMember(dto): Promise<any> {
+    const newUser = {
       email: dto.email,
       phone: dto.phone,
       password: dto.password,
@@ -81,48 +70,11 @@ export class UsersRepository {
     }
 
     const createdUser: User = await this.users.save(newUser)
-
-    const newIdentity: CreateMemberIdentityDto = {
-      city: dto.city,
-      birthDate: dto.birthDate,
-      workplace: dto.workplace,
-      position: dto.position,
-      education: dto.education,
-      fieldOfWork: dto.fieldOfWork,
-      diplomaNumber: dto.diplomaNumber,
-      personalDataCollectionConsent: dto.personalDataCollectionConsent,
-      residenceAddress: dto.residenceAddress,
-      country: dto.country,
-      region: dto.region,
-      taxpayerId: dto.taxpayerId,
-      passportId: dto.passportId,
-      passportIssuedBy: dto.passportIssuedBy,
-      educationInstitution: dto.educationInstitution,
-      workExperience: dto.workExperience,
-      relevantTopics: dto.relevantTopics,
-      user: createdUser
-    }
-
-    let createdIdentity: Identity | undefined
-    try {
-      createdIdentity = await this.identityRepository.createStudentIdentity(newIdentity)
-    } catch {
-      await this.users.delete(createdUser.id)
-      throw new Error('Error creating user')
-    }
-
-    if (isEmpty(createdIdentity)) {
-      await this.users.delete(createdUser.id)
-      throw new Error('Error creating user')
-    }
-
-    await this.users.update(createdUser.id, { identity: createdIdentity })
-
     return this.users.findOneOrFail({ where: { id: createdUser.id } });
   }
 
-  async registerStudent(dto: StudentRegistrationDto): Promise<GetUserDto> {
-    const newUser: CreateUserDto = {
+  async registerStudent(dto): Promise<any> {
+    const newUser = {
       email: dto.email,
       phone: dto.phone,
       password: dto.password,
@@ -132,34 +84,6 @@ export class UsersRepository {
     }
 
     const createdUser: User = await this.users.save(newUser)
-
-    const newIdentity: CreateStudentIdentityDto = {
-      city: dto.city,
-      birthDate: dto.birthDate,
-      workplace: dto.workplace,
-      position: dto.position,
-      education: dto.education,
-      fieldOfWork: dto.fieldOfWork,
-      diplomaNumber: dto.diplomaNumber,
-      personalDataCollectionConsent: dto.personalDataCollectionConsent,
-      user: createdUser
-    }
-
-    let createdIdentity: Identity | undefined
-    try {
-      createdIdentity = await this.identityRepository.createStudentIdentity(newIdentity)
-    } catch {
-      await this.users.delete(createdUser.id)
-      throw new Error('Error creating user')
-    }
-
-    if (isEmpty(createdIdentity)) {
-      await this.users.delete(createdUser.id)
-      throw new Error('Error creating user')
-    }
-
-    await this.users.update(createdUser.id, { identity: createdIdentity })
-
     return this.users.findOneOrFail({ where: { id: createdUser.id } });
   }
 }

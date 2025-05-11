@@ -2,11 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsersRepository } from "src/repositories/usersRepository";
 import { compare } from 'bcryptjs';
 import { isEmpty } from "lodash";
-import { LoginUserDto } from "src/models/dto/LoginUserDto";
 import { User } from "src/models/User";
-import { GetUserDto } from "src/models/dto/GetUserDto";
-import { CheckIfUserExistDto } from "src/models/dto/CheckIfUserExistDto";
-import { ChangePasswordDto } from "src/models/dto/ChangePasswordDto";
 import { hash } from 'bcryptjs';
 import { RedisClient } from "src/clients/RedisClient";
 
@@ -17,7 +13,7 @@ export class AuthService {
     private readonly redisClient: RedisClient
   ) { }
 
-  async validateUser(user: LoginUserDto): Promise<GetUserDto> {
+  async validateUser(user): Promise<any> {
     const validationResult = await this.usersRepository.getUser(user);
 
     if (isEmpty(validationResult)) {
@@ -41,8 +37,8 @@ export class AuthService {
     await this.redisClient.deleteSession(sessionId);
   }
 
-  async changePassword(user: User, passwords: ChangePasswordDto): Promise<void> {
-    const userDto: LoginUserDto = {
+  async changePassword(user: User, passwords): Promise<void> {
+    const userDto = {
       phoneOrEmail: user.email,
       password: passwords.oldPassword
     }
@@ -61,7 +57,7 @@ export class AuthService {
     return await this.usersRepository.findUserById(id)
   }
 
-  async checkIfUserExist(user: CheckIfUserExistDto): Promise<boolean> {
+  async checkIfUserExist(user): Promise<boolean> {
     return await this.usersRepository.checkIfUserExists(user)
   }
 }

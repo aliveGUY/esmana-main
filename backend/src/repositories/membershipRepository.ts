@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateMembershipDto } from "src/models/dto/CreateMembershipDto";
 import { Membership } from "src/models/Membership";
 import { Repository } from "typeorm";
 
@@ -10,7 +9,7 @@ export class membershipRepository {
     @InjectRepository(Membership) private readonly lecture: Repository<Membership>,
   ) { }
 
-  async createMembership(membership: CreateMembershipDto) {
+  async createMembership(membership) {
 
   }
 }

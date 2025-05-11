@@ -2,14 +2,13 @@ import { Body, Controller, Get, Headers, HttpCode, Post, Req, UseGuards } from '
 import { Request } from 'express';
 import { CheckoutService } from 'src/services/checkoutService';
 import { PaymentLoginGuard } from 'src/guards/PaymentLoginGuard';
-import { CreateUserDto } from 'src/models/dto/CreateUserDto';
 
 @Controller('/')
 export class CheckoutController {
   constructor(private readonly checkoutService: CheckoutService) { }
 
   @Post('create-membership-payment-intent')
-  async createCheckoutSession(@Body() memberIdentity: CreateUserDto) {
+  async createCheckoutSession(@Body() memberIdentity) {
     return this.checkoutService.createMembershipPaymentIntent(memberIdentity)
   }
 

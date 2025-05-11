@@ -4,8 +4,6 @@ import { isEmpty } from 'lodash';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { LoginGuard } from 'src/guards/LoginGuard';
 import { LogoutGuard } from 'src/guards/LogoutGuard';
-import { ChangePasswordDto } from 'src/models/dto/ChangePasswordDto';
-import { CheckIfUserExistDto } from 'src/models/dto/CheckIfUserExistDto';
 import { AuthService } from 'src/services/authService';
 
 @Controller('/auth')
@@ -33,13 +31,13 @@ export class AuthController {
 
   @Put('pass')
   @UseGuards(AuthGuard)
-  changePassword(@Req() req: Request, @Body() passwords: ChangePasswordDto) {
+  changePassword(@Req() req: Request, @Body() passwords) {
     if (isEmpty(req.user)) throw new UnauthorizedException()
     return this.authService.changePassword(req.user, passwords)
   }
 
   @Post('check')
-  checkIfUserExist(@Body() user: CheckIfUserExistDto): Promise<boolean> {
+  checkIfUserExist(@Body() user): Promise<boolean> {
     return this.authService.checkIfUserExist(user)
   }
 }
