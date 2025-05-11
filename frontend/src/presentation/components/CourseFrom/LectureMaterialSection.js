@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import { Box, Paper, Stack, Typography } from '@mui/material'
-import { ENGLISH, UKRAINIAN } from '../../../constants'
+import { ENGLISH } from '../../../constants'
 import SectionWrapper from '../../common/SectionWrapper'
 import RichTextEditor from '../RichTextEditor'
 import LanguageToggle from '../RichTextEditor/LanguageToggle'
 
 const LectureMaterialSection = () => {
-  const [richText, setRichText] = useState({ [UKRAINIAN]: '', [ENGLISH]: '' })
+  const { setValue, getValues } = useFormContext()
+  const [richText, setRichText] = useState(getValues('richText'))
   const [selectedLang, setSelectedLang] = useState(ENGLISH)
 
   const handleChange = (data) => {
+    setValue(`richText.${selectedLang}`, data)
     setRichText((prev) => ({
       ...prev,
       [selectedLang]: data,
@@ -20,6 +23,8 @@ const LectureMaterialSection = () => {
   const setLanguage = (lang) => {
     setSelectedLang(lang)
   }
+
+  if (!richText) return
 
   return (
     <Box px={2}>

@@ -80,6 +80,22 @@ const courseFormSlice = createSlice({
         }
       }
     },
+
+    setTitle: (state, { payload }) => {
+      state.title = payload
+    },
+
+    setDescription: (state, { payload }) => {
+      state.description = payload
+    },
+
+    setActive: (state, { payload }) => {
+      state.active = payload
+    },
+
+    setThumbnail: (state, { payload }) => {
+      state.thumbnail = payload
+    },
   },
 })
 
@@ -92,5 +108,9 @@ export const {
   removeBprQuestionAnswer,
   addLecture,
   editLecture,
+  setTitle,
+  setDescription,
+  setActive,
+  setThumbnail,
 } = courseFormSlice.actions
 export default courseFormSlice.reducer

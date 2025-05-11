@@ -49,10 +49,7 @@ const EditLectureDraft = () => {
       date: date,
       startHour: startHour,
       endHour: endHour,
-      richText: {
-        uk: '',
-        en: '',
-      },
+      richText: lecture?.materials.richText,
     },
   })
 
@@ -71,7 +68,7 @@ const EditLectureDraft = () => {
       endHour: endHour,
       materials: {
         embeddedVideo: '',
-        richText: '',
+        richText: data.richText,
         evaluation: lectureEvaluation,
       },
     }

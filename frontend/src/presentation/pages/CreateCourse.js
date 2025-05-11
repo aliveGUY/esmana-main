@@ -25,10 +25,10 @@ const CreateCourse = () => {
 
   const methods = useForm({
     defaultValues: {
-      thumbnail: '',
-      title: '',
-      description: '',
-      active: false,
+      thumbnail: courseForm.thumbnail,
+      title: courseForm.title,
+      description: courseForm.description,
+      active: courseForm.active,
       participationCertificate: '',
       bprCertificate: '',
       students: [],

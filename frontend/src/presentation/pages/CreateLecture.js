@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { Box, Button, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
+import { ENGLISH, UKRAINIAN } from '../../constants'
 import useLectureEvaluationFromControls from '../../hooks/useLectureEvaluationFromControls'
 import { addLecture } from '../../state/reducers/courseForm'
 import { convertLectureDatesFormToStorage } from '../../utils/lectureDates'
@@ -42,8 +43,8 @@ const CreateLecture = () => {
       startHour: '',
       endHour: '',
       richText: {
-        uk: '',
-        en: '',
+        [UKRAINIAN]: '',
+        [ENGLISH]: '',
       },
     },
   })
@@ -63,7 +64,7 @@ const CreateLecture = () => {
       endHour: endHour,
       materials: {
         embeddedVideo: '',
-        richText: '',
+        richText: data.richText,
         evaluation: lectureEvaluation,
       },
     }
