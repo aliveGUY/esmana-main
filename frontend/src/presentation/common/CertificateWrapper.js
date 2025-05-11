@@ -3,10 +3,12 @@ import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 
 import { Box } from '@mui/material'
+import { useCertificateFactory } from '../../hooks/useCertificateFactory'
 
-const CertificateWrapper = forwardRef(({ TemplateComponent, studentName, date, courseName }, ref) => {
+const CertificateWrapper = forwardRef(({ certificateTemplate, studentName, date, courseName }, ref) => {
   const certificateRef = useRef(null)
   const [certificateImg, setCertificateImg] = useState(null)
+  const TemplateComponent = useCertificateFactory(certificateTemplate)
 
   useEffect(() => {
     const generateCertificateImage = async () => {
@@ -44,11 +46,18 @@ const CertificateWrapper = forwardRef(({ TemplateComponent, studentName, date, c
           component="img"
           src={certificateImg}
           alt="Certificate"
-          sx={{ width: '100%', maxWidth: '250px', boxShadow: '0px 5px 10px rgba(31, 35, 62, 0.15)' }}
+          sx={{
+            width: '100%',
+            maxWidth: '250px',
+            boxShadow: '0px 5px 10px rgba(31, 35, 62, 0.15)',
+            pointerEvents: 'none',
+          }}
         />
       )}
     </Fragment>
   )
 })
+
+CertificateWrapper.displayName = 'CertificateWrapper'
 
 export default CertificateWrapper

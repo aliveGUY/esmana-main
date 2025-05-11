@@ -14,7 +14,7 @@ const Hero = () => {
           <Typography fontWeight="bold" fontSize={{ xs: 23, md: 56 }} lineHeight="normal" textAlign="center">
             International Professional School
             <br />
-            "Sleep Medicine" 2025
+            &ldquo;Sleep Medicine&rdquo; 2025
           </Typography>
           <Typography display={{ md: 'none' }} textAlign="center" color="stormWave.main" px="6px">
             Sleep: Physiology, Diagnostics, Treatment. <br />

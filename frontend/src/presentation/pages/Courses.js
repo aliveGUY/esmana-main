@@ -16,7 +16,6 @@ const Courses = () => {
   const navigate = useNavigate()
 
   const handleRedirect = () => {
-    console.log('TEST')
     navigate('/dashboard/course/new')
   }
 

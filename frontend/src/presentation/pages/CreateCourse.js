@@ -29,8 +29,8 @@ const CreateCourse = () => {
       title: courseForm.title,
       description: courseForm.description,
       active: courseForm.active,
-      participationCertificate: '',
-      bprCertificate: '',
+      participationCertificate: courseForm.participationCertificate,
+      bprCertificate: courseForm.bprCertificate,
       students: [],
     },
   })
@@ -39,7 +39,8 @@ const CreateCourse = () => {
     data.bprEvaluation = courseForm.bprEvaluation
     data.lectures = courseForm.lectures
 
-    console.log({ data })
+    // Submit the form data
+    // console.log({ data })
   }
 
   const handleAddBprOption = ({ questionId, option }) => {

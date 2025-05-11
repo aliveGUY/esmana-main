@@ -13,7 +13,6 @@ const Switch = ({ onClick, onChange, name }) => {
       control={control}
       name={name}
       render={({ field }) => {
-        console.log({ field })
         const handleChange = (e) => {
           onChange(e.target.checked)
           field.onChange(e)

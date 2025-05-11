@@ -20,8 +20,12 @@ export default function useInputFactory() {
     [INPUT_TYPE_CHECKBOX]: Checkbox,
   }
 
-  return ({ inputType, ...rest }) => {
+  const InputComponent = ({ inputType, ...rest }) => {
     const Component = inputs[inputType]
     return <Component {...rest} />
   }
+
+  InputComponent.displayName = 'InputComponent'
+
+  return InputComponent
 }

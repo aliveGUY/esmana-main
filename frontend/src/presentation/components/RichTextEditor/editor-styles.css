@@ -17,7 +17,7 @@
 }
 
 /* Direct styling for the contenteditable div - this is the root of the editor */
-[contenteditable="true"][data-lexical-editor="true"] {
+[contenteditable='true'][data-lexical-editor='true'] {
   min-height: 300px !important;
   width: 100% !important;
   outline: none !important;
@@ -32,17 +32,17 @@
 }
 
 /* Ensure proper tab indentation display */
-[contenteditable="true"][data-lexical-editor="true"] p {
+[contenteditable='true'][data-lexical-editor='true'] p {
   margin: 0 0 8px 0 !important;
   padding: 0 !important;
   min-height: 1.5em !important;
 }
 
-[contenteditable="true"][data-lexical-editor="true"] p.tab-indented {
+[contenteditable='true'][data-lexical-editor='true'] p.tab-indented {
   padding-left: 40px !important;
 }
 
-[contenteditable="true"][data-lexical-editor="true"] p.tab-indented-2 {
+[contenteditable='true'][data-lexical-editor='true'] p.tab-indented-2 {
   padding-left: 80px !important;
 }
 
@@ -58,40 +58,40 @@
 
 /* Text Formatting */
 .editor-text-bold,
-[contenteditable="true"][data-lexical-editor="true"] strong,
-[contenteditable="true"][data-lexical-editor="true"] b,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-bold {
+[contenteditable='true'][data-lexical-editor='true'] strong,
+[contenteditable='true'][data-lexical-editor='true'] b,
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-bold {
   font-weight: 700 !important;
 }
 
 .editor-text-italic,
-[contenteditable="true"][data-lexical-editor="true"] em,
-[contenteditable="true"][data-lexical-editor="true"] i,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-italic {
+[contenteditable='true'][data-lexical-editor='true'] em,
+[contenteditable='true'][data-lexical-editor='true'] i,
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-italic {
   font-style: italic !important;
 }
 
 .editor-text-underline,
-[contenteditable="true"][data-lexical-editor="true"] u,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-underline {
+[contenteditable='true'][data-lexical-editor='true'] u,
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-underline {
   text-decoration: underline !important;
 }
 
 .editor-text-strikethrough,
-[contenteditable="true"][data-lexical-editor="true"] s,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-strikethrough {
+[contenteditable='true'][data-lexical-editor='true'] s,
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-strikethrough {
   text-decoration: line-through !important;
 }
 
 .editor-text-underline-strikethrough,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-underline-strikethrough {
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-underline-strikethrough {
   text-decoration: underline line-through !important;
 }
 
 /* Headings */
 .editor-heading-h1,
-[contenteditable="true"][data-lexical-editor="true"] h1,
-[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h1 {
+[contenteditable='true'][data-lexical-editor='true'] h1,
+[contenteditable='true'][data-lexical-editor='true'] .editor-heading-h1 {
   font-size: 32px !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
@@ -102,8 +102,8 @@
 }
 
 .editor-heading-h2,
-[contenteditable="true"][data-lexical-editor="true"] h2,
-[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h2 {
+[contenteditable='true'][data-lexical-editor='true'] h2,
+[contenteditable='true'][data-lexical-editor='true'] .editor-heading-h2 {
   font-size: 24px !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
@@ -114,8 +114,8 @@
 }
 
 .editor-heading-h3,
-[contenteditable="true"][data-lexical-editor="true"] h3,
-[contenteditable="true"][data-lexical-editor="true"] .editor-heading-h3 {
+[contenteditable='true'][data-lexical-editor='true'] h3,
+[contenteditable='true'][data-lexical-editor='true'] .editor-heading-h3 {
   font-size: 20px !important;
   font-weight: 400 !important;
   line-height: 1.2 !important;
@@ -154,8 +154,8 @@
 
 /* Quote */
 .editor-quote,
-[contenteditable="true"][data-lexical-editor="true"] blockquote,
-[contenteditable="true"][data-lexical-editor="true"] .editor-quote {
+[contenteditable='true'][data-lexical-editor='true'] blockquote,
+[contenteditable='true'][data-lexical-editor='true'] .editor-quote {
   border-left: 3px solid #dadce0 !important;
   color: #5f6368 !important;
   font-style: italic !important;
@@ -195,17 +195,17 @@
 
 /* Text Alignment */
 .editor-text-left,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-left {
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-left {
   text-align: left !important;
 }
 
 .editor-text-center,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-center {
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-center {
   text-align: center !important;
 }
 
 .editor-text-right,
-[contenteditable="true"][data-lexical-editor="true"] .editor-text-right {
+[contenteditable='true'][data-lexical-editor='true'] .editor-text-right {
   text-align: right !important;
 }
 
@@ -214,6 +214,6 @@
   min-height: unset !important;
 }
 
-.rich-text-viewer-content [contenteditable="true"][data-lexical-editor="true"] {
+.rich-text-viewer-content [contenteditable='true'][data-lexical-editor='true'] {
   min-height: unset !important;
 }

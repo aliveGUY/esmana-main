@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+import { CERTIFICATE_TEMPLATE_EXAMPLE } from '../../constants'
 import generateRandomString from '../../utils/generateRandomString'
 
 const courseFormSlice = createSlice({
@@ -9,8 +10,8 @@ const courseFormSlice = createSlice({
     title: '',
     description: '',
     active: false,
-    participationCertificate: '',
-    bprCertificate: '',
+    participationCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
+    bprCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
     bprEvaluation: [],
     students: [],
     lectures: [],
@@ -96,6 +97,14 @@ const courseFormSlice = createSlice({
     setThumbnail: (state, { payload }) => {
       state.thumbnail = payload
     },
+
+    setParticipationCertificate: (state, { payload }) => {
+      state.participationCertificate = payload
+    },
+
+    setBprCertificate: (state, { payload }) => {
+      state.bprCertificate = payload
+    },
   },
 })
 
@@ -112,5 +121,7 @@ export const {
   setDescription,
   setActive,
   setThumbnail,
+  setParticipationCertificate,
+  setBprCertificate,
 } = courseFormSlice.actions
 export default courseFormSlice.reducer
