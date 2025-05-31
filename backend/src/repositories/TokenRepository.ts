@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TokenData } from '../models/token.model';
+import { TokenData } from '../models/Token';
 import { TokenType } from '../models/enums';
 import { IRedisService } from '../infrastructure/redis/interfaces/redis.interface';
 import * as crypto from 'crypto';
@@ -36,9 +36,12 @@ export class TokenRepository implements ITokenRepository {
     const tokenData: TokenData = {
       userId,
       type: TokenType.ACCESS,
+      email: metadata.email || '',
+      roles: metadata.roles || [],
       createdAt: new Date(),
       expiresAt,
       isRevoked: false,
+      refreshTokenId: metadata.refreshTokenId,
       metadata,
     };
 
@@ -67,6 +70,8 @@ export class TokenRepository implements ITokenRepository {
     const tokenData: TokenData = {
       userId,
       type: TokenType.REFRESH,
+      email: metadata.email || '',
+      roles: metadata.roles || [],
       createdAt: new Date(),
       expiresAt,
       isRevoked: false,

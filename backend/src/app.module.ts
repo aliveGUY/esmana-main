@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth.module';
-import { TokenAuthGuard } from './guards/token-auth.guard';
+import { TokenAuthGuard } from './guards/TokenAuthGuard';
 import redisConfig from './config/redis.config';
 import tokenConfig from './config/token.config';
 import googleConfig from './config/google.config';

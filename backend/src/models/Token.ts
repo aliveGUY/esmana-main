@@ -28,13 +28,16 @@ export class Token {
   }
 }
 
-export interface TokenData {
+export class TokenData {
   userId: string;
   type: TokenType;
+  email: string;
+  roles: string[];
   createdAt: Date;
   expiresAt: Date;
   userAgent?: string;
   ipAddress?: string;
   isRevoked: boolean;
+  refreshTokenId?: string;
   metadata?: any;
 }

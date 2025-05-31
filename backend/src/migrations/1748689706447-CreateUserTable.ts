@@ -14,6 +14,22 @@ export class CreateUserTable1748689706447 implements MigrationInterface {
                         isPrimary: true,
                     },
                     {
+                        name: "first_name",
+                        type: "varchar",
+                        length: "255",
+                    },
+                    {
+                        name: "middle_name",
+                        type: "varchar",
+                        length: "255",
+                        isNullable: true,
+                    },
+                    {
+                        name: "last_name",
+                        type: "varchar",
+                        length: "255",
+                    },
+                    {
                         name: "email",
                         type: "varchar",
                         length: "255",
@@ -24,16 +40,6 @@ export class CreateUserTable1748689706447 implements MigrationInterface {
                         type: "varchar",
                         length: "255",
                         isNullable: true,
-                    },
-                    {
-                        name: "first_name",
-                        type: "varchar",
-                        length: "255",
-                    },
-                    {
-                        name: "last_name",
-                        type: "varchar",
-                        length: "255",
                     },
                     {
                         name: "google_id",
@@ -48,12 +54,6 @@ export class CreateUserTable1748689706447 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
-                        name: "provider",
-                        type: "enum",
-                        enum: ["local", "google"],
-                        default: "'local'",
-                    },
-                    {
                         name: "is_email_verified",
                         type: "boolean",
                         default: false,
@@ -61,17 +61,6 @@ export class CreateUserTable1748689706447 implements MigrationInterface {
                     {
                         name: "roles",
                         type: "json",
-                    },
-                    {
-                        name: "created_at",
-                        type: "timestamp",
-                        default: "CURRENT_TIMESTAMP",
-                    },
-                    {
-                        name: "updated_at",
-                        type: "timestamp",
-                        default: "CURRENT_TIMESTAMP",
-                        onUpdate: "CURRENT_TIMESTAMP",
                     },
                 ],
             }),
