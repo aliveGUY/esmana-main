@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apk add --no-cache bash git
 
 # Copy package.json and yarn.lock first to leverage Docker cache
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install dependencies (without --frozen-lockfile to allow updates)
 RUN yarn install

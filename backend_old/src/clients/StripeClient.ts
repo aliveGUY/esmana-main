@@ -7,13 +7,13 @@ export class StripeClient {
   private readonly apiVersion = "2025-03-31.basil";
 
   constructor() {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error('Stripe key ot defined')
-    }
+    // if (!process.env.STRIPE_SECRET_KEY) {
+    //   throw new Error('Stripe key ot defined')
+    // }
 
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: this.apiVersion,
-    });
+    // this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    //   apiVersion: this.apiVersion,
+    // });
   }
 
   getApiVersion(): string {
