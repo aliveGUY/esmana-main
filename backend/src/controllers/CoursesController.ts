@@ -30,6 +30,7 @@ export class CoursesController {
   }
 
   @UseGuards(TokenAuthGuard)
+  @Public()
   @Post('')
   async createCourse(@Req() request: Request, @Body() course: CreateCourseDto): Promise<DetailedCourseDto> {
     const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);

@@ -60,6 +60,7 @@ import { User } from '../models/User';
     'IAuthService',
     'ITokenRepository',
     TokenAuthGuard,
+    'IGoogleClient',
   ],
 })
 export class AuthModule { }

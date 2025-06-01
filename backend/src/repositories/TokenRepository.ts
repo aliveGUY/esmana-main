@@ -97,14 +97,11 @@ export class TokenRepository implements ITokenRepository {
 
   async validateToken(token: string): Promise<TokenData | null> {
     // Check if token is blacklisted
-    console.log({ test: await this.isTokenBlacklisted(token) })
     if (await this.isTokenBlacklisted(token)) {
       return null;
     }
 
     const tokenData = await this.getTokenData(token);
-
-    console.log({ tokenData })
 
     if (!tokenData) {
       return null;

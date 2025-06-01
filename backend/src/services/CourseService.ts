@@ -10,8 +10,7 @@ import { Request } from 'express';
 import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository";
 import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
-import { DataSource } from "typeorm";
-import { InjectDataSource } from "@nestjs/typeorm";
+import { IGoogleClient } from "src/infrastructure/GoogleClient";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto): Promise<DetailedCourseDto>
@@ -29,36 +28,34 @@ export class CourseService implements ICourseService {
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
     @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
     @Inject('ILectureService') private readonly lectureService: ILectureService,
-    @InjectDataSource() private readonly dataSource: DataSource,
+    @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
   ) { }
 
   async createCourse(courseDto: CreateCourseDto): Promise<DetailedCourseDto> {
-    return await this.dataSource.transaction(async manager => {
-      const bprEvaluation = await Promise.all(
-        courseDto.bprEvaluation.map(evaluation =>
-          this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
-        )
-      );
+    const bprEvaluation = await Promise.all(
+      courseDto.bprEvaluation.map(evaluation =>
+        this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
+      )
+    );
 
-      const lectures = await Promise.all(
-        courseDto.lectures.map(lecture =>
-          this.lectureService.createLecture(lecture)
-        )
-      );
+    const lectures = await Promise.all(
+      courseDto.lectures.map(lecture =>
+        this.lectureService.createLecture(lecture)
+      )
+    );
 
-      const course: Partial<Course> = {
-        thumbnailUrl: courseDto.thumbnailUrl,
-        title: courseDto.title,
-        description: courseDto.description,
-        isActive: courseDto.isActive,
-        participationCertificate: courseDto.participationCertificate,
-        bprCertificate: courseDto.bprCertificate,
-        lectures: lectures,
-        bprEvaluation: bprEvaluation,
-      };
+    const course: Partial<Course> = {
+      thumbnailUrl: courseDto.thumbnailUrl,
+      title: courseDto.title,
+      description: courseDto.description,
+      isActive: courseDto.isActive,
+      participationCertificate: courseDto.participationCertificate,
+      bprCertificate: courseDto.bprCertificate,
+      lectures: lectures,
+      bprEvaluation: bprEvaluation,
+    };
 
-      return await this.courseRepository.createCourse(course);
-    });
+    return await this.courseRepository.createCourse(course);
   }
 
   async getCourseById(id: number, request: Request): Promise<DetailedCourseDto> {

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common"
+import { IGoogleClient } from "src/infrastructure/GoogleClient"
 import { CreateLectureDto } from "src/models/dto/CreateLectureDto"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
 import { Lecture } from "src/models/Lecture"
@@ -19,6 +20,7 @@ export class LectureService implements ILectureService {
     @Inject('ILectureRepository') private readonly lectureRepository: ILectureRepository,
     @Inject('ILectureMaterialsRepository') private readonly lectureMaterialsRepository: ILectureMaterialsRepository,
     @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
+    @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
   async createLecture(lectureDto: CreateLectureDto): Promise<Lecture> {
@@ -26,9 +28,11 @@ export class LectureService implements ILectureService {
       lectureDto.materials.evaluation.map(evaluation => this.evaluationQuestionRepository.createEvaluationQuestion(evaluation))
     )
 
+    const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
+
     const lectureMaterialsDto: Partial<LectureMaterials> = {
       videoUrl: lectureDto.materials.videoUrl,
-      meetingUrl: 'lectureDto.materials.meetingUrl',
+      meetingUrl: meetingUrl,
       richText: lectureDto.materials.richText,
       evaluation: evaluation,
     }
