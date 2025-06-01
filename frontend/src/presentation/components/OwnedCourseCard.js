@@ -1,20 +1,35 @@
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { find, isNull } from 'lodash'
+import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import LoginImage from '../../static/images/image1_0.jpg'
+import { useAuth } from '../../hooks/useAuth'
+
+export const getTotalHours = (lectures) => {
+  return lectures.reduce((sum, lecture) => {
+    const start = new Date(lecture.startTime)
+    const end = new Date(lecture.endTime)
+    const durationMs = end.getTime() - start.getTime()
+
+    const hours = durationMs / (1000 * 60 * 60) // convert ms → hours
+    return sum + hours
+  }, 0)
+}
 
 const OwnedCourseCard = ({ course }) => {
   const navigate = useNavigate()
+  const { user } = useAuth()
 
-  const { title, description, lectures } = course
-  const lecturesCount = 20
-  const hoursCount = 40
-  const firstOwnedLecture = find(lectures, (lecture) => !isNull(lecture.status) && !lecture.status.completed)
+  const { title, description, lectures, id } = course
+  const lecturesCount = lectures.length
+  const hoursCount = getTotalHours(lectures)
+  const firstOwnedLecture = find(lectures, (lecture) =>
+    lecture.users?.some((userLecture) => userLecture.userId === user?.id),
+  )
 
   const redirect = useCallback(() => {
-    navigate(`/dashboard/course/0/${firstOwnedLecture.id}`)
+    navigate(`/dashboard/course/${id}/${firstOwnedLecture.id}`)
   }, [navigate])
 
   return (

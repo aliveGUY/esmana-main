@@ -3,27 +3,19 @@ import { useSelector } from 'react-redux'
 import { concat, map, sortBy } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
+import { useCourses } from '../../hooks/useCourses'
+import { useFormattedDates } from '../../hooks/useFormattedDates'
 
 const LectureItem = ({ lecture }) => {
   const { description, title, startTime, owned } = lecture
 
-  const date = startTime.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-
-  const hours = startTime.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
+  const { date, hoursStart } = useFormattedDates({ startTime })
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <Box>
         <Typography color={owned ? 'black' : 'ternary.main'} fontWeight="bold" textAlign="right">
-          {hours}
+          {hoursStart}
         </Typography>
         <Typography color={owned ? 'stormWave.main' : 'ternary.main'} textAlign="right" whiteSpace="nowrap">
           {date}
@@ -40,7 +32,8 @@ const LectureItem = ({ lecture }) => {
 }
 
 const ScheduleList = () => {
-  const { ownedCourses, highlightedCourse = [] } = useSelector((state) => state.courses)
+  const { highlightedCourse = [] } = useSelector((state) => state.courses)
+  const { ownedCourses } = useCourses()
 
   const ownedLectures = ownedCourses
     .flatMap((course) => course.lectures)

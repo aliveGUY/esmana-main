@@ -16,7 +16,7 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
-import { cloneDeepWith, isArray, isPlainObject, mapValues, omit } from 'lodash'
+import { isArray, isPlainObject, mapValues, omit } from 'lodash'
 
 function removeIdsDeep(value) {
   if (isArray(value)) {

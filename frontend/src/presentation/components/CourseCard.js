@@ -5,15 +5,23 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
 import LoginImage from '../../static/images/image1_0.jpg'
+import { getTotalHours } from './OwnedCourseCard'
+
+export const getTotalPrice = (lectures) => {
+  return lectures.reduce((sum, lecture) => {
+    const price = Number(lecture.price)
+    return sum + (isNaN(price) ? 0 : price)
+  }, 0)
+}
 
 const CourseCard = ({ course }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { title, description } = course
-  const price = 20000
-  const lecturesCount = 20
-  const hoursCount = 40
+  const { title, description, id, lectures } = course
+  const price = getTotalPrice(lectures)
+  const lecturesCount = lectures.length
+  const hoursCount = getTotalHours(lectures)
 
   const handleCourseHighlight = () => {
     dispatch(highlightCourse(course))
@@ -25,7 +33,7 @@ const CourseCard = ({ course }) => {
 
   const redirect = useCallback(() => {
     handleRemoveHighlightedCourse()
-    navigate('/dashboard/course-details/0')
+    navigate(`/dashboard/course-details/${id}`)
   }, [navigate])
 
   return (

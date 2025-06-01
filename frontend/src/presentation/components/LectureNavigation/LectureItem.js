@@ -9,6 +9,7 @@ import { useFormattedDates } from '../../../hooks/useFormattedDates'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import LockIcon from '@mui/icons-material/Lock'
+import { useAuth } from '../../../hooks/useAuth'
 
 const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
   if (!isPurchased) {
@@ -43,16 +44,19 @@ const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
 }
 
 const LectureItem = ({ lecture }) => {
-  const { title, startTime, endTime, status, materials, id } = lecture
+  const { title, startTime, endTime, users, materials, id } = lecture
   const rippleRef = useRef(null)
   const { lectureId, courseId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const { date, hoursStart, hoursEnd } = useFormattedDates({ startTime, endTime })
 
+  const status = find(users, (u) => u.userId === user.id)
+
   const isPurchased = !isNull(status)
   const isAvailable = !isNull(materials)
-  const isCompleted = isPurchased && status.completed
+  const isCompleted = isPurchased && status.isCompleted
   const isSelected = Number(lectureId) === id
 
   const { color, backgroundColor, icon } = itemStylesFactory({

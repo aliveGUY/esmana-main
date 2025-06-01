@@ -1,4 +1,4 @@
-import { isNull } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
 import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
@@ -10,8 +10,10 @@ import '../RichTextEditor/editor-styles.css'
 
 const LectureContent = ({ lecture }) => {
   const { description, title, materials, status } = lecture
-  const isAvailable = !isNull(materials)
-  const isPurchased = !isNull(status)
+
+  console.log({ materials, lecture })
+  const isAvailable = !isEmpty(materials)
+  const isPurchased = !isEmpty(status)
 
   return (
     <Stack sx={{ pb: 5 }} spacing={3}>

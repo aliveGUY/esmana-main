@@ -1,17 +1,17 @@
-export function useFormattedDates({ startTime, endTime }) {
-  const date = startTime.toLocaleDateString('en-GB', {
+export function useFormattedDates({ startTime = new Date(), endTime = new Date() }) {
+  const date = new Date(startTime).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
 
-  const hoursStart = startTime.toLocaleTimeString('en-GB', {
+  const hoursStart = new Date(startTime).toLocaleTimeString('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
   })
 
-  const hoursEnd = endTime.toLocaleTimeString('en-GB', {
+  const hoursEnd = new Date(endTime).toLocaleTimeString('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,

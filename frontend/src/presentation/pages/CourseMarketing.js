@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 
 import { Stack } from '@mui/material'
@@ -8,11 +7,17 @@ import Hero from '../components/Marketing/Hero'
 import Image from '../components/Marketing/Image'
 import Lectors from '../components/Marketing/Lectors'
 import Lectures from '../components/Marketing/Lectures'
+import { useCourses } from '../../hooks/useCourses'
+import { find } from 'lodash'
 
 const CourseMarketing = () => {
   const { id } = useParams()
-  const { availableCourses } = useSelector((state) => state.courses)
-  const { title, description, mobileDescription, lectures, lectors } = availableCourses[id]
+  const { availableCourses } = useCourses()
+  const course = find(availableCourses, (course) => course.id === Number(id))
+
+  if (!course) return
+
+  const { title, description, mobileDescription, lectures, lectors } = course
 
   return (
     <Stack>

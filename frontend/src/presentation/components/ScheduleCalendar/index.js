@@ -9,6 +9,7 @@ import CalendarRow from './CalendarRow'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { useCourses } from '../../../hooks/useCourses'
 
 function getWeekFromDate(inputDate) {
   const date = new Date(inputDate)
@@ -40,7 +41,8 @@ const ScheduleCalendar = () => {
   const month = MONTHS[anchorDate.getMonth()]
   const calendarRef = useRef()
 
-  const { ownedCourses, highlightedCourse } = useSelector((state) => state.courses)
+  const { highlightedCourse } = useSelector((state) => state.courses)
+  const { ownedCourses } = useCourses()
 
   const swipeRight = () => {
     setAnchorDate((prev) => {

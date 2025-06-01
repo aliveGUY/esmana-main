@@ -2,31 +2,14 @@ import React, { useState } from 'react'
 import { map } from 'lodash'
 import { useTranslation } from 'react-i18next'
 
-import { Box, Button, Divider, Stack, Typography } from '@mui/material'
-import Checkbox from '../../common/inputs/Checkbox'
-import Switch from '../../common/inputs/Switch'
+import { Box, Button, Checkbox, Divider, Stack, Switch, Typography } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
+import { useFormattedDates } from '../../../hooks/useFormattedDates'
 
 const LectureItem = ({ lecture, isAllLectures }) => {
   const { description, title, startTime, endTime, price } = lecture
 
-  const date = startTime.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-
-  const hoursStart = startTime.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
-
-  const hoursEnd = endTime.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
+  const { date, hoursStart, hoursEnd } = useFormattedDates({ startTime, endTime })
 
   return (
     <Stack direction="row" spacing={2} alignItems="center" sx={{ px: 1 }}>

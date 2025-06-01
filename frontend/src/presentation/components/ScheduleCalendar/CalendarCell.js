@@ -120,7 +120,7 @@ const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
   const cellDate = new Date(day.year, monthIndex, day.date, parsedHour, parsedMinutes, 0, 0)
 
   const lecturesInHour = parseLectures(
-    ownedCourses.flatMap((course) => course.lectures),
+    ownedCourses?.flatMap((course) => course.lectures),
     cellDate,
   )
 

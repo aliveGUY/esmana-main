@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { map } from 'lodash'
 
@@ -10,9 +9,12 @@ import OwnedCourseCard from '../components/OwnedCourseCard'
 import ScheduleCalendar from '../components/ScheduleCalendar'
 import ScheduleList from '../components/ScheduleList'
 import SearchHeader from '../components/SearchHeader'
+import { useGetAllCoursesQuery } from '../../state/asynchronous'
+import { useCourses } from '../../hooks/useCourses'
 
 const Courses = () => {
-  const { ownedCourses, availableCourses } = useSelector((state) => state.courses)
+  useGetAllCoursesQuery()
+  const { ownedCourses, availableCourses } = useCourses()
   const navigate = useNavigate()
 
   const handleRedirect = () => {
@@ -23,14 +25,16 @@ const Courses = () => {
     <Stack>
       <SearchHeader title="Courses" buttonText="Create Course" onPrimaryActionClick={handleRedirect} />
       <Stack sx={{ px: 3 }} spacing={3}>
-        <SectionWrapper>
-          <Paper sx={{ p: 3 }}>
-            <Stack direction="row">
-              <ScheduleList />
-              <ScheduleCalendar />
-            </Stack>
-          </Paper>
-        </SectionWrapper>
+        {ownedCourses && (
+          <SectionWrapper>
+            <Paper sx={{ p: 3 }}>
+              <Stack direction="row">
+                <ScheduleList />
+                <ScheduleCalendar />
+              </Stack>
+            </Paper>
+          </SectionWrapper>
+        )}
 
         <SectionWrapper>
           <Box pb={10}>
