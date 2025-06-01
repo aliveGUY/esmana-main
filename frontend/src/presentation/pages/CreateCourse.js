@@ -74,7 +74,7 @@ const CreateCourse = () => {
           <ImageInputSection />
           <GeneralCourseInputSection />
           <LecturesSection data={courseForm.lectures} />
-          <PeopleSection title="Students" actionText="Add Student" />
+          {/* <PeopleSection title="Students" actionText="Add Student" /> */}
           <CertificatesSection />
           <TestSection
             title="BPR evaluation"

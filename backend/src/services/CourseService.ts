@@ -16,7 +16,8 @@ import { InjectDataSource } from "@nestjs/typeorm";
 export interface ICourseService {
   createCourse(course: CreateCourseDto): Promise<DetailedCourseDto>
   getCourseById(id: number, request: Request): Promise<DetailedCourseDto>
-  getAllCourses(): Promise<StrippedCourseDto[]>
+  getAllCourses(request: Request): Promise<StrippedCourseDto[]>
+  getAllActiveCourses(): Promise<StrippedCourseDto[]>
   editCourse(course: EditCourseDto): Promise<DetailedCourseDto>
   deleteCourse(id: number): Promise<void>
 }
@@ -72,8 +73,16 @@ export class CourseService implements ICourseService {
     return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
   }
 
-  async getAllCourses(): Promise<StrippedCourseDto[]> {
-    return await this.courseRepository.getAllCourses()
+  async getAllCourses(request: Request): Promise<StrippedCourseDto[]> {
+    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token)
+
+    if (!tokenData) throw new Error('Unauthorized')
+
+    return await this.courseRepository.getAllCourses(tokenData.userId)
+  }
+
+  async getAllActiveCourses(): Promise<StrippedCourseDto[]> {
+    return await this.courseRepository.getAllActiveCourses()
   }
 
   async editCourse(course: EditCourseDto): Promise<DetailedCourseDto> {

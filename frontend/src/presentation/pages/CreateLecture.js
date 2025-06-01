@@ -85,8 +85,8 @@ const CreateLecture = () => {
           <VideoSection />
           <GeneralLectureInputSection />
           <LectureDetailsInputSection />
-          <PeopleSection title="Lectors" actionText="Add Lector" />
-          <PeopleSection title="Passed students" actionText="Add Student" />
+          {/* <PeopleSection title="Lectors" actionText="Add Lector" />
+          <PeopleSection title="Passed students" actionText="Add Student" /> */}
           <LectureMaterialSection />
           <TestSection
             title="Lecture evaluation"

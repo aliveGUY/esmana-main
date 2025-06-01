@@ -1,4 +1,4 @@
-import { IsString, IsObject, IsArray, ValidateNested, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsObject, IsArray, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateEvaluationQuestionDto } from "./CreateEvaluationQuestionDto";
 
@@ -6,10 +6,6 @@ export class CreateLectureMaterialsDto {
   @IsOptional()
   @IsString()
   videoUrl?: string;
-
-  @IsOptional()
-  @IsString()
-  meetingUrl?: string;
 
   @IsOptional()
   @IsObject()

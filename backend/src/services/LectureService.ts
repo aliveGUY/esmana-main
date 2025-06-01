@@ -28,7 +28,7 @@ export class LectureService implements ILectureService {
 
     const lectureMaterialsDto: Partial<LectureMaterials> = {
       videoUrl: lectureDto.materials.videoUrl,
-      meetingUrl: lectureDto.materials.meetingUrl,
+      meetingUrl: 'lectureDto.materials.meetingUrl',
       richText: lectureDto.materials.richText,
       evaluation: evaluation,
     }

@@ -17,10 +17,16 @@ export class CoursesController {
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
   ) { }
 
-  @Public()
+  @UseGuards(TokenAuthGuard)
   @Get('')
-  async getAllCourses(): Promise<StrippedCourseDto[]> {
-    return await this.courseService.getAllCourses()
+  async getAllCourses(@Req() request: Request): Promise<StrippedCourseDto[]> {
+    return await this.courseService.getAllCourses(request)
+  }
+
+  @Public()
+  @Get('active')
+  async getAllActiveCourses(): Promise<StrippedCourseDto[]> {
+    return await this.courseService.getAllActiveCourses()
   }
 
   @UseGuards(TokenAuthGuard)
