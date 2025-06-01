@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { map } from 'lodash'
-import { useFormContext } from 'react-hook-form'
 
 import { Box, Button, Paper, Stack, Typography } from '@mui/material'
 import { CERTIFICATE_TEMPLATE_ALL } from '../../../constants/certificates'
@@ -17,7 +16,6 @@ const CertificatesSection = () => {
   const courseForm = useSelector((state) => state.courseForm)
   const [menuState, setMenuState] = useState({ closed: true, purpose: null })
   const dispatch = useDispatch()
-  const { setValue } = useFormContext()
 
   const handleOpenParticipation = useCallback(() => {
     setMenuState({ closed: false, purpose: TYPE_PARTICIPATION })
@@ -33,12 +31,10 @@ const CertificatesSection = () => {
 
   const handleTemplateSelect = (e) => {
     if (menuState.purpose === TYPE_PARTICIPATION) {
-      setValue('participationCertificate', e.target.id)
       dispatch(setParticipationCertificate(e.target.id))
     }
 
     if (menuState.purpose === TYPE_BPR) {
-      setValue('bprCertificate', e.target.id)
       dispatch(setBprCertificate(e.target.id))
     }
 

@@ -1,41 +1,41 @@
 import dayjs from 'dayjs'
 
-export function convertLectureDatesFormToStorage({ date, startHour, endHour }) {
+export function convertLectureDatesFormToStorage({ date, startTime, endTime }) {
   const year = new Date(date).getFullYear()
   const month = new Date(date).getMonth()
   const _date = new Date(date).getDate()
-  const startHours = new Date(startHour).getHours()
-  const startMinutes = new Date(startHour).getMinutes()
-  const endHours = new Date(endHour).getHours()
-  const endMinutes = new Date(endHour).getMinutes()
+  const startHours = new Date(startTime).getHours()
+  const startMinutes = new Date(startTime).getMinutes()
+  const endHours = new Date(endTime).getHours()
+  const endMinutes = new Date(endTime).getMinutes()
 
-  const _startHour = new Date()
-  _startHour.setFullYear(year)
-  _startHour.setMonth(month)
-  _startHour.setDate(_date)
-  _startHour.setHours(startHours)
-  _startHour.setMinutes(startMinutes)
+  const _startTime = new Date()
+  _startTime.setFullYear(year)
+  _startTime.setMonth(month)
+  _startTime.setDate(_date)
+  _startTime.setHours(startHours)
+  _startTime.setMinutes(startMinutes)
 
-  const _endHour = new Date()
-  _endHour.setFullYear(year)
-  _endHour.setMonth(month)
-  _endHour.setDate(_date)
-  _endHour.setHours(endHours)
-  _endHour.setMinutes(endMinutes)
+  const _endTime = new Date()
+  _endTime.setFullYear(year)
+  _endTime.setMonth(month)
+  _endTime.setDate(_date)
+  _endTime.setHours(endHours)
+  _endTime.setMinutes(endMinutes)
 
-  return { startHour: _startHour, endHour: _endHour }
+  return { startTime: _startTime, endTime: _endTime }
 }
 
-export function convertLectureDatesStorageToInterface({ startHour, endHour }) {
-  const date = dayjs(new Date(startHour)).format('DD.MM.YYYY')
-  const _startHour = dayjs(new Date(startHour)).format('HH:mm')
-  const _endHour = dayjs(new Date(endHour)).format('HH:mm')
+export function convertLectureDatesStorageToInterface({ startTime, endTime }) {
+  const date = dayjs(new Date(startTime)).format('DD.MM.YYYY')
+  const _startTime = dayjs(new Date(startTime)).format('HH:mm')
+  const _endTime = dayjs(new Date(endTime)).format('HH:mm')
 
-  return { date, startHour: _startHour, endHour: _endHour }
+  return { date, startTime: _startTime, endTime: _endTime }
 }
 
-export function convertLectureDatesStorageToForm({ startHour, endHour }) {
-  const date = dayjs(new Date(startHour)).format('DD.MM.YYYY')
+export function convertLectureDatesStorageToForm({ startTime, endTime }) {
+  const date = dayjs(new Date(startTime)).format('DD.MM.YYYY')
 
-  return { date, startHour, endHour }
+  return { date, startTime, endTime }
 }

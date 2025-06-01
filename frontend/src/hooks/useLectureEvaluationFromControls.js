@@ -14,9 +14,9 @@ export default function useLectureEvaluationFromControls(defaultValue = []) {
 
     const newQuestion = {
       id: temporaryId,
-      question: data,
+      questionText: data,
       options: [],
-      answers: [],
+      correctAnswers: [],
     }
 
     setLectureEvaluation((prev) => [...prev, newQuestion])
@@ -29,7 +29,7 @@ export default function useLectureEvaluationFromControls(defaultValue = []) {
         return {
           ...question,
           options: question.options.filter((_option) => _option !== option),
-          answers: question.answers.filter((answer) => answer !== option),
+          correctAnswers: question.correctAnswers.filter((answer) => answer !== option),
         }
       }),
     )
@@ -53,7 +53,7 @@ export default function useLectureEvaluationFromControls(defaultValue = []) {
         if (question.id !== questionId) return question
         return {
           ...question,
-          answers: question.answers.filter((answer) => answer !== option),
+          correctAnswers: question.correctAnswers.filter((answer) => answer !== option),
         }
       }),
     )
@@ -65,7 +65,7 @@ export default function useLectureEvaluationFromControls(defaultValue = []) {
         if (question.id !== questionId) return question
         return {
           ...question,
-          answers: [...question.answers, option],
+          correctAnswers: [...question.correctAnswers, option],
         }
       }),
     )

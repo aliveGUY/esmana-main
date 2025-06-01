@@ -1,25 +1,25 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Box, Paper, Stack, Typography } from '@mui/material'
-import { setActive, setDescription, setTitle } from '../../../state/reducers/courseForm'
-import Switch from '../../common/inputs/Switch'
-import TextField from '../../common/inputs/TextField'
+import { Box, Paper, Stack, Switch, TextField, Typography } from '@mui/material'
+import { setIsActive, setDescription, setTitle } from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 const GeneralCourseInputSection = () => {
+  const courseForm = useSelector((state) => state.courseForm)
+
   const dispatch = useDispatch()
 
-  const handleTitleChange = (value) => {
-    dispatch(setTitle(value))
+  const handleTitleChange = (event) => {
+    dispatch(setTitle(event.target.value))
   }
 
-  const handleDescriptionChange = (value) => {
-    dispatch(setDescription(value))
+  const handleDescriptionChange = (event) => {
+    dispatch(setDescription(event.target.value))
   }
 
-  const handleActiveChange = (value) => {
-    dispatch(setActive(value))
+  const handleActiveChange = (event) => {
+    dispatch(setIsActive(event.target.checked))
   }
 
   return (
@@ -28,8 +28,9 @@ const GeneralCourseInputSection = () => {
         <Paper>
           <Box p={2}>
             <Stack spacing={2}>
-              <TextField name="title" label="Title" onChange={handleTitleChange} />
+              <TextField name="title" label="Title" value={courseForm.title} onChange={handleTitleChange} />
               <TextField
+                value={courseForm.description}
                 name="description"
                 label="Description"
                 onChange={handleDescriptionChange}

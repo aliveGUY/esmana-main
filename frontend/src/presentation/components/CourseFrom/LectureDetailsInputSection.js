@@ -15,8 +15,8 @@ const LectureDetailsInputSection = () => {
             <Stack spacing={2}>
               <TextField name="price" label="Price" />
               <DatePicker name="date" label="Date" />
-              <TimePicker name="startHour" label="Starting hour" />
-              <TimePicker name="endHour" label="Ending hour" />
+              <TimePicker name="startTime" label="Starting hour" />
+              <TimePicker name="endTime" label="Ending hour" />
             </Stack>
           </Box>
         </Paper>

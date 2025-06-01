@@ -7,9 +7,9 @@ import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDat
 import SectionWrapper from '../../common/SectionWrapper'
 
 const LectureItem = ({ lecture }) => {
-  const { date, startHour, endHour } = convertLectureDatesStorageToInterface({
-    startHour: lecture.startHour,
-    endHour: lecture.endHour,
+  const { date, startTime, endTime } = convertLectureDatesStorageToInterface({
+    startTime: lecture.startTime,
+    endTime: lecture.endTime,
   })
 
   return (
@@ -21,7 +21,7 @@ const LectureItem = ({ lecture }) => {
             {date}
           </Typography>
           <Typography color="stormWave.main" lineHeight="normal">
-            {startHour} - {endHour}
+            {startTime} - {endTime}
           </Typography>
         </Stack>
       </Box>

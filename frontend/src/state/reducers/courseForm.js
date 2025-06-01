@@ -6,14 +6,13 @@ import generateRandomString from '../../utils/generateRandomString'
 const courseFormSlice = createSlice({
   name: 'courseForm',
   initialState: {
-    thumbnail: '',
+    thumbnailUrl: '',
     title: '',
     description: '',
-    active: false,
+    isActive: false,
     participationCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
     bprCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
     bprEvaluation: [],
-    students: [],
     lectures: [],
   },
   reducers: {
@@ -22,9 +21,9 @@ const courseFormSlice = createSlice({
 
       const newQuestion = {
         id: temporaryId,
-        question: payload,
+        questionText: payload,
         options: [],
-        answers: [],
+        correctAnswers: [],
       }
 
       state.bprEvaluation.push(newQuestion)
@@ -45,7 +44,7 @@ const courseFormSlice = createSlice({
       const { questionId, option } = payload
 
       const question = state.bprEvaluation.find((q) => q.id === questionId)
-      question.answers = question.answers.filter((answer) => answer !== option)
+      question.correctAnswers = question.correctAnswers.filter((answer) => answer !== option)
       question.options = question.options.filter((answer) => answer !== option)
     },
 
@@ -53,14 +52,14 @@ const courseFormSlice = createSlice({
       const { questionId, option } = payload
 
       const question = state.bprEvaluation.find((q) => q.id === questionId)
-      question.answers.push(option)
+      question.correctAnswers.push(option)
     },
 
     removeBprQuestionAnswer: (state, { payload }) => {
       const { questionId, option } = payload
 
       const question = state.bprEvaluation.find((q) => q.id === questionId)
-      question.answers = question.answers.filter((answer) => answer !== option)
+      question.correctAnswers = question.correctAnswers.filter((answer) => answer !== option)
     },
 
     addLecture: (state, { payload }) => {
@@ -90,12 +89,12 @@ const courseFormSlice = createSlice({
       state.description = payload
     },
 
-    setActive: (state, { payload }) => {
-      state.active = payload
+    setIsActive: (state, { payload }) => {
+      state.isActive = payload
     },
 
-    setThumbnail: (state, { payload }) => {
-      state.thumbnail = payload
+    setThumbnailUrl: (state, { payload }) => {
+      state.thumbnailUrl = payload
     },
 
     setParticipationCertificate: (state, { payload }) => {
@@ -119,8 +118,8 @@ export const {
   editLecture,
   setTitle,
   setDescription,
-  setActive,
-  setThumbnail,
+  setIsActive,
+  setThumbnailUrl,
   setParticipationCertificate,
   setBprCertificate,
 } = courseFormSlice.actions

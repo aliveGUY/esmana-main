@@ -81,7 +81,7 @@ const Question = ({
   onRemoveQuestionAnswer,
   onSetQuestionAnswer,
 }) => {
-  const { question, options, answers, id } = data
+  const { questionText, options, correctAnswers, id } = data
 
   const handleAddOption = (data) => {
     onAddOption({ questionId: id, option: data })
@@ -94,7 +94,7 @@ const Question = ({
   return (
     <Stack spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Typography>{question}</Typography>
+        <Typography>{questionText}</Typography>
         <IconButton variant="outlined" color="error" onClick={handleRemoveQuestion}>
           <DeleteIcon />
         </IconButton>
@@ -103,7 +103,7 @@ const Question = ({
         {map(options, (option) => (
           <Option
             option={option}
-            answers={answers}
+            answers={correctAnswers}
             questionId={id}
             onRemoveOption={onRemoveOption}
             onRemoveQuestionAnswer={onRemoveQuestionAnswer}

@@ -41,17 +41,17 @@ const initialState = {
             completed: true,
           },
           materials: {
-            embeddedVideo: 'https://www.youtube.com/embed/5_XWE5lRv-k',
+            videoUrl: 'https://www.youtube.com/embed/5_XWE5lRv-k',
             meetingLink: 'https://meet.google.com/duh-tkwr-iog',
             richText: mockedCourseText1,
             test: [
               {
-                question: 'Question example 1',
+                questionText: 'Question example 1',
                 correctAnswers: [0],
                 options: ['option 1', 'option 2', 'option 3'],
               },
               {
-                question: 'Question example 1',
+                questionText: 'Question example 1',
                 correctAnswers: [0],
                 options: ['option 1', 'option 2', 'option 3'],
               },
@@ -70,16 +70,16 @@ const initialState = {
           },
           materials: {
             meetingLink: 'https://meet.google.com/duh-tkwr-iog',
-            embeddedVideo: null,
+            videoUrl: null,
             richText: mockedCourseText2,
             test: [
               {
-                question: 'Question example 1',
+                questionText: 'Question example 1',
                 correctAnswers: [0],
                 options: ['option 1', 'option 2', 'option 3'],
               },
               {
-                question: 'Question example 1',
+                questionText: 'Question example 1',
                 correctAnswers: [0],
                 options: ['option 1', 'option 2', 'option 3'],
               },
@@ -131,7 +131,7 @@ const initialState = {
           materials: {
             test: [
               {
-                question: 'question example',
+                questionText: 'question example',
                 options: ['option 1', 'option 2', 'option 3'],
               },
             ],
@@ -150,7 +150,7 @@ const initialState = {
           materials: {
             test: [
               {
-                question: 'question example',
+                questionText: 'question example',
                 options: ['option 1', 'option 2', 'option 3'],
               },
             ],

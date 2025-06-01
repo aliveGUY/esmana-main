@@ -35,13 +35,14 @@ const CreateLecture = () => {
 
   const methods = useForm({
     defaultValues: {
-      embeddedVideo: '',
+      videoUrl: '',
       title: '',
       description: '',
       price: '',
       date: '',
-      startHour: '',
-      endHour: '',
+      startTime: '',
+      endTime: '',
+      users: [],
       richText: {
         [UKRAINIAN]: '',
         [ENGLISH]: '',
@@ -50,20 +51,20 @@ const CreateLecture = () => {
   })
 
   const onSubmit = (data) => {
-    const { startHour, endHour } = convertLectureDatesFormToStorage({
+    const { startTime, endTime } = convertLectureDatesFormToStorage({
       date: data.date,
-      startHour: data.startHour,
-      endHour: data.endHour,
+      startTime: data.startTime,
+      endTime: data.endTime,
     })
 
     const payload = {
       title: data.title,
       description: data.description,
       price: data.price,
-      startHour: startHour,
-      endHour: endHour,
+      startTime: startTime,
+      endTime: endTime,
       materials: {
-        embeddedVideo: '',
+        videoUrl: data.videoUrl,
         richText: data.richText,
         evaluation: lectureEvaluation,
       },
@@ -85,8 +86,7 @@ const CreateLecture = () => {
           <VideoSection />
           <GeneralLectureInputSection />
           <LectureDetailsInputSection />
-          {/* <PeopleSection title="Lectors" actionText="Add Lector" />
-          <PeopleSection title="Passed students" actionText="Add Student" /> */}
+          <PeopleSection />
           <LectureMaterialSection />
           <TestSection
             title="Lecture evaluation"
