@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsDate, IsBoolean, IsOptional } from 'class-validator';
-import { TokenType } from '../enums';
+import { ETokenType } from '../enums/ETokenType';
 
 export class TokenDto {
   @IsString()
@@ -8,8 +8,8 @@ export class TokenDto {
   @IsString()
   userId: string;
 
-  @IsEnum(TokenType)
-  type: TokenType;
+  @IsEnum(ETokenType)
+  type: ETokenType;
 
   @IsString()
   token: string;
@@ -25,8 +25,8 @@ export class TokenDataDto {
   @IsString()
   userId: string;
 
-  @IsEnum(TokenType)
-  type: TokenType;
+  @IsEnum(ETokenType)
+  type: ETokenType;
 
   @IsString()
   email: string;

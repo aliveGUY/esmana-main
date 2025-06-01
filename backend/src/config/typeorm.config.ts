@@ -1,6 +1,11 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { UserEntity } from '../entities/user.entity';
+import { User } from '../models/User';
+import { UserLecture } from '../models/UserLecture';
+import { Course } from '../models/Course';
+import { Lecture } from '../models/Lecture';
+import { LectureMaterials } from '../models/LectureMaterials';
+import { EvaluationQuestion } from '../models/EvaluationQuestion';
 
 config();
 
@@ -11,7 +16,14 @@ export default new DataSource({
   username: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'esmana',
-  entities: [UserEntity],
+  entities: [
+    User,
+    UserLecture,
+    Course,
+    Lecture,
+    LectureMaterials,
+    EvaluationQuestion
+  ],
   migrations: ['src/migrations/*.ts'],
   synchronize: false, // Always false for migrations
   logging: true,

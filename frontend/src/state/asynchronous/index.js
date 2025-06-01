@@ -23,10 +23,57 @@ const usersApi = createApi({
         method: 'GET',
       }),
     }),
+
+    login: builder.mutation({
+      query: (loginData) => ({
+        url: 'auth/login',
+        method: 'POST',
+        body: loginData,
+      }),
+    }),
+
+    register: builder.mutation({
+      query: (registerData) => ({
+        url: 'auth/register',
+        method: 'POST',
+        body: registerData,
+      }),
+    }),
+
+    googleLogin: builder.mutation({
+      query: (loginData) => ({
+        url: 'auth/google/login',
+        method: 'POST',
+        body: loginData,
+      }),
+    }),
+
+    googleRegister: builder.mutation({
+      query: (registerData) => ({
+        url: 'auth/google/register',
+        method: 'POST',
+        body: registerData,
+      }),
+    }),
+
+    updateAuth: builder.mutation({
+      query: () => ({
+        url: 'auth/refresh',
+        method: 'POST',
+      }),
+    }),
   }),
 })
 
-export const { useCreateMembershipPaymentIntentMutation, useCheckRegistrationStatusMutation } = usersApi
+export const {
+  useCreateMembershipPaymentIntentMutation,
+  useCheckRegistrationStatusMutation,
+  useLoginMutation,
+  useRegisterMutation,
+  useGoogleLoginMutation,
+  useGoogleRegisterMutation,
+  useUpdateAuthMutation,
+} = usersApi
 
 export const usersMiddleware = usersApi.middleware
 

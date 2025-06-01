@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { Response, Request } from 'express';
 import { ITokenRepository } from '../repositories/TokenRepository';
 import { IAuthService } from '../services/AuthService';
-import { TokenType } from '../models/enums';
+import { ETokenType } from '../models/enums/ETokenType';
 
 @Injectable()
 export class TokenAuthGuard implements CanActivate {
@@ -56,12 +56,10 @@ export class TokenAuthGuard implements CanActivate {
         }
       }
 
-      // Ensure it's an access token
-      if (tokenData.type !== TokenType.ACCESS) {
+      if (tokenData.type !== ETokenType.ACCESS) {
         throw new UnauthorizedException('Invalid token type');
       }
 
-      // Attach user data to request
       request.user = {
         id: tokenData.userId,
         email: tokenData.email,

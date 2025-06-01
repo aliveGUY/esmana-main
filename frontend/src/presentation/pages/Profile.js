@@ -4,9 +4,16 @@ import { Avatar, Box, Button, Paper, Stack, Typography, useTheme } from '@mui/ma
 import SectionWrapper from '../common/SectionWrapper'
 
 import PersonIcon from '@mui/icons-material/Person'
+import { useSelector } from 'react-redux'
 
 const Profile = () => {
   const theme = useTheme()
+  const user = useSelector((state) => state.user)
+
+  if (!user) return 'Error'
+
+  const { email, firstName, middleName, lastName } = user
+
   return (
     <Stack px={2} py={3} spacing={2}>
       <SectionWrapper>
@@ -27,29 +34,26 @@ const Profile = () => {
             <Stack direction="row" width="100%" alignItems="center">
               <Stack flex={1}>
                 <Typography variant="title" fontWeight="bold">
-                  John Doe
-                </Typography>
-                <Typography variant="description" color="stormWave.main">
-                  +1 234 56789
+                  {[firstName, middleName, lastName].join(' ')}
                 </Typography>
                 <Typography variant="description" color="stormWave.main" mb={1}>
-                  example@gmail.com
+                  {email}
                 </Typography>
               </Stack>
               <Box>
-                <Button variant="outlined">Edit Profile</Button>
+                <Button variant="outlined" disabled>Edit Profile</Button>
               </Box>
             </Stack>
           </Stack>
         </Paper>
       </SectionWrapper>
-      <SectionWrapper>
+      {/* <SectionWrapper>
         <Paper sx={{ p: 2 }}>
           <Button variant="error" sx={{ width: { xs: '100%', md: 'auto' } }}>
             Change Password
           </Button>
         </Paper>
-      </SectionWrapper>
+      </SectionWrapper> */}
     </Stack>
   )
 }

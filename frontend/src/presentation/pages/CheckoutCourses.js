@@ -1,131 +1,119 @@
-import React, { Fragment, useState } from 'react'
-import { map } from 'lodash'
+import { Box, Button, Divider, Grid2, Stack, Typography } from '@mui/material'
+import React, { Fragment } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import SectionWrapper from '../common/SectionWrapper'
+import { Grid } from '@mui/joy'
+import TextField from '../common/inputs/TextField'
+import Password from '../common/inputs/Password'
 
-import { Button, Grid2, Stack, Typography } from '@mui/material'
-import LoginImage from '../../static/images/image1_0.jpg'
-import CheckoutStep from '../components/CheckoutStep'
-import InputFactory from '../components/InputFactory'
-import TopBarUnauthorized from '../components/TopBarUnauthorized'
+const SummaryCard = () => {
+  return (
+    <Box>
+      <Typography>Details</Typography>
+      <Stack direction="row" spacing={2}>
+        <Typography>Course</Typography>
+        <Typography>2/2 Lectures</Typography>
+      </Stack>
+      <Divider />
+      <Typography>Discount Info</Typography>
+      <Typography>4.000 UAH</Typography>
+      <Button type="submit" variant="secondary">
+        Purchase
+      </Button>
+    </Box>
+  )
+}
+
+const Product = () => {
+  return (
+    <Grid2 container>
+      <Grid2 size={{ xs: 2 }}>Picture</Grid2>
+      <Grid2 size={{ xs: 8 }}>
+        <Typography fontWeight="bold">Course Name</Typography>
+        <Typography>Cropped Description</Typography>
+        <Typography color="stormWave">Selected 2/20 Lectures * 4 hours * 8 materails</Typography>
+      </Grid2>
+      <Grid2 size={{ xs: 2 }}>
+        <Typography fontWeight="bold">4.000UAH</Typography>
+        <Typography fontSize={14}>30.000UAH</Typography>
+      </Grid2>
+    </Grid2>
+  )
+}
+
+const Payment = () => {
+  return (
+    <Stack>
+      <Stack direction="row">
+        <Box>Credit Card</Box>
+        <Box>Google Pay</Box>
+      </Stack>
+
+      <Stack spacing={2}>
+        <TextField staticLabel name="card_number" label="Card Number" />
+        <Stack spacing={2} direction="row">
+          <TextField staticLabel name="exp_date" label="Exp Date" />
+          <TextField staticLabel name="cvc" label="CVC" />
+        </Stack>
+      </Stack>
+    </Stack>
+  )
+}
+
+const Registration = () => {
+  return (
+    <Grid2 container spacing={2}>
+      <Grid2 size={{ xs: 6 }}>
+        <TextField staticLabel name="email" label="Email" />
+      </Grid2>
+      <Grid2 size={{ xs: 6 }}>
+        <Typography>Or Google Login</Typography>
+      </Grid2>
+      <Grid2 size={{ xs: 6 }}>
+        <TextField staticLabel name="first_name" label="First Name" />
+      </Grid2>
+      <Grid2 size={{ xs: 6 }}>
+        <TextField staticLabel name="middle_name" label="Middle Name" />
+      </Grid2>
+      <Grid2 size={{ xs: 6 }}>
+        <TextField staticLabel name="last_name" label="Last Name" />
+      </Grid2>
+      <Grid2 size={{ xs: 12 }}>
+        <Password name="password" label="Password" />
+      </Grid2>
+      <Grid2 size={{ xs: 12 }}>
+        <Password name="confirm_password" label="Confirm Password" />
+      </Grid2>
+    </Grid2>
+  )
+}
 
 const CheckoutCourses = () => {
-  const [currentStep, setCurrentStep] = useState(1)
+  const methods = useForm()
 
-  const config = [
-    {
-      stepName: 'Personal',
-      inputs: [
-        {
-          name: 'first_name',
-          label: 'First name',
-          inputType: 'textfield',
-        },
-        {
-          name: 'middle_name',
-          label: 'Middle name',
-          inputType: 'textfield',
-        },
-        {
-          name: 'last_name',
-          label: 'Last name',
-          inputType: 'textfield',
-        },
-        {
-          name: 'birth_date',
-          label: 'Birth date',
-          inputType: 'textfield',
-        },
-      ],
-    },
-    {
-      stepName: 'General',
-      inputs: [
-        {
-          name: 'email',
-          label: 'Email',
-          inputType: 'textfield',
-        },
-        {
-          name: 'phone_number',
-          label: 'Phone number',
-          inputType: 'textfield',
-        },
-        {
-          name: 'password',
-          label: 'Password',
-          inputType: 'textfield',
-        },
-      ],
-    },
-    {
-      stepName: 'Payment',
-      inputs: [
-        {
-          name: 'payment',
-          label: 'Payment',
-          inputType: 'payment',
-        },
-      ],
-    },
-  ]
-
-  const onCheckoutStepToggle = ({ index }) => {
-    setCurrentStep(index)
-  }
-
-  const onContinue = () => {
-    setCurrentStep(currentStep + 1)
+  const onSubmit = (data) => {
+    console.log({ data })
   }
 
   return (
-    <Fragment>
-      <TopBarUnauthorized />
-      <Grid2 container minHeight="calc(100vh - 64px)">
-        <Grid2 size={{ xs: 4 }}>
-          <Stack p={4} spacing={2}>
-            <Typography variant="h4">Registration</Typography>
-            <Stack>
-              {map(config, (item, index) => (
-                <CheckoutStep
-                  key={index}
-                  step={item}
-                  index={index + 1}
-                  totalCount={config.length}
-                  onToggle={onCheckoutStepToggle}
-                  currentStep={currentStep}
-                >
-                  <Stack spacing={2}>
-                    {map(item.inputs, (input, index) => (
-                      <InputFactory key={index} {...input} />
-                    ))}
-                    {index + 1 !== config.length && <Button onClick={onContinue}>Continue</Button>}
-                  </Stack>
-                </CheckoutStep>
-              ))}
+    <Box p={3}>
+      <SectionWrapper>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Stack direction="row" spacing={4}>
+              <Stack flex={1} spacing={3}>
+                <Product />
+                <Divider />
+                <Payment />
+                <Divider />
+                <Registration />
+              </Stack>
+              <SummaryCard />
             </Stack>
-          </Stack>
-        </Grid2>
-        <Grid2
-          size={{ xs: 8 }}
-          sx={{
-            overflow: 'hidden',
-            position: 'relative',
-            img: {
-              position: 'absolute',
-              top: 0,
-              left: '50%',
-              bottom: 0,
-              right: 0,
-              height: '100%',
-              width: '100%',
-              objectFit: 'cover',
-              transform: 'translateX(-50%)',
-            },
-          }}
-        >
-          <img alt="neurons" src={LoginImage} />
-        </Grid2>
-      </Grid2>
-    </Fragment>
+          </form>
+        </FormProvider>
+      </SectionWrapper>
+    </Box>
   )
 }
 

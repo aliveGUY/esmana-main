@@ -2,7 +2,7 @@ import { IsBoolean, IsEmail, IsString, MaxLength, MinLength } from "class-valida
 
 export class UserDto {
   @IsString()
-  id: string;
+  id: number;
 
   @IsString()
   @MinLength(1)

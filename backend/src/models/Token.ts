@@ -1,9 +1,9 @@
-import { TokenType } from './enums';
+import { ETokenType } from './enums/ETokenType';
 
 export class Token {
   id: string;
   userId: string;
-  type: TokenType;
+  type: ETokenType;
   token: string;
   expiresAt: Date;
   createdAt: Date;
@@ -29,8 +29,8 @@ export class Token {
 }
 
 export class TokenData {
-  userId: string;
-  type: TokenType;
+  userId: number;
+  type: ETokenType;
   email: string;
   roles: string[];
   createdAt: Date;

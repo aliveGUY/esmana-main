@@ -107,10 +107,10 @@ export class AuthController {
 
   private setAccessTokenCookie(response: Response, accessToken: string): void {
     response.cookie('access_token', accessToken, {
-      httpOnly: true,        // Not accessible via JavaScript
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-      sameSite: 'strict',    // CSRF protection
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000,
     });
   }
 }

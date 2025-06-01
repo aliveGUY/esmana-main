@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsEmail, IsString, MaxLength, MinLength } from "class-validator";
 
 export class UserGoogleRegistrationDto {
   @IsString()
@@ -7,7 +7,6 @@ export class UserGoogleRegistrationDto {
   firstName: string;
 
   @IsString()
-  @MinLength(1)
   @MaxLength(50)
   middleName?: string;
 
@@ -21,4 +20,7 @@ export class UserGoogleRegistrationDto {
 
   @IsString()
   googleId: string;
+
+  @IsBoolean()
+  isEmailVerified: boolean;
 }

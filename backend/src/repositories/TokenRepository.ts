@@ -1,20 +1,20 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TokenData } from '../models/Token';
-import { TokenType } from '../models/enums';
+import { ETokenType } from '../models/enums/ETokenType';
 import { IRedisService } from '../infrastructure/redis/interfaces/redis.interface';
 import * as crypto from 'crypto';
 
 export interface ITokenRepository {
-  generateAccessToken(userId: string, metadata?: any): Promise<string>;
-  generateRefreshToken(userId: string, metadata?: any): Promise<string>;
+  generateAccessToken(userId: number, metadata?: any): Promise<string>;
+  generateRefreshToken(userId: number, metadata?: any): Promise<string>;
   validateToken(token: string): Promise<TokenData | null>;
   getTokenData(token: string): Promise<TokenData | null>;
   revokeToken(token: string): Promise<void>;
-  revokeUserTokens(userId: string, type?: TokenType): Promise<void>;
+  revokeUserTokens(userId: number, type?: ETokenType): Promise<void>;
   isTokenBlacklisted(token: string): Promise<boolean>;
   blacklistToken(token: string): Promise<void>;
-  getTokenExpirationTime(type: TokenType): number;
+  getTokenExpirationTime(type: ETokenType): number;
 }
 
 @Injectable()
@@ -26,16 +26,16 @@ export class TokenRepository implements ITokenRepository {
   constructor(
     private readonly configService: ConfigService,
     @Inject('IRedisService') private readonly redisService: IRedisService,
-  ) {}
+  ) { }
 
-  async generateAccessToken(userId: string, metadata: any = {}): Promise<string> {
+  async generateAccessToken(userId: number, metadata: any = {}): Promise<string> {
     const token = this.generateSecureToken();
-    const expirationTime = this.getTokenExpirationTime(TokenType.ACCESS);
+    const expirationTime = this.getTokenExpirationTime(ETokenType.ACCESS);
     const expiresAt = new Date(Date.now() + expirationTime * 1000);
 
     const tokenData: TokenData = {
       userId,
-      type: TokenType.ACCESS,
+      type: ETokenType.ACCESS,
       email: metadata.email || '',
       roles: metadata.roles || [],
       createdAt: new Date(),
@@ -54,7 +54,7 @@ export class TokenRepository implements ITokenRepository {
 
     // Add to user's token set
     await this.redisService.set(
-      `${this.USER_TOKENS_PREFIX}:${userId}:${TokenType.ACCESS}:${token}`,
+      `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.ACCESS}:${token}`,
       token,
       expirationTime,
     );
@@ -62,14 +62,14 @@ export class TokenRepository implements ITokenRepository {
     return token;
   }
 
-  async generateRefreshToken(userId: string, metadata: any = {}): Promise<string> {
+  async generateRefreshToken(userId: number, metadata: any = {}): Promise<string> {
     const token = this.generateSecureToken();
-    const expirationTime = this.getTokenExpirationTime(TokenType.REFRESH);
+    const expirationTime = this.getTokenExpirationTime(ETokenType.REFRESH);
     const expiresAt = new Date(Date.now() + expirationTime * 1000);
 
     const tokenData: TokenData = {
       userId,
-      type: TokenType.REFRESH,
+      type: ETokenType.REFRESH,
       email: metadata.email || '',
       roles: metadata.roles || [],
       createdAt: new Date(),
@@ -87,7 +87,7 @@ export class TokenRepository implements ITokenRepository {
 
     // Add to user's token set
     await this.redisService.set(
-      `${this.USER_TOKENS_PREFIX}:${userId}:${TokenType.REFRESH}:${token}`,
+      `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.REFRESH}:${token}`,
       token,
       expirationTime,
     );
@@ -97,12 +97,15 @@ export class TokenRepository implements ITokenRepository {
 
   async validateToken(token: string): Promise<TokenData | null> {
     // Check if token is blacklisted
+    console.log({ test: await this.isTokenBlacklisted(token) })
     if (await this.isTokenBlacklisted(token)) {
       return null;
     }
 
     const tokenData = await this.getTokenData(token);
-    
+
+    console.log({ tokenData })
+
     if (!tokenData) {
       return null;
     }
@@ -124,7 +127,7 @@ export class TokenRepository implements ITokenRepository {
   async getTokenData(token: string): Promise<TokenData | null> {
     try {
       const data = await this.redisService.get(`${this.TOKEN_PREFIX}:${token}`);
-      
+
       if (!data) {
         return null;
       }
@@ -142,7 +145,7 @@ export class TokenRepository implements ITokenRepository {
 
   async revokeToken(token: string): Promise<void> {
     const tokenData = await this.getTokenData(token);
-    
+
     if (!tokenData) {
       return;
     }
@@ -154,7 +157,7 @@ export class TokenRepository implements ITokenRepository {
     };
 
     const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
-    
+
     if (remainingTtl > 0) {
       await this.redisService.set(
         `${this.TOKEN_PREFIX}:${token}`,
@@ -167,13 +170,13 @@ export class TokenRepository implements ITokenRepository {
     await this.redisService.del(`${this.USER_TOKENS_PREFIX}:${tokenData.userId}:${tokenData.type}:${token}`);
   }
 
-  async revokeUserTokens(userId: string, type?: TokenType): Promise<void> {
-    const pattern = type 
+  async revokeUserTokens(userId: number, type?: ETokenType): Promise<void> {
+    const pattern = type
       ? `${this.USER_TOKENS_PREFIX}:${userId}:${type}:*`
       : `${this.USER_TOKENS_PREFIX}:${userId}:*`;
 
     const tokenKeys = await this.redisService.keys(pattern);
-    
+
     for (const key of tokenKeys) {
       const token = await this.redisService.get(key);
       if (token) {
@@ -188,10 +191,10 @@ export class TokenRepository implements ITokenRepository {
 
   async blacklistToken(token: string): Promise<void> {
     const tokenData = await this.getTokenData(token);
-    
+
     if (tokenData) {
       const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
-      
+
       if (remainingTtl > 0) {
         await this.redisService.set(
           `${this.BLACKLIST_PREFIX}:${token}`,
@@ -212,13 +215,13 @@ export class TokenRepository implements ITokenRepository {
     await this.revokeToken(token);
   }
 
-  getTokenExpirationTime(type: TokenType): number {
+  getTokenExpirationTime(type: ETokenType): number {
     const config = this.configService.get('token') || {};
-    
+
     switch (type) {
-      case TokenType.ACCESS:
+      case ETokenType.ACCESS:
         return this.parseExpirationTime(config.accessTokenExpiresIn || '15m');
-      case TokenType.REFRESH:
+      case ETokenType.REFRESH:
         return this.parseExpirationTime(config.refreshTokenExpiresIn || '7d');
       default:
         return 900; // 15 minutes default

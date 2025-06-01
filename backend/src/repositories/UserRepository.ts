@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/User';
-import { UserEntity } from '../entities/user.entity';
+import { ERoles } from 'src/models/enums/ERoles';
 
 export interface IUserRepository {
   create(user: Partial<User>): Promise<User>;
-  findById(id: string): Promise<User | null>;
+  findById(id: number): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByGoogleId(googleId: string): Promise<User | null>;
 }
@@ -14,9 +14,9 @@ export interface IUserRepository {
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-  ) {}
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) { }
 
   async create(userData: Partial<User>): Promise<User> {
     const entity = this.userRepository.create({
@@ -29,14 +29,14 @@ export class UserRepository implements IUserRepository {
       googleId: userData.googleId,
       profilePicture: userData.profilePicture,
       isEmailVerified: userData.isEmailVerified || false,
-      roles: userData.roles || ['user'],
+      roles: userData.roles || [ERoles.USER],
     });
 
     const savedEntity = await this.userRepository.save(entity);
     return this.entityToModel(savedEntity);
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     const entity = await this.userRepository.findOne({ where: { id } });
     return entity ? this.entityToModel(entity) : null;
   }
@@ -51,7 +51,7 @@ export class UserRepository implements IUserRepository {
     return entity ? this.entityToModel(entity) : null;
   }
 
-  private entityToModel(entity: UserEntity): User {
+  private entityToModel(entity: User): User {
     const user = new User();
     user.id = entity.id;
     user.firstName = entity.firstName;

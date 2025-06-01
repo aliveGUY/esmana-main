@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   entry: {
@@ -17,6 +18,13 @@ module.exports = {
     alias: {
       src: path.resolve(__dirname, 'src'),
       react: path.resolve(__dirname, 'node_modules/react'),
+      'process/browser': require.resolve('process/browser.js'),
+      canvg: path.resolve(__dirname, 'node_modules/canvg/lib/umd.js'), // fallback to CommonJS build
+    },
+    fallback: {
+      process: require.resolve('process/browser'),
+      buffer: require.resolve('buffer'),
+      stream: require.resolve('stream-browserify'),
     },
   },
   module: {
@@ -28,7 +36,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
-            cacheDirectory: false, // Disable caching to avoid findCacheDir errors
+            cacheDirectory: false,
           },
         },
       },
@@ -86,8 +94,16 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv({
+      path: './.env', // Path to .env file
+      safe: false, // Don't load .env.example
+      systemvars: true, // Load system environment variables as well
+      silent: false, // Show warnings if .env file is missing
+    }),
     new webpack.ProvidePlugin({
       React: 'react',
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',

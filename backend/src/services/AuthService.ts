@@ -9,6 +9,8 @@ import { IUserRepository } from '../repositories/UserRepository';
 import { ITokenRepository } from '../repositories/TokenRepository';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { IGoogleClient } from 'src/infrastructure/GoogleClient';
+import { ERoles } from 'src/models/enums/ERoles';
 
 export interface IAuthService {
   registerLocal(dto: UserRegistrationDto): Promise<{ user: UserDto; accessToken: string }>;
@@ -24,6 +26,7 @@ export class AuthService implements IAuthService {
   constructor(
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
+    @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
   async registerLocal(dto: UserRegistrationDto): Promise<{ user: UserDto; accessToken: string }> {
@@ -43,7 +46,7 @@ export class AuthService implements IAuthService {
       googleId: undefined,
       profilePicture: undefined,
       isEmailVerified: false,
-      roles: ['user'],
+      roles: [ERoles.USER],
     };
 
     const user = await this.userRepository.create(userData);
@@ -93,7 +96,7 @@ export class AuthService implements IAuthService {
       googleId: dto.googleId,
       profilePicture: undefined,
       isEmailVerified: true,
-      roles: ['user'],
+      roles: [ERoles.USER],
     };
 
     const user = await this.userRepository.create(userData);
@@ -103,14 +106,11 @@ export class AuthService implements IAuthService {
   }
 
   async loginGoogle(dto: UserGoogleLoginDto): Promise<{ user: UserDto; accessToken: string }> {
-    const user = await this.userRepository.findByGoogleId(dto.googleId);
+    const { googleId } = await this.googleClient.verifyAuthToken(dto.token)
+    const user = await this.userRepository.findByGoogleId(googleId);
 
     if (!user) {
       throw new UnauthorizedException('Google account not found');
-    }
-
-    if (user.email !== dto.email) {
-      throw new UnauthorizedException('Email mismatch');
     }
 
     const { accessToken } = await this.generateLinkedTokens(user);
@@ -121,6 +121,7 @@ export class AuthService implements IAuthService {
   async refreshToken(accessToken: string): Promise<{ user: UserDto; accessToken: string } | null> {
     try {
       const tokenData = await this.tokenRepository.validateToken(accessToken);
+
       if (!tokenData) {
         return null;
       }

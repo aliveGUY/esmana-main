@@ -1,9 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ERoles } from "./enums/ERoles";
+import { UserLecture } from "./UserLecture";
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ name: 'first_name' })
   firstName: string;
@@ -30,5 +32,8 @@ export class User {
   isEmailVerified: boolean;
 
   @Column('json')
-  roles: string[];
+  roles: ERoles[];
+
+  @OneToMany(() => UserLecture, userLecture => userLecture.user)
+  lectures: UserLecture[];
 }

@@ -1,28 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { AppModule } from './app.module';
+import { AppModule } from './modules/AppModule';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
-  // Enable cookie parsing
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 1);
+
   app.use(cookieParser());
-  
-  // Enable validation pipes
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
-  
-  // Enable CORS for frontend
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
-    credentials: true, // Allow cookies
+    origin: 'http://localhost:3000',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,
   });
-  
+
   await app.listen(process.env.PORT ?? 8080);
-  console.log(`🚀 Application is running on: http://localhost:${process.env.PORT ?? 8080}`);
 }
+
 bootstrap();

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-
 // Configuration
 import tokenConfig from '../config/token.config';
 import googleConfig from '../config/google.config';
@@ -17,20 +16,19 @@ import { TokenRepository } from '../repositories/TokenRepository';
 // Services
 import { AuthService } from '../services/AuthService';
 
-
-
 // Guards
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 
 // Controllers
 import { AuthController } from '../controllers/AuthController';
-import { UserEntity } from '../entities/user.entity';
+import { GoogleClient } from 'src/infrastructure/GoogleClient';
+import { User } from '../models/User';
 
 @Module({
   imports: [
     ConfigModule.forFeature(tokenConfig),
     ConfigModule.forFeature(googleConfig),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([User]),
     RedisModule,
 
   ],
@@ -50,6 +48,10 @@ import { UserEntity } from '../entities/user.entity';
       provide: 'IAuthService',
       useClass: AuthService,
     },
+    {
+      provide: 'IGoogleClient',
+      useClass: GoogleClient
+    },
 
     // Guards
     TokenAuthGuard,
@@ -60,4 +62,4 @@ import { UserEntity } from '../entities/user.entity';
     TokenAuthGuard,
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

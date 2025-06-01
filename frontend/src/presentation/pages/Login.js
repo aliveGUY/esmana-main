@@ -1,16 +1,41 @@
-import React, { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 
-import { Button, Grid2, Stack, TextField, Typography } from '@mui/material'
+import { Button, FormHelperText, Grid2, Stack, TextField, Typography, Divider, Box } from '@mui/material'
 import LoginImage from '../../static/images/image1_0.jpg'
 import TopBarUnauthorized from '../components/TopBarUnauthorized'
+import GoogleAuthButton from '../components/GoogleAuthButton'
+import { useGoogleLoginMutation, useLoginMutation } from '../../state/asynchronous'
+import { isArray, map } from 'lodash'
 
 const Login = () => {
   const navigate = useNavigate()
+  const [login, { isLoading, isSuccess, error }] = useLoginMutation()
+  const [googleLogin, { isLoading: isGoogleLoginLoading, isSuccess: isGoogleLoginSuccess, error: googleLoginError }] =
+    useGoogleLoginMutation()
 
-  const onLogin = () => {
-    navigate('dashboard/profile')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ defaultValues: { email: 'test@examplenn3.com', password: 'password123' } })
+
+  const displayServerError = (error) => {
+    if (!error?.data) return null
+
+    if (isArray(error.data.message)) {
+      return map(error.data.message, (message, index) => <FormHelperText key={index}>{message}</FormHelperText>)
+    }
+
+    return <FormHelperText>{error.data.message}</FormHelperText>
   }
+
+  useEffect(() => {
+    if (isSuccess || isGoogleLoginSuccess) {
+      navigate('dashboard/profile')
+    }
+  }, [isSuccess, isGoogleLoginSuccess])
 
   return (
     <Fragment>
@@ -37,14 +62,33 @@ const Login = () => {
           <img alt="ESMANA logo" src={LoginImage} />
         </Grid2>
         <Grid2 size={{ xs: 4 }}>
-          <Stack p={4} spacing={2}>
-            <Typography variant="h4">Login</Typography>
-            <TextField />
-            <TextField />
-            <Button variant="primary" onClick={onLogin}>
-              Login
-            </Button>
-          </Stack>
+          <form onSubmit={handleSubmit(login)}>
+            <Stack p={4} spacing={2}>
+              <Typography variant="h4">Login</Typography>
+
+              <TextField {...register('email', { required: 'Email is required' })} />
+              {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+
+              <TextField {...register('password', { required: 'Password is required' })} />
+              {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+
+              {displayServerError(error)}
+              {displayServerError(googleLoginError)}
+              <Button type="submit" variant="primary" disabled={isLoading || isGoogleLoginLoading}>
+                Login
+              </Button>
+
+              <Box sx={{ my: 2 }}>
+                <Divider>
+                  <Typography variant="body2" color="text.secondary">
+                    OR
+                  </Typography>
+                </Divider>
+              </Box>
+
+              <GoogleAuthButton onClick={googleLogin} />
+            </Stack>
+          </form>
         </Grid2>
       </Grid2>
     </Fragment>
