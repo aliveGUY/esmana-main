@@ -9,7 +9,7 @@ export interface IGoogleClient {
   verifyAuthToken(token: string): Promise<UserGoogleRegistrationDto>;
   createMeetingLink(title: string, startTime: Date, endTime: Date): Promise<string>;
   searchUploadedVideos(title: string): Promise<{ title: string; videoId: string }[]>;
-  uploadHelloWorldFileToDrive(): Promise<string>;
+  uploadMulterFileToDrive(file: Express.Multer.File): Promise<string>;
 }
 
 @Injectable()
@@ -134,22 +134,18 @@ export class GoogleClient implements IGoogleClient {
   }
 
 
-  async uploadHelloWorldFileToDrive(): Promise<string> {
+
+  async uploadMulterFileToDrive(file: Express.Multer.File): Promise<string> {
     const folderName = 'api-service';
 
-    // Check if folder exists
     const list = await this.drive.files.list({
       q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-      fields: 'files(id, name)',
+      fields: 'files(id)',
       spaces: 'drive',
     });
 
-    let folderId: string;
-
-    if (list.data.files && list.data.files.length > 0) {
-      folderId = list.data.files[0].id!;
-    } else {
-      // Create folder
+    let folderId = list.data.files?.[0]?.id;
+    if (!folderId) {
       const folder = await this.drive.files.create({
         requestBody: {
           name: folderName,
@@ -160,25 +156,29 @@ export class GoogleClient implements IGoogleClient {
       folderId = folder.data.id!;
     }
 
-    // Write temp hello.txt file
-    const filePath = path.join(__dirname, 'hello.txt');
-    fs.writeFileSync(filePath, 'Hello World!', 'utf8');
+    const tempPath = path.join(__dirname, file.originalname);
+    fs.writeFileSync(tempPath, file.buffer);
 
-    const response = await this.drive.files.create({
+    const uploaded = await this.drive.files.create({
       requestBody: {
-        name: 'hello.txt',
+        name: file.originalname,
         parents: [folderId],
       },
       media: {
-        mimeType: 'text/plain',
-        body: fs.createReadStream(filePath),
+        mimeType: file.mimetype,
+        body: fs.createReadStream(tempPath),
       },
-      fields: 'id, webViewLink, name',
+      fields: 'id, webViewLink',
     });
 
-    // Optional: clean up file
-    fs.unlinkSync(filePath);
+    await this.drive.permissions.create({
+      fileId: uploaded.data.id!,
+      requestBody: { role: 'reader', type: 'anyone' },
+    });
 
-    return response.data.webViewLink || '';
+    fs.unlinkSync(tempPath);
+
+    return uploaded.data.webViewLink!;
   }
+
 }

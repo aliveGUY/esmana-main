@@ -20,7 +20,7 @@ const CheckboxCollection = ({ options }) => {
 
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {[0, 1, 2, 3].map((value) => {
+      {options.map((value) => {
         const labelId = `checkbox-list-label-${value}`
 
         return (
@@ -35,7 +35,7 @@ const CheckboxCollection = ({ options }) => {
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText id={labelId} primary={value} />
             </ListItemButton>
           </ListItem>
         )

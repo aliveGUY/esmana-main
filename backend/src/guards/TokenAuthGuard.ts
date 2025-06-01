@@ -1,7 +1,7 @@
 import { Injectable, ExecutionContext, UnauthorizedException, Inject } from '@nestjs/common';
 import { CanActivate } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { ITokenRepository } from '../repositories/TokenRepository';
 import { IAuthService } from '../services/AuthService';
 import { ETokenType } from '../models/enums/ETokenType';
@@ -10,74 +10,38 @@ import { ETokenType } from '../models/enums/ETokenType';
 export class TokenAuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
-    @Inject('IAuthService') private readonly authService: IAuthService,
-  ) {}
+    @Inject('ITokenRepository') private tokenRepo: ITokenRepository,
+    @Inject('IAuthService') private authService: IAuthService,
+  ) { }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Check if route is marked as public
-    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+  async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    if (this.reflector.getAllAndOverride<boolean>('isPublic', [ctx.getHandler(), ctx.getClass()])) return true;
 
-    if (isPublic) {
-      return true;
+    const req = ctx.switchToHttp().getRequest<Request>();
+    const res = ctx.switchToHttp().getResponse<Response>();
+    const token = req.cookies?.access_token;
+    if (!token) throw new UnauthorizedException('No access token');
+
+    let data = await this.tokenRepo.validateToken(token);
+    if (!data) {
+      const refreshed = await this.authService.refreshToken(token);
+      if (!refreshed) throw new UnauthorizedException('Token refresh failed');
+      this.setCookie(res, refreshed.accessToken);
+      data = await this.tokenRepo.validateToken(refreshed.accessToken);
+      if (!data) throw new UnauthorizedException('New token invalid');
     }
 
-    const request = context.switchToHttp().getRequest<Request>();
-    const response = context.switchToHttp().getResponse<Response>();
-    const accessToken = request.cookies?.access_token;
-
-    if (!accessToken) {
-      throw new UnauthorizedException('No access token provided');
-    }
-
-    try {
-      // Try to validate access token
-      let tokenData = await this.tokenRepository.validateToken(accessToken);
-      
-      if (!tokenData) {
-        // Access token invalid/expired - try to refresh
-        const refreshResult = await this.authService.refreshToken(accessToken);
-        
-        if (!refreshResult) {
-          throw new UnauthorizedException('Token refresh failed');
-        }
-
-        // Set new access token cookie
-        this.setAccessTokenCookie(response, refreshResult.accessToken);
-        
-        // Validate new token
-        tokenData = await this.tokenRepository.validateToken(refreshResult.accessToken);
-        
-        if (!tokenData) {
-          throw new UnauthorizedException('New token validation failed');
-        }
-      }
-
-      if (tokenData.type !== ETokenType.ACCESS) {
-        throw new UnauthorizedException('Invalid token type');
-      }
-
-      request.user = {
-        id: tokenData.userId,
-        email: tokenData.email,
-        roles: tokenData.roles,
-      };
-
-      return true;
-    } catch (error) {
-      throw new UnauthorizedException('Token validation failed');
-    }
+    if (data.type !== ETokenType.ACCESS) throw new UnauthorizedException('Wrong token type');
+    req.user = { id: data.userId, email: data.email, roles: data.roles };
+    return true;
   }
 
-  private setAccessTokenCookie(response: Response, accessToken: string): void {
-    response.cookie('access_token', accessToken, {
-      httpOnly: true,        // Not accessible via JavaScript
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-      sameSite: 'strict',    // CSRF protection
-      maxAge: 15 * 60 * 1000, // 15 minutes
+  private setCookie(res: Response, token: string) {
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000,
     });
   }
 }

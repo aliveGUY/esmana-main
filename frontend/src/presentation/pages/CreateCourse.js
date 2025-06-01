@@ -17,6 +17,7 @@ import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
 import { isArray, isPlainObject, mapValues, omit } from 'lodash'
+import { useCreateCourseMutation } from '../../state/asynchronous'
 
 function removeIdsDeep(value) {
   if (isArray(value)) {
@@ -32,16 +33,27 @@ function removeIdsDeep(value) {
 }
 
 const CreateCourse = () => {
+  const [createCourse] = useCreateCourseMutation()
   const dispatch = useDispatch()
   const courseForm = useSelector((state) => state.courseForm)
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const createCourseData = removeIdsDeep(courseForm)
-    createCourseData.lectures.forEach((lecture) => {
+
+    const cleanedData = removeIdsDeep(omit(courseForm, ['thumbnailFile']))
+
+    cleanedData.lectures.forEach((lecture) => {
       lecture.price = Number(lecture.price)
     })
-    console.log({ createCourseData })
+
+    const formData = new FormData()
+    formData.append('data', JSON.stringify(cleanedData))
+
+    if (courseForm.thumbnailFile) {
+      formData.append('thumbnail', courseForm.thumbnailFile)
+    }
+
+    createCourse(formData)
   }
 
   const handleAddBprOption = ({ questionId, option }) => {

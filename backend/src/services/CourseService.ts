@@ -13,7 +13,7 @@ import { ILectureService } from "./LectureService";
 import { IGoogleClient } from "src/infrastructure/GoogleClient";
 
 export interface ICourseService {
-  createCourse(course: CreateCourseDto): Promise<DetailedCourseDto>
+  createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
   getCourseById(id: number, request: Request): Promise<DetailedCourseDto>
   getAllCourses(request: Request): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
@@ -31,7 +31,12 @@ export class CourseService implements ICourseService {
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
   ) { }
 
-  async createCourse(courseDto: CreateCourseDto): Promise<DetailedCourseDto> {
+  async createCourse(courseDto: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto> {
+    let thumbnailUrl = ""
+    if (thumbnail) {
+      thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail)
+    }
+
     const bprEvaluation = await Promise.all(
       courseDto.bprEvaluation.map(evaluation =>
         this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
@@ -45,7 +50,7 @@ export class CourseService implements ICourseService {
     );
 
     const course: Partial<Course> = {
-      thumbnailUrl: courseDto.thumbnailUrl,
+      thumbnailUrl: thumbnailUrl,
       title: courseDto.title,
       description: courseDto.description,
       isActive: courseDto.isActive,

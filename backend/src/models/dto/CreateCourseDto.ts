@@ -4,10 +4,6 @@ import { CreateEvaluationQuestionDto } from "./CreateEvaluationQuestionDto";
 import { CreateLectureDto } from "./CreateLectureDto";
 
 export class CreateCourseDto {
-  @IsOptional()
-  @IsString()
-  thumbnailUrl?: string;
-
   @IsString()
   @IsNotEmpty()
   title: string;

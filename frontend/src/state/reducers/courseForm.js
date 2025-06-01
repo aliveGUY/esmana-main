@@ -6,7 +6,7 @@ import generateRandomString from '../../utils/generateRandomString'
 const courseFormSlice = createSlice({
   name: 'courseForm',
   initialState: {
-    thumbnailUrl: '',
+    thumbnailFile: null,
     title: '',
     description: '',
     isActive: false,
@@ -93,8 +93,8 @@ const courseFormSlice = createSlice({
       state.isActive = payload
     },
 
-    setThumbnailUrl: (state, { payload }) => {
-      state.thumbnailUrl = payload
+    setThumbnailFile: (state, { payload }) => {
+      state.thumbnailFile = payload
     },
 
     setParticipationCertificate: (state, { payload }) => {
@@ -119,7 +119,7 @@ export const {
   setTitle,
   setDescription,
   setIsActive,
-  setThumbnailUrl,
+  setThumbnailFile,
   setParticipationCertificate,
   setBprCertificate,
 } = courseFormSlice.actions

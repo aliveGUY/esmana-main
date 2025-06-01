@@ -1,39 +1,44 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Box, Stack, Typography } from '@mui/material'
-import { setThumbnailUrl } from '../../../state/reducers/courseForm'
+import { setThumbnailFile } from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 import ImageIcon from '@mui/icons-material/Image'
 
 const ImageInputSection = () => {
   const fileInputRef = useRef(null)
-  const thumbnail = useSelector((state) => state.courseForm.thumbnailUrl)
+  const thumbnailFile = useSelector((state) => state.courseForm.thumbnailFile)
   const dispatch = useDispatch()
+  const [previewUrl, setPreviewUrl] = useState(null)
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = (error) => reject(error)
-    })
-  }
+  // Create preview URL when file changes
+  useEffect(() => {
+    if (thumbnailFile) {
+      const url = URL.createObjectURL(thumbnailFile)
+      setPreviewUrl(url)
+      
+      // Cleanup function to revoke the URL
+      return () => {
+        URL.revokeObjectURL(url)
+      }
+    } else {
+      setPreviewUrl(null)
+    }
+  }, [thumbnailFile])
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const file = e.target.files[0]
     if (!file) return
 
-    const base64 = await convertToBase64(file)
-
-    dispatch(setThumbnailUrl(base64))
+    dispatch(setThumbnailFile(file))
   }
 
   return (
     <Box
       sx={{
-        backgroundColor: thumbnail ? 'snowFog.dark' : 'snowFog.main',
+        backgroundColor: previewUrl ? 'snowFog.dark' : 'snowFog.main',
         transition: 'background-color .3s',
         position: 'relative',
         cursor: 'pointer',
@@ -48,12 +53,12 @@ const ImageInputSection = () => {
         },
 
         '&:hover': {
-          backgroundColor: thumbnail ? 'snowFog.main' : 'snowFog.light',
+          backgroundColor: previewUrl ? 'snowFog.main' : 'snowFog.light',
         },
       }}
     >
-      {thumbnail && (
-        <img src={thumbnail} alt="Course thumbnail" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+      {previewUrl && (
+        <img src={previewUrl} alt="Course thumbnail" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       )}
       <SectionWrapper>
         <input type="file" accept="image/*" ref={fileInputRef} style={{ display: 'none' }} onChange={handleChange} />
@@ -69,7 +74,7 @@ const ImageInputSection = () => {
             overflow: 'hidden',
           }}
         >
-          {thumbnail ? (
+          {previewUrl ? (
             <Box
               sx={{
                 position: 'absolute',

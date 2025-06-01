@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Get, Param, Req, Body, ForbiddenException } from '@nestjs/common';
+import { Controller, Post, UseGuards, Get, Param, Req, Body, ForbiddenException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { Public } from '../common/decorators/public.decorator';
 import { Inject } from '@nestjs/common';
@@ -9,6 +9,7 @@ import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
 import { DetailedCourseDto } from 'src/models/dto/DetailedCourseDto';
 import { ERoles } from 'src/models/enums/ERoles';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('courses')
 export class CoursesController {
@@ -29,17 +30,20 @@ export class CoursesController {
     return await this.courseService.getAllActiveCourses()
   }
 
-  @UseGuards(TokenAuthGuard)
+  // @UseGuards(TokenAuthGuard)
   @Public()
   @Post('')
-  async createCourse(@Req() request: Request, @Body() course: CreateCourseDto): Promise<DetailedCourseDto> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+  @UseInterceptors(FileInterceptor('thumbnail'))
+  async createCourse(@Req() request: Request, @UploadedFile() thumbnail: Express.Multer.File, @Body('data') dataJson: string,
+  ) {
+    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
-    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-      throw new ForbiddenException('Only administrators can create courses');
-    }
+    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+    //   throw new ForbiddenException('Only administrators can create courses');
+    // }
 
-    return await this.courseService.createCourse(course);
+    const courseDto: CreateCourseDto = JSON.parse(dataJson)
+    return await this.courseService.createCourse(courseDto, thumbnail);
   }
 
   @UseGuards(TokenAuthGuard)

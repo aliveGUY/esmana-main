@@ -72,8 +72,6 @@ const RichTextViewer = ({ content }) => {
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }
 
-  return
-
   return (
     <div className="rich-text-viewer">
       <LexicalComposer initialConfig={editorConfig}>

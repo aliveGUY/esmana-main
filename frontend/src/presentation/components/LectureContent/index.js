@@ -5,15 +5,19 @@ import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 import LectureVideo from '../LectureVideo'
 import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
+import { useTranslation } from 'react-i18next'
 
 import '../RichTextEditor/editor-styles.css'
 
 const LectureContent = ({ lecture }) => {
   const { description, title, materials, status } = lecture
+  const { i18n } = useTranslation()
+  const currentLang = i18n.language
 
-  console.log({ materials, lecture })
   const isAvailable = !isEmpty(materials)
   const isPurchased = !isEmpty(status)
+
+  console.log({ materials })
 
   return (
     <Stack sx={{ pb: 5 }} spacing={3}>
@@ -45,8 +49,8 @@ const LectureContent = ({ lecture }) => {
       <Box flex={1}>
         {isAvailable && (
           <Stack spacing={3}>
-            <RichTextViewer content={materials.richText} />
-            <LectureTest test={materials.test} />
+            <RichTextViewer content={materials.richText[currentLang]} />
+            <LectureTest test={materials.evaluation} />
           </Stack>
         )}
       </Box>
