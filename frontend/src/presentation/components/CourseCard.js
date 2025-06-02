@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
-import LoginImage from '../../static/images/image1_0.jpg'
 import { getTotalHours } from './OwnedCourseCard'
+import EmptyImage from '../../static/images/no-image.jpg'
 
 export const getTotalPrice = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -18,7 +18,8 @@ const CourseCard = ({ course }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { title, description, id, lectures } = course
+  const { title, description, id, lectures, thumbnailUrl } = course
+
   const price = getTotalPrice(lectures)
   const lecturesCount = lectures.length
   const hoursCount = getTotalHours(lectures)
@@ -98,7 +99,10 @@ const CourseCard = ({ course }) => {
             },
           }}
         >
-          <img alt="ESMANA logo" src={LoginImage} />
+          <img
+            alt="ESMANA logo"
+            src={thumbnailUrl ? `http://localhost:8080/static/images/${thumbnailUrl}` : EmptyImage}
+          />
         </Box>
         <Box
           className="body"

@@ -24,7 +24,7 @@ const LectureMaterialSection = () => {
     setSelectedLang(lang)
   }
 
-  if (!richText) return
+  console.log({ richText })
 
   return (
     <Box px={2}>

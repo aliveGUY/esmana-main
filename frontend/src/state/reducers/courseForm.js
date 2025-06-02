@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { CERTIFICATE_TEMPLATE_EXAMPLE } from '../../constants'
 import generateRandomString from '../../utils/generateRandomString'
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   thumbnailFile: null,
   title: '',
   description: '',
@@ -118,6 +118,14 @@ const courseFormSlice = createSlice({
     setLectures: (state, { payload }) => {
       state.lectures = payload
     },
+
+    setThumbnailUrl: (state, { payload }) => {
+      state.thumbnailUrl = payload
+    },
+
+    setId: (state, { payload }) => {
+      state.id = payload
+    },
   },
 })
 
@@ -139,5 +147,7 @@ export const {
   resetCourseForm,
   setBprEvaluation,
   setLectures,
+  setThumbnailUrl,
+  setId,
 } = courseFormSlice.actions
 export default courseFormSlice.reducer

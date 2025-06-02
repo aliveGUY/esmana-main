@@ -67,7 +67,7 @@ const usersApi = createApi({
       query: () => 'courses',
     }),
 
-    getCourseById: builder.query({
+    getCourseById: builder.mutation({
       query: (id) => `courses/${id}`,
     }),
 
@@ -75,6 +75,14 @@ const usersApi = createApi({
       query: (courseData) => ({
         url: 'courses',
         method: 'POST',
+        body: courseData,
+      }),
+    }),
+
+    editCourse: builder.mutation({
+      query: (courseData) => ({
+        url: 'courses',
+        method: 'PUT',
         body: courseData,
       }),
     }),
@@ -97,9 +105,10 @@ export const {
   useGoogleRegisterMutation,
   useUpdateAuthMutation,
   useGetAllCoursesQuery,
-  useGetCourseByIdQuery,
+  useGetCourseByIdMutation,
   useCreateCourseMutation,
   useSearchVideosMutation,
+  useEditCourseMutation,
 } = usersApi
 
 export const usersMiddleware = usersApi.middleware

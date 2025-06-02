@@ -1,3 +1,4 @@
+import { patch } from '@mui/material'
 import DashboardLayout from './presentation/common/DashboardLayout'
 import FormStateWrapper from './presentation/common/FormStateWrapper'
 import NotFoundPage from './presentation/pages/404'
@@ -97,6 +98,11 @@ const routing = [
             index: true,
             title: '',
             element: <EditCourse />,
+          },
+          {
+            path: 'lecture/new',
+            title: '',
+            element: <CreateLecture isEdit />,
           },
           {
             path: 'lecture/:lectureId',

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Button, Stack } from '@mui/material'
@@ -19,9 +19,10 @@ import VideoSection from '../components/CourseFrom/VideoSection'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-const CreateLecture = () => {
+const CreateLecture = ({ isEdit = false }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { courseId } = useParams()
 
   const {
     lectureEvaluation,
@@ -32,6 +33,8 @@ const CreateLecture = () => {
     handleAddQuestion,
     handleAddOption,
   } = useLectureEvaluationFromControls()
+
+  const redirect = isEdit ? `/dashboard/course/edit/${courseId}` : '/dashboard/course/new'
 
   const methods = useForm({
     defaultValues: {
@@ -70,8 +73,9 @@ const CreateLecture = () => {
       },
     }
 
+    console.log({ payload })
     dispatch(addLecture(payload))
-    navigate('/dashboard/course/new')
+    navigate(redirect)
   }
 
   return (
@@ -79,7 +83,7 @@ const CreateLecture = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <Stack spacing={2} sx={{ pb: 5 }}>
           <SectionWrapper>
-            <Button startIcon={<ArrowBackIcon />} to="/dashboard/course/new" component={Link} variant="outlined">
+            <Button startIcon={<ArrowBackIcon />} to={redirect} component={Link} variant="outlined">
               Back
             </Button>
           </SectionWrapper>

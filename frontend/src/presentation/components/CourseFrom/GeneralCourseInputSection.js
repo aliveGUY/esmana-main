@@ -45,7 +45,7 @@ const GeneralCourseInputSection = () => {
                     Indicates if this course is vissible to customers or not
                   </Typography>
                 </Box>
-                <Switch name="active" onChange={handleActiveChange} />
+                <Switch name="active" checked={courseForm.isActive} onChange={handleActiveChange} />
               </Stack>
             </Stack>
           </Box>

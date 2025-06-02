@@ -24,11 +24,11 @@ export class LectureService implements ILectureService {
   ) { }
 
   async createLecture(lectureDto: CreateLectureDto): Promise<Lecture> {
+    const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
+
     const evaluation = await Promise.all(
       lectureDto.materials.evaluation.map(evaluation => this.evaluationQuestionRepository.createEvaluationQuestion(evaluation))
     )
-
-    const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
     const lectureMaterialsDto: Partial<LectureMaterials> = {
       videoUrl: lectureDto.materials.videoUrl,
@@ -52,8 +52,19 @@ export class LectureService implements ILectureService {
     return await this.lectureRepository.createLecture(lecture)
   }
 
-  async editLecture(lecture: EditLectureDto): Promise<Lecture> {
-    return await this.lectureRepository.editLecture(lecture)
+  async editLecture(lectureDto: EditLectureDto): Promise<Lecture> {
+    // Handle evaluation questions if provided
+    if (lectureDto.materials?.evaluation && lectureDto.materials.evaluation.length > 0) {
+      await Promise.all(
+        lectureDto.materials.evaluation.map(evaluation => 
+          this.evaluationQuestionRepository.editEvaluationQuestion(evaluation)
+        )
+      );
+    }
+
+    // Update the entire lecture with materials through cascade
+    // This avoids the constraint violation by updating the relationship properly
+    return await this.lectureRepository.editLecture(lectureDto);
   }
 
   async deleteLecture(id: number): Promise<void> {

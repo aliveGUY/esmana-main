@@ -10,23 +10,27 @@ import ImageIcon from '@mui/icons-material/Image'
 const ImageInputSection = () => {
   const fileInputRef = useRef(null)
   const thumbnailFile = useSelector((state) => state.courseForm.thumbnailFile)
+  const thumbnailUrl = useSelector((state) => state.courseForm.thumbnailUrl)
   const dispatch = useDispatch()
   const [previewUrl, setPreviewUrl] = useState(null)
 
-  // Create preview URL when file changes
   useEffect(() => {
     if (thumbnailFile) {
       const url = URL.createObjectURL(thumbnailFile)
       setPreviewUrl(url)
 
-      // Cleanup function to revoke the URL
       return () => {
         URL.revokeObjectURL(url)
       }
-    } else {
-      setPreviewUrl(null)
     }
-  }, [thumbnailFile])
+
+    if (thumbnailUrl) {
+      setPreviewUrl(`http://localhost:8080/static/images/${thumbnailUrl}`)
+      return
+    }
+
+    setPreviewUrl(null)
+  }, [thumbnailFile, thumbnailUrl])
 
   const handleChange = (e) => {
     const file = e.target.files[0]

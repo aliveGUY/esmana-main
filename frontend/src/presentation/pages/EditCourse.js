@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { Stack } from '@mui/material'
-import { useGetCourseByIdQuery } from '../../state/asynchronous'
+import { useEditCourseMutation, useGetCourseByIdMutation } from '../../state/asynchronous'
 import {
   addBprOption,
   addBprQuestion,
+  INITIAL_STATE,
   removeBprOption,
   removeBprQuestion,
   removeBprQuestionAnswer,
@@ -14,9 +15,11 @@ import {
   setBprEvaluation,
   setBprQuestionAnswer,
   setDescription,
+  setId,
   setIsActive,
   setLectures,
   setParticipationCertificate,
+  setThumbnailUrl,
   setTitle,
 } from '../../state/reducers/courseForm'
 import CertificatesSection from '../components/CourseFrom/CertificatesSection'
@@ -25,15 +28,34 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
+import { isEqual, omit } from 'lodash'
+import { removeEditorIdsDeep } from './CreateCourse'
 
 const EditCourse = () => {
   const { courseId } = useParams()
-  const { isLoading, data } = useGetCourseByIdQuery(courseId)
+  const [getCourseById, { isLoading, data }] = useGetCourseByIdMutation()
   const dispatch = useDispatch()
   const courseForm = useSelector((state) => state.courseForm)
+  const [editCourse] = useEditCourseMutation()
 
   const onSubmit = (e) => {
     e.preventDefault()
+
+    const cleanedData = removeEditorIdsDeep(omit(courseForm, ['thumbnailFile', 'thumbnailUrl']))
+
+    cleanedData.lectures.forEach((lecture) => {
+      lecture.price = Number(lecture.price)
+    })
+
+    const formData = new FormData()
+
+    if (courseForm.thumbnailFile) {
+      formData.append('thumbnail', courseForm.thumbnailFile)
+    }
+
+    formData.append('data', JSON.stringify(cleanedData))
+
+    editCourse(formData)
   }
 
   const handleAddBprOption = ({ questionId, option }) => {
@@ -61,8 +83,15 @@ const EditCourse = () => {
   }
 
   useEffect(() => {
+    if (isEqual(courseForm, INITIAL_STATE)) {
+      getCourseById(courseId)
+    }
+  }, [courseForm])
+
+  useEffect(() => {
     if (!data) return
 
+    dispatch(setId(data.id))
     dispatch(setTitle(data.title))
     dispatch(setDescription(data.description))
     dispatch(setIsActive(data.isActive))
@@ -70,6 +99,7 @@ const EditCourse = () => {
     dispatch(setBprCertificate(data.bprCertificate))
     dispatch(setBprEvaluation(data.bprEvaluation))
     dispatch(setLectures(data.lectures))
+    dispatch(setThumbnailUrl(data.thumbnailUrl))
   }, [data])
 
   if (isLoading) {

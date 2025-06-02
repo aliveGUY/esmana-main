@@ -76,6 +76,7 @@ export default function useLectureEvaluationFromControls(defaultValue = []) {
     handleRemoveQuestionAnswer,
     handleSetQuestionAnswer,
     handleRemoveQuestion,
+    setLectureEvaluation,
     handleRemoveOption,
     handleAddQuestion,
     handleAddOption,

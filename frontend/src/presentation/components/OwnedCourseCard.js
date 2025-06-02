@@ -4,7 +4,7 @@ import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
-import LoginImage from '../../static/images/image1_0.jpg'
+import EmptyImage from '../../static/images/no-image.jpg'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -21,7 +21,7 @@ const OwnedCourseCard = ({ course }) => {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const { title, description, lectures, id } = course
+  const { title, description, lectures, thumbnailUrl, id } = course
   const lecturesCount = lectures.length
   const hoursCount = getTotalHours(lectures)
   const firstOwnedLecture = find(lectures, (lecture) =>
@@ -92,7 +92,10 @@ const OwnedCourseCard = ({ course }) => {
             },
           }}
         >
-          <img alt="ESMANA logo" src={LoginImage} />
+          <img
+            alt="ESMANA logo"
+            src={thumbnailUrl ? `http://localhost:8080/static/images/${thumbnailUrl}` : EmptyImage}
+          />
         </Box>
         <Box
           className="body"

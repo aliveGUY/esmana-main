@@ -4,12 +4,16 @@ import { LoginTicket, OAuth2Client, TokenPayload } from 'google-auth-library';
 import { UserGoogleRegistrationDto } from 'src/models/dto/UserGoogleRegistrationDto';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Readable } from 'stream';
+import { isEmpty } from 'class-validator';
 
 export interface IGoogleClient {
   verifyAuthToken(token: string): Promise<UserGoogleRegistrationDto>;
   createMeetingLink(title: string, startTime: Date, endTime: Date): Promise<string>;
   searchUploadedVideos(title: string): Promise<{ title: string; videoId: string }[]>;
   uploadMulterFileToDrive(file: Express.Multer.File): Promise<string>;
+  getFileStreamById(fileId: string): Promise<{ stream: Readable; mimeType: string }>
+  deleteFileIfExists(fileId: string): Promise<void>
 }
 
 @Injectable()
@@ -114,7 +118,7 @@ export class GoogleClient implements IGoogleClient {
         mimeType: file.mimetype,
         body: fs.createReadStream(tempPath),
       },
-      fields: 'id, webViewLink',
+      fields: 'id',
     });
 
     await this.drive.permissions.create({
@@ -124,8 +128,39 @@ export class GoogleClient implements IGoogleClient {
 
     fs.unlinkSync(tempPath);
 
-    return uploaded.data.webViewLink!;
+    return uploaded.data.id!;
   }
+
+  async getFileStreamById(fileId: string): Promise<{ stream: Readable; mimeType: string }> {
+    const metadata = await this.drive.files.get({
+      fileId,
+      fields: 'mimeType',
+    });
+
+    const mimeType = metadata.data.mimeType ?? 'application/octet-stream';
+
+    const file = await this.drive.files.get(
+      { fileId, alt: 'media' },
+      { responseType: 'stream' as const }
+    );
+
+    return {
+      stream: file.data,
+      mimeType,
+    };
+  }
+
+  async deleteFileIfExists(fileId: string): Promise<void> {
+    if (isEmpty(fileId)) return
+
+    try {
+      await this.drive.files.delete({ fileId });
+    } catch (error: any) {
+      if (error?.code === 404) return;
+      throw error;
+    }
+  }
+
 
   async searchUploadedVideos(query: string = ''): Promise<
     { title: string; videoId: string; thumbnail: string }[]

@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Get, Param, Req, Body, ForbiddenException, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, UseGuards, Get, Param, Req, Body, ForbiddenException, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { Public } from '../common/decorators/public.decorator';
 import { Inject } from '@nestjs/common';
@@ -10,6 +10,7 @@ import { DetailedCourseDto } from 'src/models/dto/DetailedCourseDto';
 import { ERoles } from 'src/models/enums/ERoles';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { EditCourseDto } from 'src/models/dto/EditCourseDto';
 
 @Controller('courses')
 export class CoursesController {
@@ -38,14 +39,32 @@ export class CoursesController {
     @UploadedFile() thumbnail: Express.Multer.File,
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
-    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
-    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-    //   throw new ForbiddenException('Only administrators can create courses');
-    // }
+    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+      throw new ForbiddenException('Only administrators can create courses');
+    }
 
     const courseDto: CreateCourseDto = JSON.parse(dataJson)
     return await this.courseService.createCourse(courseDto, thumbnail);
+  }
+
+  @UseGuards(TokenAuthGuard)
+  @Put('')
+  @UseInterceptors(FileInterceptor('thumbnail'))
+  async editCourse(
+    @Req() request: Request,
+    @UploadedFile() thumbnail: Express.Multer.File,
+    @Body('data') dataJson: string,
+  ): Promise<DetailedCourseDto> {
+    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+
+    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+      throw new ForbiddenException('Only administrators can edit courses');
+    }
+
+    const courseDto: EditCourseDto = JSON.parse(dataJson)
+    return await this.courseService.editCourse(courseDto, thumbnail)
   }
 
   @UseGuards(TokenAuthGuard)

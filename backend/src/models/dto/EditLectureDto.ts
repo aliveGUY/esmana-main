@@ -1,4 +1,5 @@
 import { CreateLectureMaterialsDto } from "./CreateLectureMaterialsDto";
+import { EditLectureMaterialsDto } from "./EditLectureMaterialsDto";
 
 export class EditLectureDto {
   id: number
@@ -13,5 +14,5 @@ export class EditLectureDto {
 
   endTime: Date;
 
-  materials: CreateLectureMaterialsDto
+  materials: EditLectureMaterialsDto | CreateLectureMaterialsDto
 }

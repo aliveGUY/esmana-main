@@ -46,7 +46,7 @@ export class AuthService implements IAuthService {
       googleId: undefined,
       profilePicture: undefined,
       isEmailVerified: false,
-      roles: [ERoles.USER],
+      roles: [ERoles.ADMIN],
     };
 
     const user = await this.userRepository.create(userData);

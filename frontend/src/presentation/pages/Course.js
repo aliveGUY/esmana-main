@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { find } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Box } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
-import { useGetCourseByIdQuery } from '../../state/asynchronous'
+import { useGetCourseByIdMutation } from '../../state/asynchronous'
 import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
@@ -13,7 +13,11 @@ import LectureTopControls from '../components/LectureTopControls'
 const Course = () => {
   const { lectureId, courseId } = useParams()
   const { ownedCourses } = useCourses()
-  useGetCourseByIdQuery(courseId)
+  const [getCourseById] = useGetCourseByIdMutation()
+
+  useEffect(() => {
+    getCourseById(courseId)
+  }, [])
 
   if (!ownedCourses) return
 

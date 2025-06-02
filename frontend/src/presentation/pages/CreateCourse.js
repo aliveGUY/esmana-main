@@ -19,17 +19,27 @@ import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
 
-function removeIdsDeep(value) {
+export function removeEditorIdsDeep(value) {
   if (isArray(value)) {
-    return value.map(removeIdsDeep)
+    return value.map(removeEditorIdsDeep);
   }
 
   if (isPlainObject(value)) {
-    const cleaned = omit(value, 'id')
-    return mapValues(cleaned, removeIdsDeep)
+    const cloned = { ...value };
+
+    const idValue = cloned.id;
+    const idIsValid =
+      typeof idValue === 'number' ||
+      (typeof idValue === 'string' && /^\d+$/.test(idValue));
+
+    if (!idIsValid) {
+      delete cloned.id;
+    }
+
+    return mapValues(cloned, removeEditorIdsDeep);
   }
 
-  return value
+  return value;
 }
 
 const CreateCourse = () => {
@@ -40,7 +50,7 @@ const CreateCourse = () => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    const cleanedData = removeIdsDeep(omit(courseForm, ['thumbnailFile']))
+    const cleanedData = removeEditorIdsDeep(omit(courseForm, ['thumbnailFile']))
 
     cleanedData.lectures.forEach((lecture) => {
       lecture.price = Number(lecture.price)

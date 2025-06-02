@@ -1,3 +1,8 @@
+import { CreateEvaluationQuestionDto } from "./CreateEvaluationQuestionDto";
+import { CreateLectureDto } from "./CreateLectureDto";
+import { EditEvaluationQuestionDto } from "./EditEvaluationQuestionDto";
+import { EditLectureDto } from "./EditLectureDto";
+
 export class EditCourseDto {
   id: number;
   thumbnailUrl?: string;
@@ -6,4 +11,6 @@ export class EditCourseDto {
   isActive?: boolean;
   participationCertificate?: string;
   bprCertificate?: string;
+  lectures: EditLectureDto[] | CreateLectureDto[];
+  bprEvaluation: EditEvaluationQuestionDto[] | CreateEvaluationQuestionDto[];
 }

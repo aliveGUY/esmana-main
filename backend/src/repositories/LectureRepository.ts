@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 export interface ILectureRepository {
   createLecture(lecture: Partial<Lecture>): Promise<Lecture>
   editLecture(lecture: EditLectureDto): Promise<Lecture>
+  getLectureById(id: number): Promise<Lecture>
   deleteLecture(id: number): Promise<void>
 }
 
@@ -22,7 +23,24 @@ export class LectureRepository implements ILectureRepository {
   }
 
   async editLecture(lecture: EditLectureDto): Promise<Lecture> {
-    return await this.lectureRepository.save(lecture)
+    // Use save with cascade to properly handle the one-to-one relationship
+    const savedLecture = await this.lectureRepository.save(lecture);
+    
+    // Return the lecture with all relations loaded
+    return await this.getLectureById(savedLecture.id);
+  }
+
+  async getLectureById(id: number): Promise<Lecture> {
+    const lecture = await this.lectureRepository.findOne({
+      where: { id },
+      relations: ['materials', 'materials.evaluation']
+    });
+    
+    if (!lecture) {
+      throw new Error(`Lecture with id ${id} not found`);
+    }
+    
+    return lecture;
   }
 
   async deleteLecture(id: number): Promise<void> {

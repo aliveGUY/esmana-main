@@ -14,10 +14,10 @@ import { IGoogleClient } from "src/infrastructure/GoogleClient";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
+  editCourse(course: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
   getCourseById(id: number, request: Request): Promise<DetailedCourseDto>
   getAllCourses(request: Request): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
-  editCourse(course: EditCourseDto): Promise<DetailedCourseDto>
   deleteCourse(id: number): Promise<void>
 }
 
@@ -37,15 +37,16 @@ export class CourseService implements ICourseService {
       thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail)
     }
 
-    const bprEvaluation = await Promise.all(
-      courseDto.bprEvaluation.map(evaluation =>
-        this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
-      )
-    );
 
     const lectures = await Promise.all(
       courseDto.lectures.map(lecture =>
         this.lectureService.createLecture(lecture)
+      )
+    );
+
+    const bprEvaluation = await Promise.all(
+      courseDto.bprEvaluation.map(evaluation =>
+        this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
       )
     );
 
@@ -63,16 +64,55 @@ export class CourseService implements ICourseService {
     return await this.courseRepository.createCourse(course);
   }
 
+  async editCourse(courseDto: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto> {
+    const existingCourse = await this.courseRepository.getFullCourseById(courseDto.id);
+    
+    if (thumbnail) {
+      await this.googleClient.deleteFileIfExists(existingCourse.thumbnailUrl);
+      courseDto.thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail);
+    }
+    
+    if (courseDto.lectures?.length > 0) {
+      const processedLectures = await Promise.all(
+        courseDto.lectures.map(async (lecture: any) => {
+          if (lecture.id) return await this.lectureService.editLecture(lecture);
+          const newLecture = await this.lectureService.createLecture(lecture);
+          newLecture.course = existingCourse;
+          return newLecture;
+        })
+      );
+      
+      const lectureMap = new Map(processedLectures.map(l => [l.id, l]));
+      const mergedLectures = existingCourse.lectures.map(existing => lectureMap.get(existing.id) || existing);
+      const newLectures = processedLectures.filter(l => !existingCourse.lectures.some(e => e.id === l.id));
+      
+      existingCourse.lectures = [...mergedLectures, ...newLectures];
+    }
+    
+    if (courseDto.bprEvaluation?.length > 0) {
+      const processedEvaluations = await Promise.all(
+        courseDto.bprEvaluation.map(async (evaluation: any) => {
+          if (evaluation.id) return await this.evaluationQuestionRepository.editEvaluationQuestion(evaluation);
+          return await this.evaluationQuestionRepository.createEvaluationQuestion(evaluation);
+        })
+      );
+      existingCourse.bprEvaluation = processedEvaluations;
+    }
+    
+    Object.assign(existingCourse, courseDto);
+    return await this.courseRepository.editCourse(existingCourse);
+  }
+
   async getCourseById(id: number, request: Request): Promise<DetailedCourseDto> {
     const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token)
 
     if (!tokenData) throw new Error('Unauthorized')
 
-    return await this.courseRepository.getFullCourseById(id)
-    // if (tokenData.roles.includes(ERoles.ADMIN)) {
-    // }
+    if (tokenData.roles.includes(ERoles.ADMIN)) {
+      return await this.courseRepository.getFullCourseById(id)
+    }
 
-    // return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
+    return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
   }
 
   async getAllCourses(request: Request): Promise<StrippedCourseDto[]> {
@@ -87,9 +127,7 @@ export class CourseService implements ICourseService {
     return await this.courseRepository.getAllActiveCourses()
   }
 
-  async editCourse(course: EditCourseDto): Promise<DetailedCourseDto> {
-    return await this.courseRepository.editCourse(course)
-  }
+
 
   async deleteCourse(id: number): Promise<void> {
     return await this.courseRepository.deleteCourse(id)

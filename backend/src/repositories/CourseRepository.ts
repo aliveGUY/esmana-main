@@ -9,7 +9,7 @@ import { Repository } from "typeorm";
 export interface ICourseRepository {
   createCourse(course: Partial<Course>): Promise<DetailedCourseDto>
   getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto>
-  getFullCourseById(courseId: number): Promise<DetailedCourseDto>
+  getFullCourseById(courseId: number): Promise<Course>
   getAllCourses(userId: number): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
   editCourse(course: EditCourseDto): Promise<DetailedCourseDto>
@@ -66,7 +66,7 @@ export class CourseRepository implements ICourseRepository {
     return course as DetailedCourseDto;
   }
 
-  async getFullCourseById(courseId: number): Promise<DetailedCourseDto> {
+  async getFullCourseById(courseId: number): Promise<Course> {
     const course = await this.courseRepository
       .createQueryBuilder('course')
       .leftJoinAndSelect('course.lectures', 'lecture')
@@ -89,7 +89,7 @@ export class CourseRepository implements ICourseRepository {
       throw new Error('Course not found');
     }
 
-    return course as DetailedCourseDto;
+    return course;
   }
 
   async getAllCourses(userId: number): Promise<StrippedCourseDto[]> {
@@ -138,12 +138,9 @@ export class CourseRepository implements ICourseRepository {
       .getMany();
   }
 
-  async editCourse(course: EditCourseDto): Promise<DetailedCourseDto> {
-    await this.courseRepository.update(course.id, course);
-    return await this.courseRepository.findOne({
-      where: { id: course.id },
-      relations: ['lectures', 'bprEvaluation']
-    }) as DetailedCourseDto;
+  async editCourse(course: any): Promise<DetailedCourseDto> {
+    await this.courseRepository.save(course);
+    return await this.getFullCourseById(course.id);
   }
 
   async deleteCourse(id: number): Promise<void> {

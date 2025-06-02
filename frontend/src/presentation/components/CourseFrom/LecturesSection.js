@@ -7,7 +7,7 @@ import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDates'
 import SectionWrapper from '../../common/SectionWrapper'
 
-const LectureItem = ({ lecture, isEdit }) => {
+const LectureItem = ({ lecture, isEdit = false }) => {
   const { courseId } = useParams()
   const { date, startTime, endTime } = convertLectureDatesStorageToInterface({
     startTime: lecture.startTime,
@@ -39,7 +39,10 @@ const LectureItem = ({ lecture, isEdit }) => {
 }
 
 const LecturesSection = ({ isEdit = false }) => {
+  const { courseId } = useParams()
   const data = useSelector((state) => state.courseForm.lectures)
+
+  const redirect = isEdit ? `/dashboard/course/edit/${courseId}/lecture/new` : '/dashboard/course/new/lecture/new'
 
   return (
     <Box px={2}>
@@ -48,7 +51,7 @@ const LecturesSection = ({ isEdit = false }) => {
           <Stack sx={{ p: 2 }} spacing={2}>
             <Stack justifyContent="space-between" direction="row">
               <Typography fontWeight="bold">Lectures</Typography>
-              <Button variant="primary" to="/dashboard/course/new/lecture/new" component={Link}>
+              <Button variant="primary" to={redirect} component={Link}>
                 Add Lecture
               </Button>
             </Stack>

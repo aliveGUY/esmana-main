@@ -63,7 +63,18 @@ const RichTextEditor = ({ content, onChange, readOnly = false }) => {
   }
 
   if (content) {
-    editorConfig.editorState = content
+    try {
+      // If content is a string, parse it as JSON
+      if (typeof content === 'string') {
+        editorConfig.editorState = JSON.parse(content)
+      } else {
+        // If content is already an object, use it directly
+        editorConfig.editorState = content
+      }
+    } catch (error) {
+      console.error('Failed to parse editor content:', error)
+      // If parsing fails, leave editorState undefined for empty editor
+    }
   }
 
   return (
