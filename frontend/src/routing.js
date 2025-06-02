@@ -1,4 +1,5 @@
 import DashboardLayout from './presentation/common/DashboardLayout'
+import FormStateWrapper from './presentation/common/FormStateWrapper'
 import NotFoundPage from './presentation/pages/404'
 import CheckoutCourses from './presentation/pages/CheckoutCourses'
 import CheckoutMembership from './presentation/pages/CheckoutMembership'
@@ -7,6 +8,8 @@ import CourseMarketing from './presentation/pages/CourseMarketing'
 import Courses from './presentation/pages/Courses'
 import CreateCourse from './presentation/pages/CreateCourse'
 import CreateLecture from './presentation/pages/CreateLecture'
+import EditCourse from './presentation/pages/EditCourse'
+import EditLecture from './presentation/pages/EditLecture'
 import EditLectureDraft from './presentation/pages/EditLectureDraft'
 import ForgotPassword from './presentation/pages/ForgotPassword'
 import Login from './presentation/pages/Login'
@@ -61,24 +64,46 @@ const routing = [
         element: <CourseMarketing />,
       },
       {
-        path: 'course/new',
-        title: '',
-        element: <CreateCourse />,
-      },
-      {
-        path: 'course/new/lecture/new',
-        title: '',
-        element: <CreateLecture />,
-      },
-      {
-        path: 'course/new/lecture/:id',
-        title: '',
-        element: <EditLectureDraft />,
-      },
-      {
         path: 'course/:courseId/:lectureId',
         title: '',
         element: <Course />,
+      },
+      {
+        element: <FormStateWrapper />,
+        path: 'course/new',
+        children: [
+          {
+            index: true,
+            title: '',
+            element: <CreateCourse />,
+          },
+          {
+            path: 'lecture/new',
+            title: '',
+            element: <CreateLecture />,
+          },
+          {
+            path: 'lecture/:id',
+            title: '',
+            element: <EditLectureDraft />,
+          },
+        ],
+      },
+      {
+        element: <FormStateWrapper />,
+        path: 'course/edit/:courseId',
+        children: [
+          {
+            index: true,
+            title: '',
+            element: <EditCourse />,
+          },
+          {
+            path: 'lecture/:lectureId',
+            title: '',
+            element: <EditLecture />,
+          },
+        ],
       },
       {
         path: '*',

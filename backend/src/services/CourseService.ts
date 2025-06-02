@@ -68,11 +68,11 @@ export class CourseService implements ICourseService {
 
     if (!tokenData) throw new Error('Unauthorized')
 
-    if (tokenData.roles.includes(ERoles.ADMIN)) {
-      return await this.courseRepository.getFullCourseById(id)
-    }
+    return await this.courseRepository.getFullCourseById(id)
+    // if (tokenData.roles.includes(ERoles.ADMIN)) {
+    // }
 
-    return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
+    // return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
   }
 
   async getAllCourses(request: Request): Promise<StrippedCourseDto[]> {

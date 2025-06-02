@@ -1,14 +1,14 @@
 import React from 'react'
+import { find } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Stack } from '@mui/material'
+import { useCourses } from '../../hooks/useCourses'
 import Conditions from '../components/Marketing/Conditions'
 import Hero from '../components/Marketing/Hero'
 import Image from '../components/Marketing/Image'
 import Lectors from '../components/Marketing/Lectors'
 import Lectures from '../components/Marketing/Lectures'
-import { useCourses } from '../../hooks/useCourses'
-import { find } from 'lodash'
 
 const CourseMarketing = () => {
   const { id } = useParams()

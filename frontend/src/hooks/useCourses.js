@@ -1,5 +1,6 @@
-import { useAuth } from './useAuth'
 import { useSelector } from 'react-redux'
+
+import { useAuth } from './useAuth'
 
 function getUserCourses(courses, userId) {
   return courses.filter((course) =>
@@ -24,8 +25,6 @@ export function useCourses() {
 
   availableCourses = getOtherCourses(courses, user.id)
   ownedCourses = getUserCourses(courses, user.id)
-
-  console.log({ availableCourses, ownedCourses })
 
   return { availableCourses, ownedCourses }
 }

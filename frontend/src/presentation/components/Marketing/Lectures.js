@@ -3,8 +3,8 @@ import { map } from 'lodash'
 import { useTranslation } from 'react-i18next'
 
 import { Box, Button, Checkbox, Divider, Stack, Switch, Typography } from '@mui/material'
-import SectionWrapper from '../../common/SectionWrapper'
 import { useFormattedDates } from '../../../hooks/useFormattedDates'
+import SectionWrapper from '../../common/SectionWrapper'
 
 const LectureItem = ({ lecture, isAllLectures }) => {
   const { description, title, startTime, endTime, price } = lecture

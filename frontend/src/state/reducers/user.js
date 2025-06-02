@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { usersEndpoints } from '../asynchronous'
 
 const userSlice = createSlice({

@@ -35,39 +35,39 @@ const EditLectureDraft = () => {
     handleAddOption,
   } = useLectureEvaluationFromControls(lecture?.materials?.evaluation)
 
-  const { date, startHour, endHour } = convertLectureDatesStorageToForm({
-    startHour: lecture?.startHour,
-    endHour: lecture?.endHour,
+  const { date, startTime, endTime } = convertLectureDatesStorageToForm({
+    startTime: lecture?.startTime,
+    endTime: lecture?.endTime,
   })
 
   const methods = useForm({
     defaultValues: {
-      embeddedVideo: '',
+      videoUrl: lecture?.materials.videoUrl,
       title: lecture?.title,
       description: lecture?.description,
       price: lecture?.price,
       date: date,
-      startHour: startHour,
-      endHour: endHour,
+      startTime: startTime,
+      endTime: endTime,
       richText: lecture?.materials.richText,
     },
   })
 
   const onSubmit = (data) => {
-    const { startHour, endHour } = convertLectureDatesFormToStorage({
+    const { startTime, endTime } = convertLectureDatesFormToStorage({
       date: data.date,
-      startHour: data.startHour,
-      endHour: data.endHour,
+      startTime: data.startTime,
+      endTime: data.endTime,
     })
 
     const lecture = {
       title: data.title,
       description: data.description,
       price: data.price,
-      startHour: startHour,
-      endHour: endHour,
+      startTime: startTime,
+      endTime: endTime,
       materials: {
-        embeddedVideo: '',
+        videoUrl: data.videoUrl,
         richText: data.richText,
         evaluation: lectureEvaluation,
       },
@@ -95,8 +95,7 @@ const EditLectureDraft = () => {
           <VideoSection />
           <GeneralLectureInputSection />
           <LectureDetailsInputSection />
-          <PeopleSection title="Lectors" actionText="Add Lector" />
-          <PeopleSection title="Passed students" actionText="Add Student" />
+          <PeopleSection />
           <LectureMaterialSection />
           <TestSection
             title="Lecture evaluation"

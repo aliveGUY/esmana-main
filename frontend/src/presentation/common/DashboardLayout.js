@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
-import Navigation from '../components/Navigation'
-import TopBarNavigation from '../components/TopBarNavigation'
 import { useAuth } from '../../hooks/useAuth'
 import { useUpdateAuthMutation } from '../../state/asynchronous'
+import Navigation from '../components/Navigation'
+import TopBarNavigation from '../components/TopBarNavigation'
 
 const DashboardLayout = () => {
   const theme = useTheme()
@@ -13,8 +13,6 @@ const DashboardLayout = () => {
   const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(isMobile)
   const { isAuthorized } = useAuth()
   const [updateAuth] = useUpdateAuthMutation()
-
-  console.log({ isAuthorized })
 
   const burgerToggle = useCallback(() => {
     setIsNavigationCollapsed((prev) => !prev)

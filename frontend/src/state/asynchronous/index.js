@@ -78,6 +78,13 @@ const usersApi = createApi({
         body: courseData,
       }),
     }),
+
+    searchVideos: builder.mutation({
+      query: (query) => ({
+        url: `videos?title=${query}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -92,6 +99,7 @@ export const {
   useGetAllCoursesQuery,
   useGetCourseByIdQuery,
   useCreateCourseMutation,
+  useSearchVideosMutation,
 } = usersApi
 
 export const usersMiddleware = usersApi.middleware

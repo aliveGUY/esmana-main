@@ -1,11 +1,11 @@
 import { isEmpty } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
 import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 import LectureVideo from '../LectureVideo'
 import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
-import { useTranslation } from 'react-i18next'
 
 import '../RichTextEditor/editor-styles.css'
 
@@ -14,10 +14,10 @@ const LectureContent = ({ lecture }) => {
   const { i18n } = useTranslation()
   const currentLang = i18n.language
 
+  console.log({ materials })
+
   const isAvailable = !isEmpty(materials)
   const isPurchased = !isEmpty(status)
-
-  console.log({ materials })
 
   return (
     <Stack sx={{ pb: 5 }} spacing={3}>

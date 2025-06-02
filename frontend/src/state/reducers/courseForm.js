@@ -3,19 +3,25 @@ import { createSlice } from '@reduxjs/toolkit'
 import { CERTIFICATE_TEMPLATE_EXAMPLE } from '../../constants'
 import generateRandomString from '../../utils/generateRandomString'
 
+const INITIAL_STATE = {
+  thumbnailFile: null,
+  title: '',
+  description: '',
+  isActive: false,
+  participationCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
+  bprCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
+  bprEvaluation: [],
+  lectures: [],
+}
+
 const courseFormSlice = createSlice({
   name: 'courseForm',
-  initialState: {
-    thumbnailFile: null,
-    title: '',
-    description: '',
-    isActive: false,
-    participationCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
-    bprCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
-    bprEvaluation: [],
-    lectures: [],
-  },
+  initialState: INITIAL_STATE,
   reducers: {
+    resetCourseForm: (_) => {
+      return INITIAL_STATE
+    },
+
     addBprQuestion: (state, { payload }) => {
       const temporaryId = generateRandomString(10)
 
@@ -104,6 +110,14 @@ const courseFormSlice = createSlice({
     setBprCertificate: (state, { payload }) => {
       state.bprCertificate = payload
     },
+
+    setBprEvaluation: (state, { payload }) => {
+      state.bprEvaluation = payload
+    },
+
+    setLectures: (state, { payload }) => {
+      state.lectures = payload
+    },
   },
 })
 
@@ -122,5 +136,8 @@ export const {
   setThumbnailFile,
   setParticipationCertificate,
   setBprCertificate,
+  resetCourseForm,
+  setBprEvaluation,
+  setLectures,
 } = courseFormSlice.actions
 export default courseFormSlice.reducer

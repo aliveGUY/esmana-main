@@ -15,6 +15,7 @@ import { Lecture } from '../models/Lecture';
 import { LectureMaterials } from '../models/LectureMaterials';
 import { EvaluationQuestion } from '../models/EvaluationQuestion';
 import { CourseModule } from './CourseModule';
+import { VideosController } from 'src/controllers/VideosController';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { CourseModule } from './CourseModule';
     AuthModule,
     CourseModule
   ],
-  controllers: [],
+  controllers: [VideosController],
   providers: [
     {
       provide: APP_GUARD,

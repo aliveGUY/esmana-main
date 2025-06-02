@@ -1,10 +1,10 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { Avatar, Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
 
 import PersonIcon from '@mui/icons-material/Person'
-import { useSelector } from 'react-redux'
 
 const Profile = () => {
   const theme = useTheme()
@@ -41,7 +41,9 @@ const Profile = () => {
                 </Typography>
               </Stack>
               <Box>
-                <Button variant="outlined" disabled>Edit Profile</Button>
+                <Button variant="outlined" disabled>
+                  Edit Profile
+                </Button>
               </Box>
             </Stack>
           </Stack>

@@ -40,6 +40,7 @@ const Navigation = ({ isCollapsed, onClose }) => {
   const createCourse = useMatch('/dashboard/course/new')
   const createLecture = useMatch('/dashboard/course/new/lecture/new')
   const editLectureDraft = useMatch('/dashboard/course/new/lecture/:id')
+  const editLecture = useMatch('/dashboard/course/edit/:courseId/lecture/:id')
   const users = useMatch('/dashboard/users')
   const profile = useMatch('/dashboard/profile')
 
@@ -63,7 +64,8 @@ const Navigation = ({ isCollapsed, onClose }) => {
       path: '/dashboard/courses',
       defaultIcon: <AutoStoriesOutlinedIcon />,
       activeIcon: <AutoStoriesIcon />,
-      selected: courseMarketing || courses || course || createCourse || createLecture || editLectureDraft,
+      selected:
+        courseMarketing || courses || course || createCourse || createLecture || editLectureDraft || editLecture,
     },
   ]
 

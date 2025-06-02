@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Box, Stack, Typography } from '@mui/material'
@@ -18,7 +18,7 @@ const ImageInputSection = () => {
     if (thumbnailFile) {
       const url = URL.createObjectURL(thumbnailFile)
       setPreviewUrl(url)
-      
+
       // Cleanup function to revoke the URL
       return () => {
         URL.revokeObjectURL(url)

@@ -1,16 +1,22 @@
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
 import { isEmpty, map } from 'lodash'
 
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDates'
 import SectionWrapper from '../../common/SectionWrapper'
 
-const LectureItem = ({ lecture }) => {
+const LectureItem = ({ lecture, isEdit }) => {
+  const { courseId } = useParams()
   const { date, startTime, endTime } = convertLectureDatesStorageToInterface({
     startTime: lecture.startTime,
     endTime: lecture.endTime,
   })
+
+  const redirectUrl = isEdit
+    ? `/dashboard/course/edit/${courseId}/lecture/${lecture.id}`
+    : `/dashboard/course/new/lecture/${lecture.id}`
 
   return (
     <Stack direction="row" sx={{ p: 1 }} justifyContent="space-between" alignItems="center">
@@ -25,14 +31,16 @@ const LectureItem = ({ lecture }) => {
           </Typography>
         </Stack>
       </Box>
-      <Button variant="outlined" component={Link} to={`/dashboard/course/new/lecture/${lecture.id}`}>
+      <Button variant="outlined" component={Link} to={redirectUrl}>
         Edit
       </Button>
     </Stack>
   )
 }
 
-const LecturesSection = ({ data = [] }) => {
+const LecturesSection = ({ isEdit = false }) => {
+  const data = useSelector((state) => state.courseForm.lectures)
+
   return (
     <Box px={2}>
       <SectionWrapper>
@@ -62,7 +70,7 @@ const LecturesSection = ({ data = [] }) => {
               ) : (
                 map(data, (lecture) => (
                   <Fragment>
-                    <LectureItem lecture={lecture} />
+                    <LectureItem lecture={lecture} isEdit={isEdit} />
                     <Divider sx={{ borderColor: 'stormWave.main', mx: 1 }} />
                   </Fragment>
                 ))

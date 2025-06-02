@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
-import LoginImage from '../../static/images/image1_0.jpg'
 import { useAuth } from '../../hooks/useAuth'
+import LoginImage from '../../static/images/image1_0.jpg'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {

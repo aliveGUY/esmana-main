@@ -1,7 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { isArray, isPlainObject, mapValues, omit } from 'lodash'
 
 import { Stack } from '@mui/material'
+import { useCreateCourseMutation } from '../../state/asynchronous'
 import {
   addBprOption,
   addBprQuestion,
@@ -16,8 +18,6 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
-import { isArray, isPlainObject, mapValues, omit } from 'lodash'
-import { useCreateCourseMutation } from '../../state/asynchronous'
 
 function removeIdsDeep(value) {
   if (isArray(value)) {
@@ -85,7 +85,7 @@ const CreateCourse = () => {
       <Stack spacing={2} sx={{ pb: 5 }}>
         <ImageInputSection />
         <GeneralCourseInputSection />
-        <LecturesSection data={courseForm.lectures} />
+        <LecturesSection />
         <CertificatesSection />
         <TestSection
           title="BPR evaluation"

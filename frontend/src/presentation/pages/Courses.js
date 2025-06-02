@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { map } from 'lodash'
 
 import { Box, Grid2, Paper, Stack } from '@mui/material'
+import { useCourses } from '../../hooks/useCourses'
+import { useGetAllCoursesQuery } from '../../state/asynchronous'
 import SectionWrapper from '../common/SectionWrapper'
 import CourseCard from '../components/CourseCard'
 import OwnedCourseCard from '../components/OwnedCourseCard'
 import ScheduleCalendar from '../components/ScheduleCalendar'
 import ScheduleList from '../components/ScheduleList'
 import SearchHeader from '../components/SearchHeader'
-import { useGetAllCoursesQuery } from '../../state/asynchronous'
-import { useCourses } from '../../hooks/useCourses'
 
 const Courses = () => {
   useGetAllCoursesQuery()

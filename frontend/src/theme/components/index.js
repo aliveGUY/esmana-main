@@ -1,3 +1,4 @@
+import MuiAutocomplete from './AutoComplete'
 import MuiButton from './Button'
 import MuiCheckbox from './Checkbox'
 import MuiChip from './Chip'
@@ -16,6 +17,7 @@ const components = {
   MuiChip,
   MuiCheckbox,
   MuiSwitch,
+  MuiAutocomplete,
 }
 
 export default components

@@ -30,12 +30,14 @@ export class CoursesController {
     return await this.courseService.getAllActiveCourses()
   }
 
-  // @UseGuards(TokenAuthGuard)
-  @Public()
+  @UseGuards(TokenAuthGuard)
   @Post('')
   @UseInterceptors(FileInterceptor('thumbnail'))
-  async createCourse(@Req() request: Request, @UploadedFile() thumbnail: Express.Multer.File, @Body('data') dataJson: string,
-  ) {
+  async createCourse(
+    @Req() request: Request,
+    @UploadedFile() thumbnail: Express.Multer.File,
+    @Body('data') dataJson: string,
+  ): Promise<DetailedCourseDto> {
     // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
     // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {

@@ -1,13 +1,13 @@
 import { Fragment, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { isArray, map } from 'lodash'
 import { useForm } from 'react-hook-form'
 
-import { Button, FormHelperText, Grid2, Stack, TextField, Typography, Divider, Box } from '@mui/material'
-import LoginImage from '../../static/images/image1_0.jpg'
-import TopBarUnauthorized from '../components/TopBarUnauthorized'
-import GoogleAuthButton from '../components/GoogleAuthButton'
+import { Box, Button, Divider, FormHelperText, Grid2, Stack, TextField, Typography } from '@mui/material'
 import { useGoogleLoginMutation, useLoginMutation } from '../../state/asynchronous'
-import { isArray, map } from 'lodash'
+import LoginImage from '../../static/images/image1_0.jpg'
+import GoogleAuthButton from '../components/GoogleAuthButton'
+import TopBarUnauthorized from '../components/TopBarUnauthorized'
 
 const Login = () => {
   const navigate = useNavigate()

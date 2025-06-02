@@ -3,12 +3,12 @@ import { find } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Box } from '@mui/material'
+import { useCourses } from '../../hooks/useCourses'
+import { useGetCourseByIdQuery } from '../../state/asynchronous'
 import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
 import LectureTopControls from '../components/LectureTopControls'
-import { useGetCourseByIdQuery } from '../../state/asynchronous'
-import { useCourses } from '../../hooks/useCourses'
 
 const Course = () => {
   const { lectureId, courseId } = useParams()

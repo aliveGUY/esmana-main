@@ -81,60 +81,6 @@ export class GoogleClient implements IGoogleClient {
     return event.data.hangoutLink || '';
   }
 
-  async searchUploadedVideos(query: string = ''): Promise<
-    { title: string; videoId: string; thumbnail: string }[]
-  > {
-    if (!query.trim()) {
-      const channels = await this.youtube.channels.list({
-        part: ['contentDetails'],
-        mine: true,
-      });
-
-      const uploadsPlaylistId = channels.data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-      if (!uploadsPlaylistId) throw new Error('Could not find uploads playlist');
-
-      const playlistItems = await this.youtube.playlistItems.list({
-        part: ['snippet', 'contentDetails'],
-        playlistId: uploadsPlaylistId,
-        maxResults: 5,
-      });
-
-      return (
-        playlistItems.data.items?.map((item) => ({
-          title: item.snippet?.title || 'Untitled',
-          videoId: item.snippet?.resourceId?.videoId || '',
-          thumbnail:
-            item.snippet?.thumbnails?.high?.url ||
-            item.snippet?.thumbnails?.medium?.url ||
-            item.snippet?.thumbnails?.default?.url ||
-            '',
-        })) || []
-      );
-    }
-
-    const searchResponse = await this.youtube.search.list({
-      part: ['snippet'],
-      q: query,
-      type: ['video'],
-      maxResults: 5,
-      order: 'relevance',
-    });
-
-    return (
-      searchResponse.data.items?.map((item) => ({
-        title: item.snippet?.title || 'Untitled',
-        videoId: item.id?.videoId || '',
-        thumbnail:
-          item.snippet?.thumbnails?.high?.url ||
-          item.snippet?.thumbnails?.medium?.url ||
-          item.snippet?.thumbnails?.default?.url ||
-          '',
-      })) || []
-    );
-  }
-
-
-
   async uploadMulterFileToDrive(file: Express.Multer.File): Promise<string> {
     const folderName = 'api-service';
 
@@ -179,6 +125,85 @@ export class GoogleClient implements IGoogleClient {
     fs.unlinkSync(tempPath);
 
     return uploaded.data.webViewLink!;
+  }
+
+  async searchUploadedVideos(query: string = ''): Promise<
+    { title: string; videoId: string; thumbnail: string }[]
+  > {
+    if (!query.trim()) {
+      return await this.getFiveLatestVideos()
+    }
+
+    return await this.searchFiveVideos(query)
+  }
+
+  private async getFiveLatestVideos() {
+    const channels = await this.youtube.channels.list({
+      part: ['contentDetails'],
+      mine: true,
+    });
+
+    const uploadsPlaylistId = channels.data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsPlaylistId) throw new Error('Could not find uploads playlist');
+
+    const playlistItems = await this.youtube.playlistItems.list({
+      part: ['snippet', 'contentDetails'],
+      playlistId: uploadsPlaylistId,
+      maxResults: 5,
+    });
+
+    return (
+      playlistItems.data.items?.map((item) => ({
+        title: item.snippet?.title || 'Untitled',
+        videoId: item.snippet?.resourceId?.videoId || '',
+        thumbnail:
+          item.snippet?.thumbnails?.high?.url ||
+          item.snippet?.thumbnails?.medium?.url ||
+          item.snippet?.thumbnails?.default?.url ||
+          '',
+      })) || []
+    );
+  }
+
+  private async searchFiveVideos(title: string) {
+    const channels = await this.youtube.channels.list({
+      part: ['contentDetails'],
+      mine: true,
+    });
+
+    const uploadsPlaylistId = channels.data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsPlaylistId) throw new Error('Could not find uploads playlist');
+
+    let allItems: any[] = [];
+    let nextPageToken: string | undefined = undefined;
+
+    do {
+      const playlistItems = await this.youtube.playlistItems.list({
+        part: ['snippet', 'contentDetails'],
+        playlistId: uploadsPlaylistId,
+        maxResults: 100, // TODO: Refactor
+        pageToken: nextPageToken,
+      });
+
+      allItems.push(...(playlistItems.data.items || []));
+      nextPageToken = playlistItems.data.nextPageToken;
+    } while (nextPageToken);
+
+    const filtered = allItems
+      .filter((item) =>
+        item.snippet?.title?.toLowerCase().includes(title.toLowerCase())
+      )
+      .slice(0, 5);
+
+    return filtered.map((item) => ({
+      title: item.snippet?.title || 'Untitled',
+      videoId: item.snippet?.resourceId?.videoId || '',
+      thumbnail:
+        item.snippet?.thumbnails?.high?.url ||
+        item.snippet?.thumbnails?.medium?.url ||
+        item.snippet?.thumbnails?.default?.url ||
+        '',
+    }));
   }
 
 }

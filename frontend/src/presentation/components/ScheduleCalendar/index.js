@@ -4,12 +4,12 @@ import { map } from 'lodash'
 
 import { Box, IconButton, Stack, Typography } from '@mui/material'
 import { HOURS, MONTHS, WEEK } from '../../../constants/calendar'
+import { useCourses } from '../../../hooks/useCourses'
 import CalendarHeader from './CalendarHeader'
 import CalendarRow from './CalendarRow'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { useCourses } from '../../../hooks/useCourses'
 
 function getWeekFromDate(inputDate) {
   const date = new Date(inputDate)

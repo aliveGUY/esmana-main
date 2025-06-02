@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Box, Paper, Stack, Switch, TextField, Typography } from '@mui/material'
-import { setIsActive, setDescription, setTitle } from '../../../state/reducers/courseForm'
+import { setDescription, setIsActive, setTitle } from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 const GeneralCourseInputSection = () => {
