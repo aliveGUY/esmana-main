@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Box, Stack } from '@mui/material'
-import NavLogo from '../../static/images/logo-big.png'
+import NavLogo from '../../static/images/esmana-logo-white-2x-hires.png'
 
 const TopBarUnauthorized = () => {
   return (

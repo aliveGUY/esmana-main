@@ -19,7 +19,7 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { email: 'test@examplenn3.com', password: 'password123' } })
+  } = useForm({ defaultValues: { email: '', password: '' } })
 
   const displayServerError = (error) => {
     if (!error?.data) return null
