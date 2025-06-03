@@ -9,6 +9,7 @@ import { Repository } from "typeorm";
 export interface ICourseRepository {
   createCourse(course: Partial<Course>): Promise<DetailedCourseDto>
   getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto>
+  getStrippedCourseById(courseId: number): Promise<DetailedCourseDto | null>
   getFullCourseById(courseId: number): Promise<Course>
   getAllCourses(userId: number): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
@@ -29,6 +30,36 @@ export class CourseRepository implements ICourseRepository {
       where: { id: savedCourse.id },
       relations: ['lectures', 'bprEvaluation']
     }) as DetailedCourseDto;
+  }
+
+  async getStrippedCourseById(courseId: number): Promise<DetailedCourseDto | null> {
+    const course = await this.courseRepository
+      .createQueryBuilder('course')
+      .select([
+        'course.id',
+        'course.thumbnailUrl',
+        'course.title',
+        'course.description',
+        'course.isActive'
+      ])
+      .leftJoinAndSelect('course.lectures', 'lecture')
+      .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.isLector = true')
+      .leftJoin('userLecture.user', 'user')
+      .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
+      .addSelect([
+        'user.id',
+        'user.firstName',
+        'user.middleName',
+        'user.lastName',
+        'user.profilePicture',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
+      ])
+      .where('course.id = :courseId AND course.isActive = :isActive', { courseId, isActive: true })
+      .getOne();
+
+    return course
   }
 
   async getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto> {

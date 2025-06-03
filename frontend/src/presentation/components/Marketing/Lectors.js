@@ -16,8 +16,6 @@ const Lector = ({ lector }) => {
   const avatar = profilePicture ? serveStaticImage(profilePicture) : ''
   const name = [firstName, middleName, lastName].join(' ')
 
-  console.log({ lectorDetails })
-
   return (
     <Paper>
       <Stack

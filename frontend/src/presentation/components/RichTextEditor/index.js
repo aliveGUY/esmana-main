@@ -65,7 +65,6 @@ const ContentUpdater = ({ content }) => {
     if (editor && content && content.trim() !== '' && !hasLoadedInitialContent) {
       try {
         const parsedContent = JSON.parse(content)
-        console.log({ parsedContent })
         const editorState = editor.parseEditorState(parsedContent)
         editor.setEditorState(editorState)
         setHasLoadedInitialContent(true)

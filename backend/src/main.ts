@@ -3,8 +3,8 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './modules/AppModule';
 
-const DEVELOP_ORIGINS = ['http://localhost:3000']
-const PRODUCTION_ORIGINS = ['https://esmana-main.org']
+const DEVELOP_ORIGINS = ['http://localhost:3000', 'http://localhost:4834']
+const PRODUCTION_ORIGINS = ['https://esmana-main.org', 'https://portal.esmana-main.org', 'https://school.esmana-main.org']
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

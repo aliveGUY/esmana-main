@@ -74,7 +74,6 @@ const CreateLecture = ({ isEdit = false }) => {
       },
     }
 
-    console.log({ payload })
     dispatch(addLecture(payload))
     navigate(redirect)
   }

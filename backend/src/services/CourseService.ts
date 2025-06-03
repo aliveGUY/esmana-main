@@ -16,7 +16,7 @@ import { Express } from 'express';
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
   editCourse(course: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
-  getCourseById(id: number, request: Request): Promise<DetailedCourseDto>
+  getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null>
   getAllCourses(request: Request): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
   deleteCourse(id: number): Promise<void>
@@ -106,10 +106,12 @@ export class CourseService implements ICourseService {
     return await this.courseRepository.editCourse(existingCourse);
   }
 
-  async getCourseById(id: number, request: Request): Promise<DetailedCourseDto> {
+  async getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null> {
     const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token)
 
-    if (!tokenData) throw new Error('Unauthorized')
+    if (!tokenData) {
+      return await this.courseRepository.getStrippedCourseById(id)
+    }
 
     if (tokenData.roles.includes(ERoles.ADMIN)) {
       return await this.courseRepository.getFullCourseById(id)
@@ -129,8 +131,6 @@ export class CourseService implements ICourseService {
   async getAllActiveCourses(): Promise<StrippedCourseDto[]> {
     return await this.courseRepository.getAllActiveCourses()
   }
-
-
 
   async deleteCourse(id: number): Promise<void> {
     return await this.courseRepository.deleteCourse(id)

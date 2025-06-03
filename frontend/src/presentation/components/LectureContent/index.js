@@ -14,8 +14,6 @@ const LectureContent = ({ lecture }) => {
   const { i18n } = useTranslation()
   const currentLang = i18n.language
 
-  console.log({ materials })
-
   const isAvailable = !isEmpty(materials)
   const isPurchased = !isEmpty(status)
 
