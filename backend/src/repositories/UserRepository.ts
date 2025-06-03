@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { User } from '../models/User';
 import { ERoles } from 'src/models/enums/ERoles';
 
@@ -9,6 +9,8 @@ export interface IUserRepository {
   findById(id: number): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByGoogleId(googleId: string): Promise<User | null>;
+  searchByEmail(email: string): Promise<User[]>
+  getAllUsers(): Promise<User[]>
 }
 
 @Injectable()
@@ -32,37 +34,46 @@ export class UserRepository implements IUserRepository {
       roles: userData.roles || [ERoles.USER],
     });
 
-    const savedEntity = await this.userRepository.save(entity);
-    return this.entityToModel(savedEntity);
+    return await this.userRepository.save(entity);
   }
 
   async findById(id: number): Promise<User | null> {
-    const entity = await this.userRepository.findOne({ where: { id } });
-    return entity ? this.entityToModel(entity) : null;
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email'])
+      .where('user.id = :id', { id })
+      .getOne();
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const entity = await this.userRepository.findOne({ where: { email } });
-    return entity ? this.entityToModel(entity) : null;
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email', 'user.password'])
+      .where('user.email = :email', { email })
+      .getOne();
   }
 
   async findByGoogleId(googleId: string): Promise<User | null> {
-    const entity = await this.userRepository.findOne({ where: { googleId } });
-    return entity ? this.entityToModel(entity) : null;
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email'])
+      .where('user.googleId = :googleId', { googleId })
+      .getOne();
   }
 
-  private entityToModel(entity: User): User {
-    const user = new User();
-    user.id = entity.id;
-    user.firstName = entity.firstName;
-    user.middleName = entity.middleName;
-    user.lastName = entity.lastName;
-    user.email = entity.email;
-    user.password = entity.password;
-    user.googleId = entity.googleId;
-    user.profilePicture = entity.profilePicture;
-    user.isEmailVerified = entity.isEmailVerified;
-    user.roles = entity.roles;
-    return user;
+  async searchByEmail(email: string): Promise<User[]> {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.email'])
+      .where('user.email LIKE :email', { email: `%${email}%` })
+      .limit(10)
+      .getMany();
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.email'])
+      .getMany();
   }
 }

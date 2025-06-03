@@ -4,10 +4,12 @@ import { Course } from "src/models/Course";
 import { EvaluationQuestion } from "src/models/EvaluationQuestion";
 import { Lecture } from "src/models/Lecture";
 import { LectureMaterials } from "src/models/LectureMaterials";
+import { UserLecture } from "src/models/UserLecture";
 import { CourseRepository } from "src/repositories/CourseRepository";
 import { EvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository";
 import { LectureMaterialsRepository } from "src/repositories/LectureMaterialsRepository";
 import { LectureRepository } from "src/repositories/LectureRepository";
+import { UserLectureRepository } from "src/repositories/UserLectureRepository";
 import { CourseService } from "src/services/CourseService";
 import { LectureService } from "src/services/LectureService";
 import { AuthModule } from "./AuthModule";
@@ -15,7 +17,7 @@ import { CoursesController } from "src/controllers/CoursesController";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Course, EvaluationQuestion, Lecture, LectureMaterials]),
+    TypeOrmModule.forFeature([Course, EvaluationQuestion, Lecture, LectureMaterials, UserLecture]),
     AuthModule
   ],
   controllers: [CoursesController],
@@ -35,6 +37,10 @@ import { CoursesController } from "src/controllers/CoursesController";
     {
       provide: 'ILectureMaterialsRepository',
       useClass: LectureMaterialsRepository
+    },
+    {
+      provide: 'IUserLectureRepository',
+      useClass: UserLectureRepository
     },
     {
       provide: 'ICourseService',

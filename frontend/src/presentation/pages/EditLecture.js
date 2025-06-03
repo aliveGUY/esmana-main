@@ -22,6 +22,7 @@ import {
   setBprCertificate,
   setBprEvaluation,
   setDescription,
+  setId,
   setIsActive,
   setLectures,
   setParticipationCertificate,
@@ -43,6 +44,7 @@ const EditLecture = () => {
       description: '',
       price: '',
       date: '',
+      users: [],
       startTime: '',
       endTime: '',
       richText: '',
@@ -74,6 +76,7 @@ const EditLecture = () => {
       price: data.price,
       startTime: startTime,
       endTime: endTime,
+      users: data.users,
       materials: {
         id: lecture?.materials?.id,
         videoUrl: data.videoUrl,
@@ -107,11 +110,13 @@ const EditLecture = () => {
     methods.setValue('startTime', startTime)
     methods.setValue('endTime', endTime)
     methods.setValue('richText', lecture?.materials?.richText)
+    methods.setValue('users', lecture?.users)
   }, [lecture])
 
   useEffect(() => {
     if (!data) return
 
+    dispatch(setId(data.id))
     dispatch(setTitle(data.title))
     dispatch(setDescription(data.description))
     dispatch(setIsActive(data.isActive))

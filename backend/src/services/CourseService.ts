@@ -66,12 +66,12 @@ export class CourseService implements ICourseService {
 
   async editCourse(courseDto: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto> {
     const existingCourse = await this.courseRepository.getFullCourseById(courseDto.id);
-    
+
     if (thumbnail) {
       await this.googleClient.deleteFileIfExists(existingCourse.thumbnailUrl);
       courseDto.thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail);
     }
-    
+
     if (courseDto.lectures?.length > 0) {
       const processedLectures = await Promise.all(
         courseDto.lectures.map(async (lecture: any) => {
@@ -81,14 +81,14 @@ export class CourseService implements ICourseService {
           return newLecture;
         })
       );
-      
+
       const lectureMap = new Map(processedLectures.map(l => [l.id, l]));
       const mergedLectures = existingCourse.lectures.map(existing => lectureMap.get(existing.id) || existing);
       const newLectures = processedLectures.filter(l => !existingCourse.lectures.some(e => e.id === l.id));
-      
+
       existingCourse.lectures = [...mergedLectures, ...newLectures];
     }
-    
+
     if (courseDto.bprEvaluation?.length > 0) {
       const processedEvaluations = await Promise.all(
         courseDto.bprEvaluation.map(async (evaluation: any) => {
@@ -98,7 +98,7 @@ export class CourseService implements ICourseService {
       );
       existingCourse.bprEvaluation = processedEvaluations;
     }
-    
+
     Object.assign(existingCourse, courseDto);
     return await this.courseRepository.editCourse(existingCourse);
   }

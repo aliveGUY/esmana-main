@@ -1,19 +1,25 @@
-import { Controller, UseGuards, Get, Inject, Param, Res } from '@nestjs/common';
+import { Controller, UseGuards, Get, Inject, Param, Res, Query } from '@nestjs/common';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { Response } from 'express';
 
-@Controller('static/images')
+@Controller('static')
 export class StaticFilesController {
   constructor(
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
   ) { }
 
   @UseGuards(TokenAuthGuard)
-  @Get(':fileId')
+  @Get('images/:fileId')
   async getStaticFile(@Param('fileId') fileId: string, @Res() res: Response) {
     const { stream, mimeType } = await this.googleClient.getFileStreamById(fileId)
     res.setHeader('Content-Type', mimeType);
     stream.pipe(res);
+  }
+
+  @UseGuards(TokenAuthGuard)
+  @Get('video')
+  async searchYoutubeVideos(@Query('title') title: string) {
+    return this.googleClient.searchUploadedVideos(title)
   }
 }

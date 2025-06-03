@@ -15,8 +15,8 @@ import { Lecture } from '../models/Lecture';
 import { LectureMaterials } from '../models/LectureMaterials';
 import { EvaluationQuestion } from '../models/EvaluationQuestion';
 import { CourseModule } from './CourseModule';
-import { VideosController } from 'src/controllers/VideosController';
 import { StaticFilesController } from 'src/controllers/StaticFilesController';
+import { UserModule } from './UserModule';
 
 @Module({
   imports: [
@@ -41,9 +41,10 @@ import { StaticFilesController } from 'src/controllers/StaticFilesController';
       inject: [ConfigService],
     }),
     AuthModule,
-    CourseModule
+    CourseModule,
+    UserModule
   ],
-  controllers: [VideosController, StaticFilesController],
+  controllers: [StaticFilesController],
   providers: [
     {
       provide: APP_GUARD,

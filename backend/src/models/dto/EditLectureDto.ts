@@ -14,5 +14,5 @@ export class EditLectureDto {
 
   endTime: Date;
 
-  materials: EditLectureMaterialsDto | CreateLectureMaterialsDto
+  materials: EditLectureMaterialsDto
 }

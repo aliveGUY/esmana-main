@@ -89,7 +89,14 @@ const usersApi = createApi({
 
     searchVideos: builder.mutation({
       query: (query) => ({
-        url: `videos?title=${query}`,
+        url: `static/video?title=${query}`,
+        method: 'GET',
+      }),
+    }),
+
+    searchUsers: builder.mutation({
+      query: (mail) => ({
+        url: `users/search?mail=${mail}`,
         method: 'GET',
       }),
     }),
@@ -109,6 +116,7 @@ export const {
   useCreateCourseMutation,
   useSearchVideosMutation,
   useEditCourseMutation,
+  useSearchUsersMutation,
 } = usersApi
 
 export const usersMiddleware = usersApi.middleware

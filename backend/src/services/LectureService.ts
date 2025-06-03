@@ -7,6 +7,7 @@ import { LectureMaterials } from "src/models/LectureMaterials"
 import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository"
 import { ILectureMaterialsRepository } from "src/repositories/LectureMaterialsRepository"
 import { ILectureRepository } from "src/repositories/LectureRepository"
+import { IUserLectureRepository } from "src/repositories/UserLectureRepository"
 
 export interface ILectureService {
   createLecture(lecture: CreateLectureDto): Promise<Lecture>
@@ -20,6 +21,7 @@ export class LectureService implements ILectureService {
     @Inject('ILectureRepository') private readonly lectureRepository: ILectureRepository,
     @Inject('ILectureMaterialsRepository') private readonly lectureMaterialsRepository: ILectureMaterialsRepository,
     @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
+    @Inject('IUserLectureRepository') private readonly userLectureRepository: IUserLectureRepository,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
@@ -52,19 +54,62 @@ export class LectureService implements ILectureService {
     return await this.lectureRepository.createLecture(lecture)
   }
 
-  async editLecture(lectureDto: EditLectureDto): Promise<Lecture> {
-    // Handle evaluation questions if provided
+  async editLecture(lectureDto: any): Promise<Lecture> {
+    // Handle evaluation questions with smart merge
     if (lectureDto.materials?.evaluation && lectureDto.materials.evaluation.length > 0) {
       await Promise.all(
-        lectureDto.materials.evaluation.map(evaluation => 
-          this.evaluationQuestionRepository.editEvaluationQuestion(evaluation)
-        )
+        lectureDto.materials.evaluation.map(evaluation => {
+          if (evaluation.id) {
+            return this.evaluationQuestionRepository.editEvaluationQuestion(evaluation);
+          }
+          return this.evaluationQuestionRepository.createEvaluationQuestion(evaluation);
+        })
       );
     }
 
-    // Update the entire lecture with materials through cascade
-    // This avoids the constraint violation by updating the relationship properly
-    return await this.lectureRepository.editLecture(lectureDto);
+    // Handle users if provided
+    if (lectureDto.users) {
+      await this.handleLectureUsers(lectureDto.id, lectureDto.users);
+    }
+
+    // Handle lecture materials if provided
+    if (lectureDto.materials) {
+      await this.lectureMaterialsRepository.editLectureMaterials(lectureDto.materials);
+    }
+
+    return await this.lectureRepository.editLecture(lectureDto)
+  }
+
+  private async handleLectureUsers(lectureId: number, users: any[]): Promise<void> {
+    if (!users || users.length === 0) return;
+    
+    const existingUsers = await this.userLectureRepository.getUserLecturesByLectureId(lectureId);
+    const existingUserIds = existingUsers.map(u => u.userId);
+    const incomingUserIds = users.map(u => u.userId);
+    
+    const usersToRemove = existingUsers.filter(u => !incomingUserIds.includes(u.userId));
+    if (usersToRemove.length > 0) {
+      await Promise.all(
+        usersToRemove.map(u => this.userLectureRepository.deleteUserLecture(u.userId, lectureId))
+      );
+    }
+    
+    await Promise.all(
+      users.map(async (user) => {
+        const userLectureData = {
+          userId: user.userId,
+          lectureId: lectureId,
+          isCompleted: user.isCompleted || false,
+          isLector: user.isLector || false,
+          isGotAcademicHours: user.isGotAcademicHours || false
+        };
+        
+        if (existingUserIds.includes(user.userId)) {
+          return await this.userLectureRepository.updateUserLecture(userLectureData);
+        }
+        return await this.userLectureRepository.createUserLecture(userLectureData);
+      })
+    );
   }
 
   async deleteLecture(id: number): Promise<void> {

@@ -51,7 +51,8 @@ export class CourseRepository implements ICourseRepository {
         'user.firstName',
         'user.middleName',
         'user.lastName',
-        'user.profilePicture'
+        'user.profilePicture',
+        'user.email',
       ])
       .leftJoinAndSelect('lecture.materials', 'materials',
         'EXISTS (SELECT 1 FROM user_lecture ul WHERE ul.lecture_id = lecture.id AND (ul.user_id = :userId OR ul.is_lector = true))')
@@ -110,7 +111,8 @@ export class CourseRepository implements ICourseRepository {
         'user.firstName',
         'user.middleName',
         'user.lastName',
-        'user.profilePicture'
+        'user.profilePicture',
+        'user.email',
       ])
       .getMany();
   }
@@ -132,7 +134,8 @@ export class CourseRepository implements ICourseRepository {
         'user.firstName',
         'user.middleName',
         'user.lastName',
-        'user.profilePicture'
+        'user.profilePicture',
+        'user.email',
       ])
       .where('course.isActive = :isActive', { isActive: true })
       .getMany();
