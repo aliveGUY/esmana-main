@@ -61,7 +61,9 @@ export class CourseService implements ICourseService {
       bprEvaluation: bprEvaluation,
     };
 
-    return await this.courseRepository.createCourse(course);
+    const newCourse = await this.courseRepository.createCourse(course);
+
+    return await this.courseRepository.getFullCourseById(newCourse.id)
   }
 
   async editCourse(courseDto: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto> {

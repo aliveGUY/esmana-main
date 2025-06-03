@@ -1,9 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common"
 import { IGoogleClient } from "src/infrastructure/GoogleClient"
 import { CreateLectureDto } from "src/models/dto/CreateLectureDto"
+import { CreateUserLectureDto } from "src/models/dto/CreateUserLectureDto"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
 import { Lecture } from "src/models/Lecture"
 import { LectureMaterials } from "src/models/LectureMaterials"
+import { UserLecture } from "src/models/UserLecture"
 import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository"
 import { ILectureMaterialsRepository } from "src/repositories/LectureMaterialsRepository"
 import { ILectureRepository } from "src/repositories/LectureRepository"
@@ -26,6 +28,17 @@ export class LectureService implements ILectureService {
   ) { }
 
   async createLecture(lectureDto: CreateLectureDto): Promise<Lecture> {
+    const lecture = await this.createLectureWithoutUsers(lectureDto);
+    
+    if (lectureDto.users?.length > 0) {
+      const userLectures = await this.createUserLecturesForLecture(lecture.id, lectureDto.users);
+      lecture.users = userLectures;
+    }
+    
+    return lecture;
+  }
+
+  private async createLectureWithoutUsers(lectureDto: CreateLectureDto): Promise<Lecture> {
     const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
     const evaluation = await Promise.all(
@@ -48,10 +61,15 @@ export class LectureService implements ILectureService {
       startTime: lectureDto.startTime,
       endTime: lectureDto.endTime,
       materials: lectureMaterials,
-      users: lectureDto.users,
     }
 
     return await this.lectureRepository.createLecture(lecture)
+  }
+
+  private async createUserLecturesForLecture(lectureId: number, users: CreateUserLectureDto[]): Promise<UserLecture[]> {
+    return await Promise.all(
+      users.map(user => this.userLectureRepository.createUserLectureWithLectureId(lectureId, user))
+    )
   }
 
   async editLecture(lectureDto: any): Promise<Lecture> {
@@ -82,18 +100,18 @@ export class LectureService implements ILectureService {
 
   private async handleLectureUsers(lectureId: number, users: any[]): Promise<void> {
     if (!users || users.length === 0) return;
-    
+
     const existingUsers = await this.userLectureRepository.getUserLecturesByLectureId(lectureId);
     const existingUserIds = existingUsers.map(u => u.userId);
     const incomingUserIds = users.map(u => u.userId);
-    
+
     const usersToRemove = existingUsers.filter(u => !incomingUserIds.includes(u.userId));
     if (usersToRemove.length > 0) {
       await Promise.all(
         usersToRemove.map(u => this.userLectureRepository.deleteUserLecture(u.userId, lectureId))
       );
     }
-    
+
     await Promise.all(
       users.map(async (user) => {
         const userLectureData = {
@@ -103,7 +121,7 @@ export class LectureService implements ILectureService {
           isLector: user.isLector || false,
           isGotAcademicHours: user.isGotAcademicHours || false
         };
-        
+
         if (existingUserIds.includes(user.userId)) {
           return await this.userLectureRepository.updateUserLecture(userLectureData);
         }

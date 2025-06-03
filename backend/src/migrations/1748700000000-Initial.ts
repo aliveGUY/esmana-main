@@ -12,6 +12,7 @@ export class Initial1748700000000 implements MigrationInterface {
                 middle_name VARCHAR,
                 last_name VARCHAR NOT NULL,
                 email VARCHAR UNIQUE NOT NULL,
+                phone VARCHAR,
                 password VARCHAR,
                 google_id VARCHAR UNIQUE,
                 profile_picture VARCHAR,

@@ -66,6 +66,7 @@ const CreateLecture = ({ isEdit = false }) => {
       price: data.price,
       startTime: startTime,
       endTime: endTime,
+      users: data.users,
       materials: {
         videoUrl: data.videoUrl,
         richText: data.richText,

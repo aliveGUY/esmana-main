@@ -2,6 +2,7 @@ import { IsString, IsNumber, IsDateString, IsArray, ValidateNested, IsNotEmpty, 
 import { Type } from 'class-transformer';
 import { UserLecture } from "../UserLecture";
 import { CreateLectureMaterialsDto } from "./CreateLectureMaterialsDto";
+import { CreateUserLectureDto } from './CreateUserLectureDto';
 
 export class CreateLectureDto {
   @IsString()
@@ -28,6 +29,6 @@ export class CreateLectureDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => UserLecture)
-  users?: UserLecture[];
+  @Type(() => CreateUserLectureDto)
+  users: CreateUserLectureDto[];
 }
