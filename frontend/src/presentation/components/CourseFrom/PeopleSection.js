@@ -28,32 +28,32 @@ import DeleteIcon from '@mui/icons-material/Delete'
 
 const UsersTableRow = ({ row }) => {
   const { setValue, getValues } = useFormContext()
-  const { user, isCompleted, isGotAcademicHours, isLector, id } = row
+  const { user, isCompleted, isGotAcademicHours, isLector } = row
 
   const name = [user.firstName, user.middleName, user.lastName].join(' ')
 
   const updateRow = (changes) => {
     const users = getValues('users')
-    const updatedUsers = users.map((u) => (u.id === id ? { ...u, ...changes } : u))
+    const updatedUsers = users.map((u) => (u.userId === user.id ? { ...u, ...changes } : u))
     setValue('users', updatedUsers)
   }
 
-  const setIsLector = (e) => {
+  const handleLectorChange = (e) => {
     updateRow({ isLector: e.target.checked })
   }
 
-  const setIsGotAcademicHours = (e) => {
+  const handleAcademicHoursChange = (e) => {
     updateRow({ isGotAcademicHours: e.target.checked })
   }
 
-  const setIsCompleted = (e) => {
+  const handleCompletedChange = (e) => {
     updateRow({ isCompleted: e.target.checked })
   }
 
   const handleDelete = () => {
     const users = getValues('users')
-    const filteredUsers = users.filter((u) => u.id !== id)
-    setValue('users', filteredUsers)
+    const filtered = users.filter((u) => u.userId !== user.id)
+    setValue('users', filtered)
   }
 
   return (
@@ -63,17 +63,17 @@ const UsersTableRow = ({ row }) => {
       </TableCell>
       <TableCell align="right">
         <Stack alignItems="end">
-          <Checkbox checked={isLector} onChange={setIsLector} />
+          <Checkbox checked={isLector} onChange={handleLectorChange} />
         </Stack>
       </TableCell>
       <TableCell align="right">
         <Stack alignItems="end">
-          <Checkbox checked={isGotAcademicHours} onChange={setIsGotAcademicHours} />
+          <Checkbox checked={isGotAcademicHours} onChange={handleAcademicHoursChange} />
         </Stack>
       </TableCell>
       <TableCell align="right">
         <Stack alignItems="end">
-          <Checkbox checked={isCompleted} onChange={setIsCompleted} />
+          <Checkbox checked={isCompleted} onChange={handleCompletedChange} />
         </Stack>
       </TableCell>
       <TableCell align="right">

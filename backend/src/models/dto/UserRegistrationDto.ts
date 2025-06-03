@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { CreateLectorDetailsDto } from "./CreateLectorDetailsDto";
 import { ERoles } from "../enums/ERoles";
 
@@ -28,7 +28,9 @@ export class UserRegistrationDto {
   @MaxLength(100)
   password: string;
 
+  @IsOptional()
   lectorDetails?: CreateLectorDetailsDto
-
+  
+  @IsOptional()
   roles: ERoles[]
 }

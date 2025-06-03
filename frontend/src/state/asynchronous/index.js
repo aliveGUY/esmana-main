@@ -113,6 +113,14 @@ const usersApi = createApi({
       }),
     }),
 
+    editAccount: builder.mutation({
+      query: (accountData) => ({
+        url: 'users',
+        method: 'PUT',
+        body: accountData,
+      }),
+    }),
+
     getUserById: builder.mutation({
       query: (userId) => `users/${userId}`,
     }),
@@ -136,6 +144,7 @@ export const {
   useGetAllUsersQuery,
   useCreateAccountMutation,
   useGetUserByIdMutation,
+  useEditAccountMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {

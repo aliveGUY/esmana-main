@@ -6,6 +6,8 @@ import { CreateLectorDetailsDto } from "src/models/dto/CreateLectorDetailsDto";
 
 export interface ILectorDetailsRepository {
   createLectorDetails(details: CreateLectorDetailsDto): Promise<LectorDetails>
+  updateLectorDetails(details: any): Promise<LectorDetails>
+  deleteLectorDetails(id: number): Promise<void>
 }
 
 @Injectable()
@@ -17,5 +19,13 @@ export class LectorDetailsRepository implements ILectorDetailsRepository {
 
   async createLectorDetails(details: CreateLectorDetailsDto): Promise<LectorDetails> {
     return await this.lectorDetailsRepository.save(details)
+  }
+
+  async updateLectorDetails(details: any): Promise<LectorDetails> {
+    return await this.lectorDetailsRepository.save(details)
+  }
+
+  async deleteLectorDetails(id: number): Promise<void> {
+    await this.lectorDetailsRepository.delete(id)
   }
 }

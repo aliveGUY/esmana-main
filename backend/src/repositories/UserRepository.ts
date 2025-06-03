@@ -25,6 +25,8 @@ const PASSWORD_SELECTION = [...COMMON_SELECTION, 'user.password']
 
 export interface IUserRepository {
   create(user: Partial<User>): Promise<User>;
+  update(user: User): Promise<User>;
+  merge(existingUser: User, updateData: Partial<User>): User;
   findById(id: number): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByGoogleId(googleId: string): Promise<User | null>;
@@ -55,6 +57,15 @@ export class UserRepository implements IUserRepository {
     });
 
     return await this.userRepository.save(entity);
+  }
+
+  async update(user: User): Promise<User> {
+    await this.userRepository.save(user);
+    return await this.getById(user.id);
+  }
+
+  merge(existingUser: User, updateData: Partial<User>): User {
+    return this.userRepository.merge(existingUser, updateData);
   }
 
   async findById(id: number): Promise<User | null> {

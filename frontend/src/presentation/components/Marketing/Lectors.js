@@ -4,13 +4,19 @@ import { map } from 'lodash'
 import { Box, Paper, Stack, Typography, useTheme } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
 import { serveStaticImage } from '../../../state/asynchronous'
+import RichTextViewer from '../RichTextViewer'
+import { useTranslation } from 'react-i18next'
 
 const Lector = ({ lector }) => {
   const { profilePicture, firstName, middleName, lastName, lectorDetails } = lector
   const theme = useTheme()
+  const { i18n } = useTranslation()
+  const currentLang = i18n.language
 
   const avatar = profilePicture ? serveStaticImage(profilePicture) : ''
   const name = [firstName, middleName, lastName].join(' ')
+
+  console.log({ lectorDetails })
 
   return (
     <Paper>
@@ -61,10 +67,10 @@ const Lector = ({ lector }) => {
           <Typography fontWeight="bold">{name}</Typography>
           {lectorDetails && (
             <Fragment>
-              <Typography color="stormWave.main">{'title'}</Typography>
-              <Typography className="qualification" display="none">
-                {'qualification'}
+              <Typography color="stormWave.main" pb={2}>
+                {lectorDetails.credentials}
               </Typography>
+              <RichTextViewer content={lectorDetails.biography[currentLang]} />
             </Fragment>
           )}
         </Box>

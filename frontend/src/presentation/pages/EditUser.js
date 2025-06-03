@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
@@ -9,17 +9,21 @@ import RoleSection from '../components/UserForm/RoleSection'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
-import { useGetUserByIdMutation } from '../../state/asynchronous'
+import { useEditAccountMutation, useGetUserByIdMutation } from '../../state/asynchronous'
 import ProfilePictureSection from '../components/UserForm/ProfilePictureSection'
+import { isEmpty, omit } from 'lodash'
 
 const EditUser = () => {
   const { userId } = useParams()
+  const [editAccount, { isLoading, isSuccess }] = useEditAccountMutation()
   const [getUserById, { data }] = useGetUserByIdMutation()
+  const navigate = useNavigate()
 
   const methods = useForm({
     defaultValues: {
       id: userId,
       profilePicture: null,
+      profilePictureFile: null,
       firstName: '',
       middleName: '',
       lastName: '',
@@ -30,8 +34,21 @@ const EditUser = () => {
     },
   })
 
-  const onSubmit = (data) => {
-    console.log({ data })
+  const onSubmit = (accountForm) => {
+    if (isEmpty(accountForm.email)) {
+      methods.setError('email', { type: 'custom', message: 'Email is required' })
+      return
+    }
+
+    const data = JSON.stringify(omit(accountForm, ['profilePicture']))
+    const formData = new FormData()
+
+    formData.append('data', data)
+    if (accountForm.profilePictureFile) {
+      formData.append('profilePicture', accountForm.profilePictureFile)
+    }
+
+    editAccount(formData)
   }
 
   useEffect(() => {
@@ -51,6 +68,12 @@ const EditUser = () => {
     methods.setValue('lectorDetails', data.lectorDetails)
   }, [data])
 
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/dashboard/users')
+    }
+  }, [isSuccess])
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -64,7 +87,7 @@ const EditUser = () => {
           <ContactSection />
           <RoleSection />
           <LectorSection />
-          <SubmitSection />
+          <SubmitSection isLoading={isLoading} />
         </Stack>
       </form>
     </FormProvider>

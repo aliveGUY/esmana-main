@@ -53,7 +53,6 @@ export class CourseRepository implements ICourseRepository {
         'user.middleName',
         'user.lastName',
         'user.profilePicture',
-        'user.email',
         'lectorDetails.id',
         'lectorDetails.credentials',
         'lectorDetails.biography'
@@ -121,7 +120,6 @@ export class CourseRepository implements ICourseRepository {
         'user.middleName',
         'user.lastName',
         'user.profilePicture',
-        'user.email',
         'lectorDetails.id',
         'lectorDetails.credentials',
         'lectorDetails.biography'
@@ -148,7 +146,6 @@ export class CourseRepository implements ICourseRepository {
         'user.middleName',
         'user.lastName',
         'user.profilePicture',
-        'user.email',
         'lectorDetails.id',
         'lectorDetails.credentials',
         'lectorDetails.biography'

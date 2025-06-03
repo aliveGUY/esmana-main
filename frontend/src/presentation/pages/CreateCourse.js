@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isArray, isPlainObject, mapValues, omit } from 'lodash'
 
@@ -18,6 +18,7 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
+import { useNavigate } from 'react-router-dom'
 
 export function removeEditorIdsDeep(value) {
   if (isArray(value)) {
@@ -41,8 +42,9 @@ export function removeEditorIdsDeep(value) {
 }
 
 const CreateCourse = () => {
-  const [createCourse] = useCreateCourseMutation()
+  const [createCourse, { isLoading, isSuccess }] = useCreateCourseMutation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const courseForm = useSelector((state) => state.courseForm)
 
   const onSubmit = (e) => {
@@ -88,6 +90,12 @@ const CreateCourse = () => {
     dispatch(setBprQuestionAnswer({ questionId, option }))
   }
 
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/dashboard/courses')
+    }
+  }, [isSuccess])
+
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2} sx={{ pb: 5 }}>
@@ -105,7 +113,7 @@ const CreateCourse = () => {
           onRemoveQuestionAnswer={handleRemoveBprQuestionAnswer}
           onSetQuestionAnswer={handleSetBprQuestionAnswer}
         />
-        <SubmitSection />
+        <SubmitSection isLoading={isLoading} />
       </Stack>
     </form>
   )

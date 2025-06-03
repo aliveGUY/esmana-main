@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { isEqual, omit } from 'lodash'
 
 import { Stack } from '@mui/material'
@@ -35,8 +35,9 @@ const EditCourse = () => {
   const { courseId } = useParams()
   const [getCourseById, { isLoading, data }] = useGetCourseByIdMutation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const courseForm = useSelector((state) => state.courseForm)
-  const [editCourse] = useEditCourseMutation()
+  const [editCourse, { isLoading: isEditLoading, isSuccess }] = useEditCourseMutation()
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -102,6 +103,12 @@ const EditCourse = () => {
     dispatch(setThumbnailUrl(data.thumbnailUrl))
   }, [data])
 
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/dashboard/courses')
+    }
+  }, [isSuccess])
+
   if (isLoading) {
     return 'Loading...'
   }
@@ -123,7 +130,7 @@ const EditCourse = () => {
           onRemoveQuestionAnswer={handleRemoveBprQuestionAnswer}
           onSetQuestionAnswer={handleSetBprQuestionAnswer}
         />
-        <SubmitSection />
+        <SubmitSection isLoading={isEditLoading} />
       </Stack>
     </form>
   )
