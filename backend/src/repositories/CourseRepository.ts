@@ -46,6 +46,7 @@ export class CourseRepository implements ICourseRepository {
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.userId = :userId OR userLecture.isLector = true', { userId })
       .leftJoin('userLecture.user', 'user')
+      .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
         'user.id',
         'user.firstName',
@@ -53,6 +54,9 @@ export class CourseRepository implements ICourseRepository {
         'user.lastName',
         'user.profilePicture',
         'user.email',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
       ])
       .leftJoinAndSelect('lecture.materials', 'materials',
         'EXISTS (SELECT 1 FROM user_lecture ul WHERE ul.lecture_id = lecture.id AND (ul.user_id = :userId OR ul.is_lector = true))')
@@ -73,12 +77,16 @@ export class CourseRepository implements ICourseRepository {
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture')
       .leftJoin('userLecture.user', 'user')
+      .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
         'user.id',
         'user.firstName',
         'user.middleName',
         'user.lastName',
-        'user.profilePicture'
+        'user.profilePicture',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
       ])
       .leftJoinAndSelect('lecture.materials', 'materials')
       .leftJoinAndSelect('materials.evaluation', 'lectureEvaluation')
@@ -106,6 +114,7 @@ export class CourseRepository implements ICourseRepository {
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.userId = :userId OR userLecture.isLector = true', { userId })
       .leftJoin('userLecture.user', 'user')
+      .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
         'user.id',
         'user.firstName',
@@ -113,6 +122,9 @@ export class CourseRepository implements ICourseRepository {
         'user.lastName',
         'user.profilePicture',
         'user.email',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
       ])
       .getMany();
   }
@@ -129,6 +141,7 @@ export class CourseRepository implements ICourseRepository {
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.isLector = true')
       .leftJoin('userLecture.user', 'user')
+      .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
         'user.id',
         'user.firstName',
@@ -136,6 +149,9 @@ export class CourseRepository implements ICourseRepository {
         'user.lastName',
         'user.profilePicture',
         'user.email',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
       ])
       .where('course.isActive = :isActive', { isActive: true })
       .getMany();

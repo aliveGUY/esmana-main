@@ -6,6 +6,7 @@ import { Course } from '../models/Course';
 import { Lecture } from '../models/Lecture';
 import { LectureMaterials } from '../models/LectureMaterials';
 import { EvaluationQuestion } from '../models/EvaluationQuestion';
+import { LectorDetails } from '../models/LectorDetails';
 
 config();
 
@@ -22,7 +23,8 @@ export default new DataSource({
     Course,
     Lecture,
     LectureMaterials,
-    EvaluationQuestion
+    EvaluationQuestion,
+    LectorDetails
   ],
   migrations: ['src/migrations/*.ts'],
   synchronize: false, // Always false for migrations

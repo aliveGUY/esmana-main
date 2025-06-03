@@ -104,6 +104,18 @@ const usersApi = createApi({
     getAllUsers: builder.query({
       query: () => 'users',
     }),
+
+    createAccount: builder.mutation({
+      query: (accountData) => ({
+        url: 'users',
+        method: 'POST',
+        body: accountData,
+      }),
+    }),
+
+    getUserById: builder.mutation({
+      query: (userId) => `users/${userId}`,
+    }),
   }),
 })
 
@@ -122,7 +134,13 @@ export const {
   useEditCourseMutation,
   useSearchUsersMutation,
   useGetAllUsersQuery,
+  useCreateAccountMutation,
+  useGetUserByIdMutation,
 } = usersApi
+
+export function serveStaticImage(imageId) {
+  return `${BASE_URL}/static/images/${imageId}`
+}
 
 export const usersMiddleware = usersApi.middleware
 

@@ -14,6 +14,7 @@ import { Course } from '../models/Course';
 import { Lecture } from '../models/Lecture';
 import { LectureMaterials } from '../models/LectureMaterials';
 import { EvaluationQuestion } from '../models/EvaluationQuestion';
+import { LectorDetails } from '../models/LectorDetails';
 import { CourseModule } from './CourseModule';
 import { StaticFilesController } from 'src/controllers/StaticFilesController';
 import { UserModule } from './UserModule';
@@ -35,7 +36,8 @@ import { UserModule } from './UserModule';
           Course,
           Lecture,
           LectureMaterials,
-          EvaluationQuestion
+          EvaluationQuestion,
+          LectorDetails
         ],
       }),
       inject: [ConfigService],

@@ -6,6 +6,7 @@ import { setThumbnailFile } from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 import ImageIcon from '@mui/icons-material/Image'
+import { serveStaticImage } from '../../../state/asynchronous'
 
 const ImageInputSection = () => {
   const fileInputRef = useRef(null)
@@ -25,7 +26,7 @@ const ImageInputSection = () => {
     }
 
     if (thumbnailUrl) {
-      setPreviewUrl(`http://localhost:8080/static/images/${thumbnailUrl}`)
+      setPreviewUrl(serveStaticImage(thumbnailUrl))
       return
     }
 

@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ERoles } from "./enums/ERoles";
 import { UserLecture } from "./UserLecture";
+import { LectorDetails } from "./LectorDetails";
 
 @Entity('users')
 export class User {
@@ -39,4 +40,7 @@ export class User {
 
   @OneToMany(() => UserLecture, userLecture => userLecture.user)
   lectures: UserLecture[];
+
+  @OneToOne(() => LectorDetails, lectorDetails => lectorDetails.user, { nullable: true })
+  lectorDetails?: LectorDetails;
 }

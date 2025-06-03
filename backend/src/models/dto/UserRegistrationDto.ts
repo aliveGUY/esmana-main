@@ -1,4 +1,6 @@
 import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
+import { CreateLectorDetailsDto } from "./CreateLectorDetailsDto";
+import { ERoles } from "../enums/ERoles";
 
 export class UserRegistrationDto {
   @IsString()
@@ -19,7 +21,14 @@ export class UserRegistrationDto {
   email: string;
 
   @IsString()
+  phone: string;
+
+  @IsString()
   @MinLength(6)
   @MaxLength(100)
   password: string;
+
+  lectorDetails?: CreateLectorDetailsDto
+
+  roles: ERoles[]
 }

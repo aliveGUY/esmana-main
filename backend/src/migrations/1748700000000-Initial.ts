@@ -21,6 +21,17 @@ export class Initial1748700000000 implements MigrationInterface {
             )
         `);
 
+        // Create lector_details table
+        await queryRunner.query(`
+            CREATE TABLE lector_details (
+                id SERIAL PRIMARY KEY,
+                credentials VARCHAR(2048),
+                biography JSON,
+                user_id INTEGER UNIQUE NOT NULL,
+                CONSTRAINT FK_lector_details_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        `);
+
         // Create course table
         await queryRunner.query(`
             CREATE TABLE course (
@@ -97,6 +108,7 @@ export class Initial1748700000000 implements MigrationInterface {
         // Create indexes for better performance
         await queryRunner.query(`CREATE INDEX IDX_users_email ON users (email)`);
         await queryRunner.query(`CREATE INDEX IDX_users_google_id ON users (google_id)`);
+        await queryRunner.query(`CREATE INDEX IDX_lector_details_user_id ON lector_details (user_id)`);
         await queryRunner.query(`CREATE INDEX IDX_course_is_active ON course (is_active)`);
         await queryRunner.query(`CREATE INDEX IDX_course_created_at ON course (created_at)`);
         await queryRunner.query(`CREATE INDEX IDX_lecture_course_id ON lecture (course_id)`);
@@ -160,6 +172,7 @@ export class Initial1748700000000 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX IF EXISTS IDX_lecture_course_id`);
         await queryRunner.query(`DROP INDEX IF EXISTS IDX_course_created_at`);
         await queryRunner.query(`DROP INDEX IF EXISTS IDX_course_is_active`);
+        await queryRunner.query(`DROP INDEX IF EXISTS IDX_lector_details_user_id`);
         await queryRunner.query(`DROP INDEX IF EXISTS IDX_users_google_id`);
         await queryRunner.query(`DROP INDEX IF EXISTS IDX_users_email`);
 
@@ -169,6 +182,7 @@ export class Initial1748700000000 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE IF EXISTS lecture_materials`);
         await queryRunner.query(`DROP TABLE IF EXISTS lecture`);
         await queryRunner.query(`DROP TABLE IF EXISTS course`);
+        await queryRunner.query(`DROP TABLE IF EXISTS lector_details`);
         await queryRunner.query(`DROP TABLE IF EXISTS users`);
     }
 }

@@ -5,6 +5,7 @@ import { find } from 'lodash'
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
 import EmptyImage from '../../static/images/no-image.jpg'
+import { serveStaticImage } from '../../state/asynchronous'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -92,10 +93,7 @@ const OwnedCourseCard = ({ course }) => {
             },
           }}
         >
-          <img
-            alt="ESMANA logo"
-            src={thumbnailUrl ? `http://localhost:8080/static/images/${thumbnailUrl}` : EmptyImage}
-          />
+          <img alt="ESMANA logo" src={thumbnailUrl ? serveStaticImage(thumbnailUrl) : EmptyImage} />
         </Box>
         <Box
           className="body"

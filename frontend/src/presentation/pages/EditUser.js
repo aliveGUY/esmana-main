@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
@@ -9,17 +9,23 @@ import RoleSection from '../components/UserForm/RoleSection'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
+import { useGetUserByIdMutation } from '../../state/asynchronous'
+import ProfilePictureSection from '../components/UserForm/ProfilePictureSection'
 
 const EditUser = () => {
+  const { userId } = useParams()
+  const [getUserById, { data }] = useGetUserByIdMutation()
+
   const methods = useForm({
     defaultValues: {
-      profilePicture: '',
-      firstName: 'John',
+      id: userId,
+      profilePicture: null,
+      firstName: '',
       middleName: '',
-      lastName: 'Doe',
-      email: 'test@examplenn3.com',
+      lastName: '',
+      email: '',
       phone: '',
-      roles: ['admin'],
+      roles: [],
       lectorDetails: null,
     },
   })
@@ -27,6 +33,23 @@ const EditUser = () => {
   const onSubmit = (data) => {
     console.log({ data })
   }
+
+  useEffect(() => {
+    getUserById(userId)
+  }, [])
+
+  useEffect(() => {
+    if (!data) return
+
+    methods.setValue('profilePicture', data.profilePicture)
+    methods.setValue('firstName', data.firstName)
+    methods.setValue('middleName', data.middleName)
+    methods.setValue('lastName', data.lastName)
+    methods.setValue('email', data.email)
+    methods.setValue('phone', data.phone)
+    methods.setValue('roles', data.roles)
+    methods.setValue('lectorDetails', data.lectorDetails)
+  }, [data])
 
   return (
     <FormProvider {...methods}>
@@ -37,6 +60,7 @@ const EditUser = () => {
               Back
             </Button>
           </Box>
+          <ProfilePictureSection />
           <ContactSection />
           <RoleSection />
           <LectorSection />

@@ -1,10 +1,15 @@
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
-import { FormControl, TextField as MuiTextField, Typography } from '@mui/material'
+import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
 
 const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ...rest }) => {
-  const { control } = useFormContext()
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext()
+
+  const error = errors[name]
 
   return (
     <Controller
@@ -17,7 +22,7 @@ const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ..
         }
 
         return (
-          <FormControl fullWidth>
+          <FormControl fullWidth error={error}>
             {staticLabel && (
               <Typography variant="body2" component="label" htmlFor={name} sx={{ mb: 0.5 }}>
                 {label}
@@ -31,6 +36,7 @@ const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ..
               {...rest}
               onChange={handleChange}
             />
+            {error && <FormHelperText>{error.message}</FormHelperText>}
           </FormControl>
         )
       }}

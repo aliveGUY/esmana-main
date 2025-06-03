@@ -6,10 +6,12 @@ import { UserRepository } from "src/repositories/UserRepository";
 import { UserController } from "src/controllers/UsersController";
 import { User } from "src/models/User";
 import { UserService } from "src/services/UserService";
+import { LectorDetailsRepository } from "src/repositories/LectorDetailsRepository";
+import { LectorDetails } from "src/models/LectorDetails";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, LectureMaterials]),
+    TypeOrmModule.forFeature([User, LectureMaterials, LectorDetails]),
     AuthModule
   ],
   controllers: [UserController],
@@ -19,10 +21,15 @@ import { UserService } from "src/services/UserService";
       useClass: UserRepository,
     },
     {
+      provide: 'ILectorDetailsRepository',
+      useClass: LectorDetailsRepository
+    },
+    {
       provide: 'IUserService',
       useClass: UserService,
     },
   ],
   exports: ['IUserService'],
 })
+
 export class UserModule { }

@@ -6,6 +6,7 @@ import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
 import EmptyImage from '../../static/images/no-image.jpg'
 import { getTotalHours } from './OwnedCourseCard'
+import { serveStaticImage } from '../../state/asynchronous'
 
 export const getTotalPrice = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -99,10 +100,7 @@ const CourseCard = ({ course }) => {
             },
           }}
         >
-          <img
-            alt="ESMANA logo"
-            src={thumbnailUrl ? `http://localhost:8080/static/images/${thumbnailUrl}` : EmptyImage}
-          />
+          <img alt="ESMANA logo" src={thumbnailUrl ? serveStaticImage(thumbnailUrl) : EmptyImage} />
         </Box>
         <Box
           className="body"

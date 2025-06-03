@@ -1,3 +1,4 @@
+import { element } from 'prop-types'
 import DashboardLayout from './presentation/common/DashboardLayout'
 import FormStateWrapper from './presentation/common/FormStateWrapper'
 import NotFoundPage from './presentation/pages/404'
@@ -17,6 +18,8 @@ import Login from './presentation/pages/Login'
 import Profile from './presentation/pages/Profile'
 import ResetPassword from './presentation/pages/ResetPassword'
 import Users from './presentation/pages/Users'
+import CreateProfile from './presentation/pages/CreateProfile'
+import { patch } from '@mui/material'
 
 const routing = [
   {
@@ -73,6 +76,11 @@ const routing = [
         path: 'users/:userId',
         title: '',
         element: <EditUser />,
+      },
+      {
+        path: 'users/new',
+        title: '',
+        element: <CreateProfile />,
       },
       {
         element: <FormStateWrapper />,
