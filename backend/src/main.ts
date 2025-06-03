@@ -3,6 +3,9 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './modules/AppModule';
 
+const DEVELOP_ORIGINS = ['http://localhost:3000']
+const PRODUCTION_ORIGINS = ['https://esmana-main.org']
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const expressApp = app.getHttpAdapter().getInstance();
@@ -17,7 +20,7 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.NODE_ENV === 'production' ? PRODUCTION_ORIGINS : DEVELOP_ORIGINS,
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
   });
