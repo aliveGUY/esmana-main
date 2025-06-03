@@ -11,6 +11,7 @@ import { ERoles } from 'src/models/enums/ERoles';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditCourseDto } from 'src/models/dto/EditCourseDto';
+import { Express } from 'express';
 
 @Controller('courses')
 export class CoursesController {

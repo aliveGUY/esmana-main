@@ -11,6 +11,7 @@ import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuesti
 import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
 import { IGoogleClient } from "src/infrastructure/GoogleClient";
+import { Express } from 'express';
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>

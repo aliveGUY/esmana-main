@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Readable } from 'stream';
 import { isEmpty } from 'class-validator';
+import { Express } from 'express';
 
 export interface IGoogleClient {
   verifyAuthToken(token: string): Promise<UserGoogleRegistrationDto>;

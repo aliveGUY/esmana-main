@@ -7,6 +7,7 @@ import { CreateLectorDetailsDto } from 'src/models/dto/CreateLectorDetailsDto';
 import { ILectorDetailsRepository } from 'src/repositories/LectorDetailsRepository';
 import * as bcrypt from 'bcrypt';
 import { EditUserDto } from 'src/models/dto/EditUserDto';
+import { Express } from 'express';
 
 export interface IUserService {
   searchUsers(email: string): Promise<User[]>

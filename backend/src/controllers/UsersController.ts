@@ -8,6 +8,7 @@ import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 import { EditUserDto } from 'src/models/dto/EditUserDto';
+import { Express } from 'express';
 
 @Controller('users')
 export class UserController {
