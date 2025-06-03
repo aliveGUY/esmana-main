@@ -1,7 +1,9 @@
 import React from 'react'
 
+import { Stack } from '@mui/material'
+
 const EditProfile = () => {
-  return <div></div>
+  return <Stack></Stack>
 }
 
 export default EditProfile

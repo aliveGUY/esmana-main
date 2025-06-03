@@ -40,7 +40,7 @@ export class UserRepository implements IUserRepository {
   async findById(id: number): Promise<User | null> {
     return await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email'])
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.phone', 'user.email'])
       .where('user.id = :id', { id })
       .getOne();
   }
@@ -48,7 +48,7 @@ export class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     return await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email', 'user.password'])
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.phone', 'user.email', 'user.password'])
       .where('user.email = :email', { email })
       .getOne();
   }
@@ -56,7 +56,7 @@ export class UserRepository implements IUserRepository {
   async findByGoogleId(googleId: string): Promise<User | null> {
     return await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email'])
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.phone', 'user.email'])
       .where('user.googleId = :googleId', { googleId })
       .getOne();
   }
@@ -64,7 +64,7 @@ export class UserRepository implements IUserRepository {
   async searchByEmail(email: string): Promise<User[]> {
     return await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.email'])
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email', 'user.phone',])
       .where('user.email LIKE :email', { email: `%${email}%` })
       .limit(10)
       .getMany();
@@ -73,7 +73,7 @@ export class UserRepository implements IUserRepository {
   async getAllUsers(): Promise<User[]> {
     return await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.email'])
+      .select(['user.id', 'user.firstName', 'user.middleName', 'user.lastName', 'user.roles', 'user.email', 'user.phone',])
       .getMany();
   }
 }

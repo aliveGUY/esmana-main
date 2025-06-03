@@ -87,8 +87,6 @@ const RichTextEditor = ({ content, onChange, readOnly = false }) => {
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }
 
-  console.log({ editorConfig, content })
-
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <Box

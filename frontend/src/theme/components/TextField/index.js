@@ -40,6 +40,18 @@ const MuiTextField = {
       '& .MuiOutlinedInput-root': {
         paddingTop: 0,
         paddingBottom: 0,
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.stormWave.main,
+          borderWidth: '1px',
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.stormWave.main,
+          borderWidth: '1px',
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.stormWave.main,
+          borderWidth: '2px',
+        },
       },
 
       variants: [

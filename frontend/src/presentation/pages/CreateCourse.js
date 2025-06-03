@@ -21,25 +21,23 @@ import TestSection from '../components/CourseFrom/TestSection'
 
 export function removeEditorIdsDeep(value) {
   if (isArray(value)) {
-    return value.map(removeEditorIdsDeep);
+    return value.map(removeEditorIdsDeep)
   }
 
   if (isPlainObject(value)) {
-    const cloned = { ...value };
+    const cloned = { ...value }
 
-    const idValue = cloned.id;
-    const idIsValid =
-      typeof idValue === 'number' ||
-      (typeof idValue === 'string' && /^\d+$/.test(idValue));
+    const idValue = cloned.id
+    const idIsValid = typeof idValue === 'number' || (typeof idValue === 'string' && /^\d+$/.test(idValue))
 
     if (!idIsValid) {
-      delete cloned.id;
+      delete cloned.id
     }
 
-    return mapValues(cloned, removeEditorIdsDeep);
+    return mapValues(cloned, removeEditorIdsDeep)
   }
 
-  return value;
+  return value
 }
 
 const CreateCourse = () => {

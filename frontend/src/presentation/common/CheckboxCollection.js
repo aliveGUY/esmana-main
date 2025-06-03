@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
-const CheckboxCollection = ({ options }) => {
+const CheckboxCollection = ({ options = [] }) => {
   const [checked, setChecked] = useState([0])
 
   const handleToggle = (value) => () => {

@@ -1,4 +1,3 @@
-import { patch } from '@mui/material'
 import DashboardLayout from './presentation/common/DashboardLayout'
 import FormStateWrapper from './presentation/common/FormStateWrapper'
 import NotFoundPage from './presentation/pages/404'
@@ -12,6 +11,7 @@ import CreateLecture from './presentation/pages/CreateLecture'
 import EditCourse from './presentation/pages/EditCourse'
 import EditLecture from './presentation/pages/EditLecture'
 import EditLectureDraft from './presentation/pages/EditLectureDraft'
+import EditUser from './presentation/pages/EditUser'
 import ForgotPassword from './presentation/pages/ForgotPassword'
 import Login from './presentation/pages/Login'
 import Profile from './presentation/pages/Profile'
@@ -68,6 +68,11 @@ const routing = [
         path: 'course/:courseId/:lectureId',
         title: '',
         element: <Course />,
+      },
+      {
+        path: 'users/:userId',
+        title: '',
+        element: <EditUser />,
       },
       {
         element: <FormStateWrapper />,

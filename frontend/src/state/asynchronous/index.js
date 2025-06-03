@@ -100,6 +100,10 @@ const usersApi = createApi({
         method: 'GET',
       }),
     }),
+
+    getAllUsers: builder.query({
+      query: () => 'users',
+    }),
   }),
 })
 
@@ -117,6 +121,7 @@ export const {
   useSearchVideosMutation,
   useEditCourseMutation,
   useSearchUsersMutation,
+  useGetAllUsersQuery,
 } = usersApi
 
 export const usersMiddleware = usersApi.middleware

@@ -6,16 +6,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
 import useLectureEvaluationFromControls from '../../hooks/useLectureEvaluationFromControls'
-import { convertLectureDatesFormToStorage, convertLectureDatesStorageToForm } from '../../utils/lectureDates'
-import GeneralLectureInputSection from '../components/CourseFrom/GeneralLectureInputSection'
-import LectureDetailsInputSection from '../components/CourseFrom/LectureDetailsInputSection'
-import LectureMaterialSection from '../components/CourseFrom/LectureMaterialSection'
-import PeopleSection from '../components/CourseFrom/PeopleSection'
-import SubmitSection from '../components/CourseFrom/SubmitSection'
-import TestSection from '../components/CourseFrom/TestSection'
-import VideoSection from '../components/CourseFrom/VideoSection'
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useGetCourseByIdMutation } from '../../state/asynchronous'
 import {
   editLecture,
@@ -28,6 +18,16 @@ import {
   setParticipationCertificate,
   setTitle,
 } from '../../state/reducers/courseForm'
+import { convertLectureDatesFormToStorage, convertLectureDatesStorageToForm } from '../../utils/lectureDates'
+import GeneralLectureInputSection from '../components/CourseFrom/GeneralLectureInputSection'
+import LectureDetailsInputSection from '../components/CourseFrom/LectureDetailsInputSection'
+import LectureMaterialSection from '../components/CourseFrom/LectureMaterialSection'
+import PeopleSection from '../components/CourseFrom/PeopleSection'
+import SubmitSection from '../components/CourseFrom/SubmitSection'
+import TestSection from '../components/CourseFrom/TestSection'
+import VideoSection from '../components/CourseFrom/VideoSection'
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const EditLecture = () => {
   const [getCourseById, { isLoading, data }] = useGetCourseByIdMutation()

@@ -1,11 +1,14 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 
-import { Chip, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { Button, Chip, Stack, Typography, useTheme } from '@mui/material'
 import Checkbox from '../../common/inputs/Checkbox'
 
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-
 const TableRow = ({ user }) => {
+  const { firstName, middleName, lastName, email, phone, roles, id } = user
+  const name = [firstName, middleName, lastName].join(' ')
+  const role = roles.join(', ')
+
   const theme = useTheme()
 
   const rowStyles = {
@@ -19,28 +22,28 @@ const TableRow = ({ user }) => {
         <Checkbox size="small" />
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
-        <Typography whiteSpace="nowrap">{user.name}</Typography>
+        <Typography whiteSpace="nowrap">{name}</Typography>
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
         <Typography color="stormWave.main" whiteSpace="nowrap">
-          {user.phone}
+          {phone || 'N/A'}
         </Typography>
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
         <Typography color="stormWave.main" whiteSpace="nowrap">
-          {user.email}
+          {email}
         </Typography>
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
-        <Chip label={user.membership} />
+        <Chip label="N/A" />
       </Stack>
       <Stack sx={rowStyles} alignItems="center" direction="row">
-        <Chip label={user.role} />
+        <Chip label={role} />
       </Stack>
       <Stack sx={{ ...rowStyles, justifyContent: 'end' }} alignItems="center" direction="row">
-        <IconButton>
-          <MoreVertIcon />
-        </IconButton>
+        <Button variant="outlined" to={`/dashboard/users/${id}`} component={Link}>
+          Edit
+        </Button>
       </Stack>
     </Fragment>
   )

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { isEqual, omit } from 'lodash'
 
 import { Stack } from '@mui/material'
 import { useEditCourseMutation, useGetCourseByIdMutation } from '../../state/asynchronous'
@@ -28,7 +29,6 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
-import { isEqual, omit } from 'lodash'
 import { removeEditorIdsDeep } from './CreateCourse'
 
 const EditCourse = () => {

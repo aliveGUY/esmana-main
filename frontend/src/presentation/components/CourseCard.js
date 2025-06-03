@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
-import { getTotalHours } from './OwnedCourseCard'
 import EmptyImage from '../../static/images/no-image.jpg'
+import { getTotalHours } from './OwnedCourseCard'
 
 export const getTotalPrice = (lectures) => {
   return lectures.reduce((sum, lecture) => {

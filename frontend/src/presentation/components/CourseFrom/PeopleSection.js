@@ -1,4 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { includes, isEmpty } from 'lodash'
+import debounce from 'lodash.debounce'
+import { useFormContext } from 'react-hook-form'
+
 import {
   Autocomplete,
   Box,
@@ -15,14 +20,11 @@ import {
   TableRow,
   TextField,
 } from '@mui/material'
-import SectionWrapper from '../../common/SectionWrapper'
 import { useSearchUsersMutation } from '../../../state/asynchronous'
-import debounce from 'lodash.debounce'
-import { useFormContext } from 'react-hook-form'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { includes, isEmpty } from 'lodash'
-import { useParams } from 'react-router-dom'
 import generateRandomString from '../../../utils/generateRandomString'
+import SectionWrapper from '../../common/SectionWrapper'
+
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const UsersTableRow = ({ row }) => {
   const { setValue, getValues } = useFormContext()
