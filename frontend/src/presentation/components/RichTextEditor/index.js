@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
@@ -54,6 +55,30 @@ const theme = {
   },
 }
 
+// Component to handle initial content loading only
+const ContentUpdater = ({ content }) => {
+  const [editor] = useLexicalComposerContext()
+  const [hasLoadedInitialContent, setHasLoadedInitialContent] = useState(false)
+
+  useEffect(() => {
+    // Only load content once when component mounts and content is available
+    if (editor && content && content.trim() !== '' && !hasLoadedInitialContent) {
+      try {
+        const parsedContent = JSON.parse(content)
+        console.log({ parsedContent })
+        const editorState = editor.parseEditorState(parsedContent)
+        editor.setEditorState(editorState)
+        setHasLoadedInitialContent(true)
+      } catch (e) {
+        console.warn('Failed to parse editor content:', e)
+        setHasLoadedInitialContent(true) // Mark as loaded even if failed to prevent retries
+      }
+    }
+  }, [editor, content, hasLoadedInitialContent])
+
+  return null
+}
+
 const RichTextEditor = ({ content, onChange, readOnly = false }) => {
   const editorConfig = {
     namespace: 'RichEditor',
@@ -62,20 +87,7 @@ const RichTextEditor = ({ content, onChange, readOnly = false }) => {
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
   }
 
-  if (content) {
-    try {
-      // If content is a string, parse it as JSON
-      if (typeof content === 'string') {
-        editorConfig.editorState = JSON.parse(content)
-      } else {
-        // If content is already an object, use it directly
-        editorConfig.editorState = content
-      }
-    } catch (error) {
-      console.error('Failed to parse editor content:', error)
-      // If parsing fails, leave editorState undefined for empty editor
-    }
-  }
+  console.log({ editorConfig, content })
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
@@ -105,6 +117,8 @@ const RichTextEditor = ({ content, onChange, readOnly = false }) => {
             }}
           />
         )}
+        {/* Load initial content only once */}
+        {content && <ContentUpdater content={content} />}
       </Box>
     </LexicalComposer>
   )

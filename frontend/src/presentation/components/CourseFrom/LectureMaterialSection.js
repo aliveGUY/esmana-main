@@ -8,23 +8,19 @@ import RichTextEditor from '../RichTextEditor'
 import LanguageToggle from '../RichTextEditor/LanguageToggle'
 
 const LectureMaterialSection = () => {
-  const { setValue, getValues } = useFormContext()
-  const [richText, setRichText] = useState(getValues('richText'))
+  const { setValue, watch } = useFormContext()
   const [selectedLang, setSelectedLang] = useState(ENGLISH)
+
+  const richText = watch('richText')
+  console.log({ richText })
 
   const handleChange = (data) => {
     setValue(`richText.${selectedLang}`, data)
-    setRichText((prev) => ({
-      ...prev,
-      [selectedLang]: data,
-    }))
   }
 
   const setLanguage = (lang) => {
     setSelectedLang(lang)
   }
-
-  console.log({ richText })
 
   return (
     <Box px={2}>
