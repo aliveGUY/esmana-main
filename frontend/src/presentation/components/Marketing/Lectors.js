@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { map } from 'lodash'
 
 import { Box, Paper, Stack, Typography, useTheme } from '@mui/material'
-import usePredefinedAvatar from '../../../hooks/usePredefinedAvatar'
 import SectionWrapper from '../../common/SectionWrapper'
+import { serveStaticImage } from '../../../state/asynchronous'
 
 const Lector = ({ lector }) => {
-  const { avatar, name, title, qualification } = lector
-  const AvatarPng = usePredefinedAvatar(avatar)
+  const { profilePicture, firstName, middleName, lastName, lectorDetails } = lector
   const theme = useTheme()
+
+  const avatar = profilePicture ? serveStaticImage(profilePicture) : ''
+  const name = [firstName, middleName, lastName].join(' ')
 
   return (
     <Paper>
@@ -49,7 +51,7 @@ const Lector = ({ lector }) => {
             },
           }}
         >
-          <img src={AvatarPng} />
+          <img src={avatar} />
         </Stack>
         <Box
           height={{ xs: '30%', md: '50%' }}
@@ -57,10 +59,14 @@ const Lector = ({ lector }) => {
           sx={{ p: 2, transition: 'height .3s', overflowY: 'auto' }}
         >
           <Typography fontWeight="bold">{name}</Typography>
-          <Typography color="stormWave.main">{title}</Typography>
-          <Typography className="qualification" display="none">
-            {qualification}
-          </Typography>
+          {lectorDetails && (
+            <Fragment>
+              <Typography color="stormWave.main">{'title'}</Typography>
+              <Typography className="qualification" display="none">
+                {'qualification'}
+              </Typography>
+            </Fragment>
+          )}
         </Box>
       </Stack>
     </Paper>
