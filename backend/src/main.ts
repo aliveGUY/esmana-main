@@ -20,7 +20,7 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production' ? PRODUCTION_ORIGINS : DEVELOP_ORIGINS,
+    origin: PRODUCTION_ORIGINS,
     allowedHeaders: '*',
     credentials: true,
   });
