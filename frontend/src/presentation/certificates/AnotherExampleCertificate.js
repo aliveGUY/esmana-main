@@ -225,6 +225,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                 </svg>
               </div>
 
+              <div
                 style={{
                   position: 'absolute',
                   left: '80px',
@@ -239,7 +240,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                 }}
               ></div>
 
-
+              <div
                 style={{
                   position: 'absolute',
                   left: '-95.82px',
@@ -264,6 +265,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                 ></div>
               </div>
 
+              <div
                 style={{
                   zIndex: 4,
                   display: 'flex',
@@ -294,6 +296,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                   </div>
                 </div>
 
+                <div
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -340,6 +343,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                     </div>
                   </div>
 
+                  <div
                     style={{
                       position: 'relative',
                       display: 'flex',
@@ -370,6 +374,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                       ></div>
                     </div>
 
+                    <div
                       style={{
                         position: 'absolute',
                         bottom: 0,
@@ -404,6 +409,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                       </div>
                     </div>
 
+                    <div
                       style={{
                         position: 'absolute',
                         right: 0,
@@ -498,6 +504,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                 </div>
               </div>
 
+              <div
                 style={{
                   position: 'absolute',
                   left: '160px',
@@ -519,6 +526,7 @@ const AnotherExampleCertificate = ({ studentName, courseName, date }) => (
                 </div>
               </div>
 
+              <div
                 style={{
                   position: 'absolute',
                   left: '256px',
