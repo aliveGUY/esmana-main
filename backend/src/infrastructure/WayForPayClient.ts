@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { UserCheckoutInfoDto } from "src/models/dto/UserCheckoutInfoDto";
 import { TWayforpayRequestPayment, Wayforpay } from "wayforpay-ts-integration";
 
@@ -9,28 +10,14 @@ export interface IWayForPayClient {
 @Injectable()
 export class WayForPayClient implements IWayForPayClient {
   private wayForPay: Wayforpay;
-  private testMode: boolean;
 
-  constructor() {
-    console.log({ env: process.env })
-    // Check for required environment variables
-    if (!process.env.MERCHANT_LOGIN) {
-      throw new Error('MERCHANT_LOGIN environment variable is required');
-    }
-    if (!process.env.MERCHANT_SECRET_KEY) {
-      throw new Error('MERCHANT_SECRET_KEY environment variable is required');
-    }
+  constructor(private readonly configService: ConfigService) {
+    const redisConfig = this.configService.get('way-for-pay');
 
-    // Determine if we're in test mode
-    this.testMode = process.env.NODE_ENV !== 'production' || process.env.WAYFORPAY_TEST_MODE === 'true';
-
-    // Initialize WayForPay client
     this.wayForPay = new Wayforpay({
-      merchantLogin: 'test_merch_n1',
-      merchantSecret: 'flk3409refn54t54t*FNJRET'
+      merchantLogin: redisConfig.merchantLogin,
+      merchantSecret: redisConfig.merchantSecretKey
     });
-
-    console.log(`WayForPay initialized in ${this.testMode ? 'TEST' : 'PRODUCTION'} mode`);
   }
 
   async createPurchase(orderReference: string, checkoutAccountInfo: UserCheckoutInfoDto): Promise<any> {
@@ -48,8 +35,8 @@ export class WayForPayClient implements IWayForPayClient {
       }
     ];
 
-    const WEBHOOK_URL = `https://04ef-151-76-44-246.ngrok-free.app/checkout/way-for-pay/callback?oid=${orderReference}`
-    const REDIRECT_URL = 'http://localhost:3000'
+    const WEBHOOK_URL = `https://api.esmana-main.org/checkout/way-for-pay/callback?oid=${orderReference}`
+    const REDIRECT_URL = 'https://portal.esmana-main.org'
 
     const purchaseOptions: TWayforpayRequestPayment = {
       domain: process.env.DOMAIN,

@@ -8,6 +8,7 @@ import redisConfig from '../config/redis.config';
 import tokenConfig from '../config/token.config';
 import googleConfig from '../config/google.config';
 import databaseConfig from '../config/database.config';
+import wayForPayConfig from '../config/wayForPay.config';
 import { User } from '../models/User';
 import { UserLecture } from '../models/UserLecture';
 import { Course } from '../models/Course';
@@ -23,7 +24,7 @@ import { CheckoutModule } from './CheckoutModule';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [redisConfig, tokenConfig, googleConfig, databaseConfig],
+      load: [redisConfig, tokenConfig, googleConfig, databaseConfig, wayForPayConfig],
       isGlobal: true,
       envFilePath: '.env',
 
