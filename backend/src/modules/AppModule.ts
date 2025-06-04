@@ -23,9 +23,10 @@ import { CheckoutModule } from './CheckoutModule';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
       load: [redisConfig, tokenConfig, googleConfig, databaseConfig],
-      envFilePath: ['.env.local', '.env'],
+      isGlobal: true,
+      envFilePath: '.env',
+
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
