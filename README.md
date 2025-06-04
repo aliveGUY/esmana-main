@@ -25,6 +25,11 @@ Stop the development environment with:
 docker-compose down
 ```
 
+Use ngrok to test webhooks
+```bash
+ngrok http 8080
+```
+
 ## Project Structure
 
 - **Frontend**: React application with custom webpack configuration
