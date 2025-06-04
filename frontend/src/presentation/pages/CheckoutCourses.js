@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Divider, Grid2, Stack, Typography } from '@mui/material'
 import Password from '../common/inputs/Password'
 import TextField from '../common/inputs/TextField'
 import SectionWrapper from '../common/SectionWrapper'
+import { useCreateCheckoutFormMutation, useCreatePaymentMutation } from '../../state/asynchronous'
 
 const SummaryCard = () => {
   return (
@@ -89,30 +90,35 @@ const Registration = () => {
 }
 
 const CheckoutCourses = () => {
-  const methods = useForm()
+  const [createCheckoutForm, { data, isLoading }] = useCreateCheckoutFormMutation()
 
-  const onSubmit = (data) => {
-    console.log({ data })
+  const handleBuy = () => {
+    createCheckoutForm({
+      lectureIds: [1, 2, 3, 4],
+      formData: {
+        firstName: 'John',
+        middleName: 'Jr',
+        lastName: 'Doe',
+        email: 'example@gmail.com',
+        phone: '+123456789',
+        password: 'test-password',
+      },
+    })
   }
+
+  useEffect(() => {
+    if (data) {
+      const form = document.getElementById('wayforpayForm')
+      if (form) form.submit()
+    }
+  }, [data])
 
   return (
     <Box p={3}>
-      <SectionWrapper>
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Stack direction="row" spacing={4}>
-              <Stack flex={1} spacing={3}>
-                <Product />
-                <Divider />
-                <Payment />
-                <Divider />
-                <Registration />
-              </Stack>
-              <SummaryCard />
-            </Stack>
-          </form>
-        </FormProvider>
-      </SectionWrapper>
+      <Button variant="secondary" onClick={handleBuy} disabled={isLoading}>
+        {isLoading ? 'Loading...' : 'Buy'}
+      </Button>
+      {data && <div dangerouslySetInnerHTML={{ __html: data }} />}
     </Box>
   )
 }

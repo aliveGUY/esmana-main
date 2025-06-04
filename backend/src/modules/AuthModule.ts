@@ -6,9 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import tokenConfig from '../config/token.config';
 import googleConfig from '../config/google.config';
 
-// Infrastructure
-import { RedisModule } from '../infrastructure/redis/redis.module';
-
 // Repositories
 import { UserRepository } from '../repositories/UserRepository';
 import { TokenRepository } from '../repositories/TokenRepository';
@@ -23,6 +20,7 @@ import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { AuthController } from '../controllers/AuthController';
 import { GoogleClient } from 'src/infrastructure/GoogleClient';
 import { User } from '../models/User';
+import { RedisModule } from './RedisModule';
 
 @Module({
   imports: [

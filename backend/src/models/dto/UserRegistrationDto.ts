@@ -30,7 +30,7 @@ export class UserRegistrationDto {
 
   @IsOptional()
   lectorDetails?: CreateLectorDetailsDto
-  
+
   @IsOptional()
-  roles: ERoles[]
+  roles?: ERoles[]
 }

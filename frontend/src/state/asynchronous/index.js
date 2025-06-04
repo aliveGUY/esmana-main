@@ -124,6 +124,20 @@ const usersApi = createApi({
     getUserById: builder.mutation({
       query: (userId) => `users/${userId}`,
     }),
+
+    createCheckoutForm: builder.mutation({
+      query: ({ lectureIds, formData }) => {
+        const searchParams = new URLSearchParams()
+        lectureIds.forEach((value) => searchParams.append('lids', value.toString()))
+
+        return {
+          url: `checkout/way-for-pay?${searchParams.toString()}`,
+          method: 'POST',
+          body: formData,
+          responseHandler: (response) => response.text(),
+        }
+      },
+    }),
   }),
 })
 
@@ -145,6 +159,7 @@ export const {
   useCreateAccountMutation,
   useGetUserByIdMutation,
   useEditAccountMutation,
+  useCreateCheckoutFormMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {

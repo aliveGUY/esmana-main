@@ -18,6 +18,7 @@ import { LectorDetails } from '../models/LectorDetails';
 import { CourseModule } from './CourseModule';
 import { StaticFilesController } from 'src/controllers/StaticFilesController';
 import { UserModule } from './UserModule';
+import { CheckoutModule } from './CheckoutModule';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { UserModule } from './UserModule';
     }),
     AuthModule,
     CourseModule,
-    UserModule
+    UserModule,
+    CheckoutModule
   ],
   controllers: [StaticFilesController],
   providers: [

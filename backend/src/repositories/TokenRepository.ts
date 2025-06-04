@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TokenData } from '../models/Token';
 import { ETokenType } from '../models/enums/ETokenType';
-import { IRedisService } from '../infrastructure/redis/interfaces/redis.interface';
 import * as crypto from 'crypto';
+import { IRedisClient } from 'src/infrastructure/RedisClient';
 
 export interface ITokenRepository {
   generateAccessToken(userId: number, metadata?: any): Promise<string>;
@@ -25,7 +25,7 @@ export class TokenRepository implements ITokenRepository {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject('IRedisService') private readonly redisService: IRedisService,
+    @Inject('IRedisClient') private readonly redisClient: IRedisClient,
   ) { }
 
   async generateAccessToken(userId: number, metadata: any = {}): Promise<string> {
@@ -46,14 +46,14 @@ export class TokenRepository implements ITokenRepository {
     };
 
     // Store token data in Redis with TTL
-    await this.redisService.set(
+    await this.redisClient.saveKey(
       `${this.TOKEN_PREFIX}:${token}`,
       JSON.stringify(tokenData),
       expirationTime,
     );
 
     // Add to user's token set
-    await this.redisService.set(
+    await this.redisClient.saveKey(
       `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.ACCESS}:${token}`,
       token,
       expirationTime,
@@ -79,14 +79,14 @@ export class TokenRepository implements ITokenRepository {
     };
 
     // Store token data in Redis with TTL
-    await this.redisService.set(
+    await this.redisClient.saveKey(
       `${this.TOKEN_PREFIX}:${token}`,
       JSON.stringify(tokenData),
       expirationTime,
     );
 
     // Add to user's token set
-    await this.redisService.set(
+    await this.redisClient.saveKey(
       `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.REFRESH}:${token}`,
       token,
       expirationTime,
@@ -123,7 +123,7 @@ export class TokenRepository implements ITokenRepository {
 
   async getTokenData(token: string): Promise<TokenData | null> {
     try {
-      const data = await this.redisService.get(`${this.TOKEN_PREFIX}:${token}`);
+      const data = await this.redisClient.getKey(`${this.TOKEN_PREFIX}:${token}`);
 
       if (!data) {
         return null;
@@ -156,7 +156,7 @@ export class TokenRepository implements ITokenRepository {
     const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
 
     if (remainingTtl > 0) {
-      await this.redisService.set(
+      await this.redisClient.saveKey(
         `${this.TOKEN_PREFIX}:${token}`,
         JSON.stringify(updatedTokenData),
         remainingTtl,
@@ -164,7 +164,7 @@ export class TokenRepository implements ITokenRepository {
     }
 
     // Remove from user's token set
-    await this.redisService.del(`${this.USER_TOKENS_PREFIX}:${tokenData.userId}:${tokenData.type}:${token}`);
+    await this.redisClient.deleteKey(`${this.USER_TOKENS_PREFIX}:${tokenData.userId}:${tokenData.type}:${token}`);
   }
 
   async revokeUserTokens(userId: number, type?: ETokenType): Promise<void> {
@@ -172,10 +172,10 @@ export class TokenRepository implements ITokenRepository {
       ? `${this.USER_TOKENS_PREFIX}:${userId}:${type}:*`
       : `${this.USER_TOKENS_PREFIX}:${userId}:*`;
 
-    const tokenKeys = await this.redisService.keys(pattern);
+    const tokenKeys = await this.redisClient.findKeys(pattern);
 
     for (const key of tokenKeys) {
-      const token = await this.redisService.get(key);
+      const token = await this.redisClient.getKey(key);
       if (token) {
         await this.revokeToken(token);
       }
@@ -183,7 +183,7 @@ export class TokenRepository implements ITokenRepository {
   }
 
   async isTokenBlacklisted(token: string): Promise<boolean> {
-    return this.redisService.exists(`${this.BLACKLIST_PREFIX}:${token}`);
+    return this.redisClient.isKeyExists(`${this.BLACKLIST_PREFIX}:${token}`);
   }
 
   async blacklistToken(token: string): Promise<void> {
@@ -193,7 +193,7 @@ export class TokenRepository implements ITokenRepository {
       const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
 
       if (remainingTtl > 0) {
-        await this.redisService.set(
+        await this.redisClient.saveKey(
           `${this.BLACKLIST_PREFIX}:${token}`,
           'blacklisted',
           remainingTtl,
@@ -201,7 +201,7 @@ export class TokenRepository implements ITokenRepository {
       }
     } else {
       // If we can't get token data, blacklist for a default period
-      await this.redisService.set(
+      await this.redisClient.saveKey(
         `${this.BLACKLIST_PREFIX}:${token}`,
         'blacklisted',
         24 * 60 * 60, // 24 hours
