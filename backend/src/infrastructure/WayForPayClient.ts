@@ -12,6 +12,7 @@ export class WayForPayClient implements IWayForPayClient {
   private testMode: boolean;
 
   constructor() {
+    console.log({ env: process.env })
     // Check for required environment variables
     if (!process.env.MERCHANT_LOGIN) {
       throw new Error('MERCHANT_LOGIN environment variable is required');
