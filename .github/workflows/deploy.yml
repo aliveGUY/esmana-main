@@ -20,6 +20,12 @@ jobs:
         with:
           node-version: 20
 
+      # Clean previous build artifacts from runner
+      - name: Clean Previous Build Artifacts
+        run: |
+          echo "Cleaning previous build artifacts from runner..."
+          rm -f frontend.tar.gz backend.tar.gz || true
+
       # Build Frontend
       - name: Build Frontend
         env:
@@ -27,6 +33,8 @@ jobs:
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
         run: |
           cd frontend
+          echo "Cleaning previous build artifacts..."
+          rm -rf build/ node_modules/.cache/ || true
           npm install --omit=dev
           npm run build
           tar -czf ../frontend.tar.gz -C build .
@@ -35,6 +43,8 @@ jobs:
       - name: Build Backend
         run: |
           cd backend
+          echo "Cleaning previous build artifacts..."
+          rm -rf dist/ node_modules/.cache/ || true
           npm install --omit=dev
           npm install -g @nestjs/cli
           npm run build
@@ -50,7 +60,7 @@ jobs:
           source: "frontend.tar.gz"
           target:  ${{ secrets.FRONTEND_TARGET }}
 
-      - name: Extract Frontend Archive
+      - name: Clean and Extract Frontend Archive
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.FRONTEND_HOST }}
@@ -58,6 +68,10 @@ jobs:
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           script: |
             cd "${{ secrets.FRONTEND_TARGET }}"
+            echo "Cleaning previous frontend deployment..."
+            # Remove all previous files except the uploaded archive
+            find . -mindepth 1 -not -name "frontend.tar.gz" -delete
+            echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
             echo "Frontend deployed successfully."
@@ -72,7 +86,7 @@ jobs:
           source: "backend.tar.gz"
           target: ${{ secrets.BACKEND_TARGET }}
 
-      - name: Extract Backend Archive and Restart PM2
+      - name: Clean, Extract Backend Archive and Restart PM2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.BACKEND_HOST }}
@@ -80,10 +94,18 @@ jobs:
           key: ${{ secrets.BACKEND_SSH_KEY }}
           script: |
             cd "${{ secrets.BACKEND_TARGET }}"
+            echo "Stopping PM2 process..."
+            pm2 stop main || echo "PM2 process was not running"
+            echo "Cleaning previous backend deployment..."
+            # Remove all previous files except the uploaded archive and critical config files
+            find . -mindepth 1 -not -name "backend.tar.gz" -not -name ".env*" -not -name "ecosystem.config.js" -delete
+            echo "Extracting new backend archive..."
             tar -xzf backend.tar.gz
             rm backend.tar.gz
+            echo "Setting up Node.js environment..."
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
             . ~/.bashrc
             npm install pm2 -g
-            pm2 restart main
+            echo "Starting PM2 process..."
+            pm2 start main
             echo "Backend deployed and restarted successfully."
