@@ -3,8 +3,13 @@ import { ConfigService } from "@nestjs/config";
 import { UserCheckoutInfoDto } from "src/models/dto/UserCheckoutInfoDto";
 import { TWayforpayRequestPayment, Wayforpay } from "wayforpay-ts-integration";
 
+const PRODUCTION_BASE_URL = 'https://api.esmana-main.org'
+const DEVELOP_BASE_URL = 'https://20cd-151-76-44-246.ngrok-free.app'
+
+const BASE_URL = process.env.NODE_ENV === 'development' ? DEVELOP_BASE_URL : PRODUCTION_BASE_URL
+
 export interface IWayForPayClient {
-  createPurchase(orderReference: string, checkoutAccountInfo: UserCheckoutInfoDto): Promise<any>;
+  createPurchase(orderReference: string, checkoutAccountInfo: UserCheckoutInfoDto): Promise<string>;
 }
 
 @Injectable()
@@ -20,7 +25,7 @@ export class WayForPayClient implements IWayForPayClient {
     });
   }
 
-  async createPurchase(orderReference: string, checkoutAccountInfo: UserCheckoutInfoDto): Promise<any> {
+  async createPurchase(orderReference: string, checkoutAccountInfo: UserCheckoutInfoDto): Promise<string> {
     if (!process.env.DOMAIN) {
       throw new Error('DOMAIN environment variable is required');
     }
@@ -35,7 +40,7 @@ export class WayForPayClient implements IWayForPayClient {
       }
     ];
 
-    const WEBHOOK_URL = `https://api.esmana-main.org/checkout/way-for-pay/callback?oid=${orderReference}`
+    const WEBHOOK_URL = `${BASE_URL}/checkout/way-for-pay/callback?oid=${orderReference}`
     const REDIRECT_URL = 'https://portal.esmana-main.org'
 
     const purchaseOptions: TWayforpayRequestPayment = {

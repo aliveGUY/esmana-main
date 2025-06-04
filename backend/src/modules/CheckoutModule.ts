@@ -3,9 +3,11 @@ import { WayForPayClient } from 'src/infrastructure/WayForPayClient';
 import { CheckoutController } from 'src/controllers/CheckoutController';
 import { CheckoutService } from 'src/services/CheckoutService';
 import { RedisModule } from './RedisModule';
+import { UserModule } from './UserModule';
+import { AuthModule } from './AuthModule';
 
 @Module({
-  imports: [RedisModule],
+  imports: [RedisModule, UserModule, AuthModule],
   controllers: [CheckoutController],
   providers: [
     {

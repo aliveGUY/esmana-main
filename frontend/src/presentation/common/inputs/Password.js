@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
 
-const Password = ({ name, label, placeholder, staticLabel = false }) => {
+const Password = ({ name, label, placeholder, staticLabel = false, required = null }) => {
   const {
     control,
     formState: { errors },
@@ -15,6 +15,7 @@ const Password = ({ name, label, placeholder, staticLabel = false }) => {
     <Controller
       control={control}
       name={name}
+      {...(required && { rules: { required } })}
       render={({ field }) => (
         <FormControl fullWidth error={error}>
           {staticLabel && (
@@ -22,7 +23,13 @@ const Password = ({ name, label, placeholder, staticLabel = false }) => {
               {label}
             </Typography>
           )}
-          <MuiTextField id={name} type="password" label={!staticLabel && label} placeholder={placeholder} {...field} />
+          <MuiTextField
+            id={name}
+            type="password"
+            placeholder={placeholder}
+            {...(!staticLabel && { label })}
+            {...field}
+          />
 
           {error && <FormHelperText>{error.message}</FormHelperText>}
         </FormControl>

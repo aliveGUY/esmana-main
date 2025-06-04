@@ -2,8 +2,9 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
+import { isEmpty } from 'lodash'
 
-const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ...rest }) => {
+const TextField = ({ name, label, onChange, placeholder, staticLabel = false, required = null, pattern, ...rest }) => {
   const {
     control,
     formState: { errors },
@@ -11,10 +12,16 @@ const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ..
 
   const error = errors[name]
 
+  const rules = {
+    ...(required && { required }),
+    ...(pattern && { pattern }),
+  }
+
   return (
     <Controller
       control={control}
       name={name}
+      {...(!isEmpty(rules) && { rules })}
       render={({ field }) => {
         const handleChange = (e) => {
           onChange && onChange(e.target.value)
@@ -29,12 +36,12 @@ const TextField = ({ name, label, onChange, placeholder, staticLabel = false, ..
               </Typography>
             )}
             <MuiTextField
-              label={!staticLabel && label}
               id={name}
               placeholder={placeholder}
+              onChange={handleChange}
               {...field}
               {...rest}
-              onChange={handleChange}
+              {...(!staticLabel && { label })}
             />
             {error && <FormHelperText>{error.message}</FormHelperText>}
           </FormControl>

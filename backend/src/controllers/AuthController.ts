@@ -1,8 +1,6 @@
 import { Controller, Post, Body, Res, Req, UseGuards } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { UserRegistrationDto } from '../models/dto/UserRegistrationDto';
 import { UserLoginDto } from '../models/dto/UserLoginDto';
-import { UserGoogleRegistrationDto } from '../models/dto/UserGoogleRegistrationDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
 import { IAuthService } from '../services/AuthService';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
@@ -17,36 +15,12 @@ export class AuthController {
   ) { }
 
   @Public()
-  @Post('register')
-  async register(
-    @Body() dto: UserRegistrationDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<UserDto> {
-    const { user, accessToken } = await this.authService.registerLocal(dto);
-
-    this.setAccessTokenCookie(response, accessToken);
-    return user
-  }
-
-  @Public()
   @Post('login')
   async login(
     @Body() dto: UserLoginDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<UserDto> {
     const { user, accessToken } = await this.authService.loginLocal(dto);
-
-    this.setAccessTokenCookie(response, accessToken);
-    return user
-  }
-
-  @Public()
-  @Post('google/register')
-  async googleRegister(
-    @Body() dto: UserGoogleRegistrationDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<UserDto> {
-    const { user, accessToken } = await this.authService.registerGoogle(dto);
 
     this.setAccessTokenCookie(response, accessToken);
     return user

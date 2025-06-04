@@ -29,7 +29,7 @@ import { LectorDetails } from "src/models/LectorDetails";
       useClass: UserService,
     },
   ],
-  exports: ['IUserService'],
+  exports: ['IUserService', 'IUserRepository'],
 })
 
 export class UserModule { }

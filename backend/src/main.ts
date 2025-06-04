@@ -20,7 +20,7 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: PRODUCTION_ORIGINS,
+    origin: process.env.NODE_ENV === 'development' ? DEVELOP_ORIGINS : PRODUCTION_ORIGINS,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,

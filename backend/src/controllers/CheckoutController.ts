@@ -12,8 +12,14 @@ export class CheckoutController {
 
   @Public()
   @Post('way-for-pay')
-  async wayForPayCheckout(@Query('lids') lectureIdList: string[], @Body() newAccountData: UserRegistrationDto) {
-    return await this.checkoutService.createCheckoutForm(lectureIdList, newAccountData)
+  async createSignupCheckoutForm(@Query('lids') lectureIdList: string[], @Body() newAccountData: UserRegistrationDto) {
+    return await this.checkoutService.createSignupCheckoutForm(lectureIdList, newAccountData)
+  }
+
+  @Public()
+  @Post('google/way-for-pay')
+  async googleSignUpAndCheckout(@Query('lids') lectureIdList: string[], @Body() { token }) {
+    return await this.checkoutService.createSignupCheckoutFormWithGoogle(lectureIdList, token)
   }
 
   @Public()

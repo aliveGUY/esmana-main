@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Query, Inject, Post, ForbiddenException, Req, UseInterceptors, UploadedFile, Body, Param, Put } from '@nestjs/common';
+import { Controller, UseGuards, Get, Query, Inject, ForbiddenException, Req, UseInterceptors, UploadedFile, Body, Param, Put } from '@nestjs/common';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { IUserService } from 'src/services/UserService';
 import { User } from 'src/models/User';
@@ -6,7 +6,6 @@ import { ERoles } from 'src/models/enums/ERoles';
 import { Request } from 'express';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 import { EditUserDto } from 'src/models/dto/EditUserDto';
 import { Express } from 'express';
 
@@ -17,24 +16,6 @@ export class UserController {
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
 
   ) { }
-
-  @UseGuards(TokenAuthGuard)
-  @Post()
-  @UseInterceptors(FileInterceptor('profilePicture'))
-  async createAccount(
-    @Req() request: Request,
-    @UploadedFile() profilePicture: Express.Multer.File,
-    @Body('data') dataJson: string
-  ): Promise<User> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
-
-    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-      throw new ForbiddenException('Only administrators can create accounts manually');
-    }
-
-    const user: UserRegistrationDto = JSON.parse(dataJson)
-    return await this.userService.createAccount(user, profilePicture)
-  }
 
   @UseGuards(TokenAuthGuard)
   @Put()

@@ -138,6 +138,20 @@ const usersApi = createApi({
         }
       },
     }),
+
+    createCheckoutFormWithGoogle: builder.mutation({
+      query: ({ lectureIds, token }) => {
+        const searchParams = new URLSearchParams()
+        lectureIds.forEach((value) => searchParams.append('lids', value.toString()))
+
+        return {
+          url: `checkout/google/way-for-pay?${searchParams.toString()}`,
+          method: 'POST',
+          body: token,
+          responseHandler: (response) => response.text(),
+        }
+      },
+    }),
   }),
 })
 
@@ -160,6 +174,7 @@ export const {
   useGetUserByIdMutation,
   useEditAccountMutation,
   useCreateCheckoutFormMutation,
+  useCreateCheckoutFormWithGoogleMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {
