@@ -2,6 +2,7 @@ import { Controller, UseGuards, Get, Inject, Param, Res, Query } from '@nestjs/c
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { Response } from 'express';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('static')
 export class StaticFilesController {
@@ -9,7 +10,7 @@ export class StaticFilesController {
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
   ) { }
 
-  @UseGuards(TokenAuthGuard)
+  @Public()
   @Get('images/:fileId')
   async getStaticFile(@Param('fileId') fileId: string, @Res() res: Response) {
     const { stream, mimeType } = await this.googleClient.getFileStreamById(fileId)

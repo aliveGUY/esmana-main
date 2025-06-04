@@ -4,6 +4,7 @@ import { Course } from "src/models/Course";
 import { DetailedCourseDto } from "src/models/dto/DetailedCourseDto";
 import { EditCourseDto } from "src/models/dto/EditCourseDto";
 import { StrippedCourseDto } from "src/models/dto/StrippedCourseDto";
+import { LectureMaterials } from "src/models/LectureMaterials";
 import { Repository } from "typeorm";
 
 export interface ICourseRepository {
@@ -65,31 +66,26 @@ export class CourseRepository implements ICourseRepository {
   async getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto> {
     const course = await this.courseRepository
       .createQueryBuilder('course')
-      .select([
-        'course.id',
-        'course.thumbnailUrl',
-        'course.title',
-        'course.description',
-        'course.isActive',
-        'course.createdAt',
-        'course.updatedAt'
-      ])
       .leftJoinAndSelect('course.lectures', 'lecture')
-      .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.userId = :userId OR userLecture.isLector = true', { userId })
+      .leftJoinAndSelect(
+        'lecture.users',
+        'userLecture',
+        'userLecture.userId = :userId OR userLecture.isLector = true',
+        { userId }
+      )
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
-      .addSelect([
-        'user.id',
-        'user.firstName',
-        'user.middleName',
-        'user.lastName',
-        'user.profilePicture',
-        'lectorDetails.id',
-        'lectorDetails.credentials',
-        'lectorDetails.biography'
-      ])
-      .leftJoinAndSelect('lecture.materials', 'materials',
-        'EXISTS (SELECT 1 FROM user_lecture ul WHERE ul.lecture_id = lecture.id AND (ul.user_id = :userId OR ul.is_lector = true))')
+      .leftJoinAndSelect(
+        'lecture.materials',
+        'materials',
+        `EXISTS (
+          SELECT 1
+          FROM user_lecture ul
+          WHERE ul.lecture_id = lecture.id
+            AND ul.user_id = :userId
+        )`,
+        { userId }
+      )
       .leftJoinAndSelect('materials.evaluation', 'lectureEvaluation')
       .where('course.id = :courseId', { courseId })
       .getOne();

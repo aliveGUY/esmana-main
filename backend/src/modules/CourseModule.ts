@@ -51,6 +51,6 @@ import { CoursesController } from "src/controllers/CoursesController";
       useClass: LectureService
     }
   ],
-  exports: ['ICourseService'],
+  exports: ['ICourseService', 'IUserLectureRepository'],
 })
 export class CourseModule { }

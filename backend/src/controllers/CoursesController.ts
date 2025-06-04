@@ -40,11 +40,11 @@ export class CoursesController {
     @UploadedFile() thumbnail: Express.Multer.File,
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
-    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-      throw new ForbiddenException('Only administrators can create courses');
-    }
+    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+    //   throw new ForbiddenException('Only administrators can create courses');
+    // }
 
     const courseDto: CreateCourseDto = JSON.parse(dataJson)
     return await this.courseService.createCourse(courseDto, thumbnail);
@@ -58,11 +58,11 @@ export class CoursesController {
     @UploadedFile() thumbnail: Express.Multer.File,
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
-    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-      throw new ForbiddenException('Only administrators can edit courses');
-    }
+    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+    //   throw new ForbiddenException('Only administrators can edit courses');
+    // }
 
     const courseDto: EditCourseDto = JSON.parse(dataJson)
     return await this.courseService.editCourse(courseDto, thumbnail)

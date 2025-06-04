@@ -8,6 +8,7 @@ import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditUserDto } from 'src/models/dto/EditUserDto';
 import { Express } from 'express';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
 export class UserController {
@@ -25,11 +26,11 @@ export class UserController {
     @UploadedFile() profilePicture: Express.Multer.File,
     @Body('data') dataJson: string
   ): Promise<User> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
+    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
 
-    if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-      throw new ForbiddenException('Only administrators can modify accounts manually');
-    }
+    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
+    //   throw new ForbiddenException('Only administrators can modify accounts manually');
+    // }
 
     const user: EditUserDto = JSON.parse(dataJson)
     return await this.userService.editAccount(user, profilePicture)

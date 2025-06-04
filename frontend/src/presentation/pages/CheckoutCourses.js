@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { isEmpty, isEqual } from 'lodash'
 
-import { Box, Button, Divider, Grid2, Stack, Typography } from '@mui/material'
+import { Box, Button, Divider, FormControl, FormHelperText, Grid2, Stack, Typography } from '@mui/material'
 import { useCreateCheckoutFormMutation, useCreateCheckoutFormWithGoogleMutation } from '../../state/asynchronous'
 import Password from '../common/inputs/Password'
 import TextField from '../common/inputs/TextField'
@@ -85,9 +85,11 @@ const CheckoutCourses = () => {
   const [searchParams] = useSearchParams()
   const lectureIds = searchParams.getAll('lids')
   const methods = useForm()
+  const [globalError, setGlobalError] = useState()
 
-  const [createCheckoutForm, { data: form, isLoading: isFormLoading }] = useCreateCheckoutFormMutation()
-  const [createCheckoutFormWithGoogle, { data: googleForm, isLoading: isGoogleFormLoading }] =
+  const [createCheckoutForm, { data: form, isLoading: isFormLoading, error: formError }] =
+    useCreateCheckoutFormMutation()
+  const [createCheckoutFormWithGoogle, { data: googleForm, isLoading: isGoogleFormLoading, error: googleError }] =
     useCreateCheckoutFormWithGoogleMutation()
 
   const isLoading = isFormLoading || isGoogleFormLoading
@@ -141,6 +143,17 @@ const CheckoutCourses = () => {
     }
   }, [form, googleForm])
 
+  useEffect(() => {
+    if (formError) {
+      const data = JSON.parse(formError.data)
+      setGlobalError(data.message)
+    }
+    if (googleError) {
+      const data = JSON.parse(googleError.data)
+      setGlobalError(data.message)
+    }
+  }, [formError, googleError])
+
   return (
     <Box p={3} maxWidth={600} m="0 auto">
       <FormProvider {...methods}>
@@ -153,9 +166,12 @@ const CheckoutCourses = () => {
             </Stack>
             <Registration />
             <Stack spacing={2}>
-              <Button variant="secondary" type="submit" disabled={isLoading}>
-                {isLoading ? 'Loading...' : 'Register & Checkout'}
-              </Button>
+              <FormControl error={globalError}>
+                <Button variant="secondary" type="submit" disabled={isLoading}>
+                  {isLoading ? 'Loading...' : 'Register & Checkout'}
+                </Button>
+                {globalError && <FormHelperText>{globalError}</FormHelperText>}
+              </FormControl>
               <Box sx={{ my: 2 }}>
                 <Divider>
                   <Typography variant="body2" color="text.secondary">

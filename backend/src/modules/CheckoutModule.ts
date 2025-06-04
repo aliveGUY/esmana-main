@@ -5,9 +5,10 @@ import { CheckoutService } from 'src/services/CheckoutService';
 import { RedisModule } from './RedisModule';
 import { UserModule } from './UserModule';
 import { AuthModule } from './AuthModule';
+import { CourseModule } from './CourseModule';
 
 @Module({
-  imports: [RedisModule, UserModule, AuthModule],
+  imports: [RedisModule, UserModule, AuthModule, CourseModule],
   controllers: [CheckoutController],
   providers: [
     {

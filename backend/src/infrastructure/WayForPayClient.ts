@@ -4,7 +4,7 @@ import { UserCheckoutInfoDto } from "src/models/dto/UserCheckoutInfoDto";
 import { TWayforpayRequestPayment, Wayforpay } from "wayforpay-ts-integration";
 
 const PRODUCTION_BASE_URL = 'https://api.esmana-main.org'
-const DEVELOP_BASE_URL = 'https://20cd-151-76-44-246.ngrok-free.app'
+const DEVELOP_BASE_URL = 'https://8bc0-151-76-44-246.ngrok-free.app'
 
 const BASE_URL = process.env.NODE_ENV === 'development' ? DEVELOP_BASE_URL : PRODUCTION_BASE_URL
 

@@ -9,6 +9,8 @@ import { IUserRepository } from "src/repositories/UserRepository";
 import { TWayforpayResponseTransactionDetails } from "wayforpay-ts-integration";
 import * as bcrypt from 'bcrypt';
 import { User } from "src/models/User";
+import { CreateUserLectureDto } from "src/models/dto/CreateUserLectureDto";
+import { IUserLectureRepository } from "src/repositories/UserLectureRepository";
 
 const HOURS_24 = 24 * 60 * 60
 
@@ -25,6 +27,7 @@ export class CheckoutService implements ICheckoutService {
     @Inject('IRedisClient') private readonly redisClient: IRedisClient,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+    @Inject('IUserLectureRepository') private readonly userLectureRepository: IUserLectureRepository,
   ) { }
 
   async createSignupCheckoutFormWithGoogle(lectureIdList: string[], token: string): Promise<string> {
@@ -84,24 +87,47 @@ export class CheckoutService implements ICheckoutService {
     return await this.wayForPayClient.createPurchase(orderRef, checkoutDetails);
   }
 
-  async handleCheckoutWebhook(orderId: string, callbackData: TWayforpayResponseTransactionDetails): Promise<object> {
-    const orderJson = await this.redisClient.getKey(orderId)
+  async handleCheckoutWebhook(orderReference: string, callbackData: TWayforpayResponseTransactionDetails): Promise<object> {
+    const orderJson = await this.redisClient.getKey(orderReference)
 
     if (orderJson && callbackData.transactionStatus === 'Approved') {
       const newAccountData: Partial<User> = JSON.parse(orderJson).newAccountData
       const lectureIdList: string[] = JSON.parse(orderJson).lectureIdList
 
-      await this.redisClient.deleteKey(orderId)
+      await this.redisClient.deleteKey(orderReference)
 
-      console.log('SHOULD REGISTER USER', { newAccountData, callbackData, lectureIdList })
-      return { success: true };
+      const newUser = await this.userRepository.create(newAccountData)
+
+      await this.grantAccessToLectures(lectureIdList, newUser)
+
+      return { orderReference, status: 'accept' }
     }
 
     console.log('TRANSACTION FAILED ', { callbackData })
-    return { success: true };
+    return { orderReference, status: 'accept' }
   }
 
   private generateOrderRef() {
     return `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
+
+  private async grantAccessToLectures(lectureIdList: string[], newAccountData: User): Promise<void> {
+    const userId = newAccountData.id
+    console.log('SHOULD CREATE USER', { newAccountData, lectureIdList })
+
+    const promises = lectureIdList.map(lectureId => {
+      const userLecture: CreateUserLectureDto = {
+        userId: userId,
+        lectureId: Number(lectureId),
+        isCompleted: false,
+        isGotAcademicHours: false,
+        isLector: false,
+        user: newAccountData
+      }
+
+      return this.userLectureRepository.createUserLecture(userLecture)
+    })
+
+    await Promise.all(promises)
   }
 }

@@ -12,13 +12,15 @@ export class CheckoutController {
 
   @Public()
   @Post('way-for-pay')
-  async createSignupCheckoutForm(@Query('lids') lectureIdList: string[], @Body() newAccountData: UserRegistrationDto) {
+  async createSignupCheckoutForm(@Query('lids') lids: string[], @Body() newAccountData: UserRegistrationDto) {
+    const lectureIdList = Array.isArray(lids) ? lids : [lids];
     return await this.checkoutService.createSignupCheckoutForm(lectureIdList, newAccountData)
   }
 
   @Public()
   @Post('google/way-for-pay')
-  async googleSignUpAndCheckout(@Query('lids') lectureIdList: string[], @Body() { token }) {
+  async googleSignUpAndCheckout(@Query('lids') lids: string[], @Body() { token }) {
+    const lectureIdList = Array.isArray(lids) ? lids : [lids];
     return await this.checkoutService.createSignupCheckoutFormWithGoogle(lectureIdList, token)
   }
 
