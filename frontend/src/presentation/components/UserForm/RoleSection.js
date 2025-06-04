@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useFormContext } from 'react-hook-form'
+
 import {
   Box,
   Checkbox,
@@ -12,7 +14,6 @@ import {
   Stack,
 } from '@mui/material'
 import SectionWrapper from '../../common/SectionWrapper'
-import { useFormContext } from 'react-hook-form'
 
 const RoleSection = () => {
   const { setValue, watch } = useFormContext()

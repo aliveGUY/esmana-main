@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty, omit } from 'lodash'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
+import { useEditAccountMutation, useGetUserByIdMutation } from '../../state/asynchronous'
+import SubmitSection from '../components/CourseFrom/SubmitSection'
 import ContactSection from '../components/UserForm/ContactSection'
 import LectorSection from '../components/UserForm/LectorSection'
+import ProfilePictureSection from '../components/UserForm/ProfilePictureSection'
 import RoleSection from '../components/UserForm/RoleSection'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import SubmitSection from '../components/CourseFrom/SubmitSection'
-import { useEditAccountMutation, useGetUserByIdMutation } from '../../state/asynchronous'
-import ProfilePictureSection from '../components/UserForm/ProfilePictureSection'
-import { isEmpty, omit } from 'lodash'
 
 const EditUser = () => {
   const { userId } = useParams()

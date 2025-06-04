@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react'
-import { Box, Button, Stack } from '@mui/material'
-import { FormProvider, useForm } from 'react-hook-form'
-import ContactSection from '../components/UserForm/ContactSection'
-import RoleSection from '../components/UserForm/RoleSection'
-import LectorSection from '../components/UserForm/LectorSection'
-import SubmitSection from '../components/CourseFrom/SubmitSection'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Link, useNavigate } from 'react-router-dom'
-import PasswordSection from '../components/UserForm/PasswordSection'
 import { isEmpty, isEqual, omit } from 'lodash'
+import { FormProvider, useForm } from 'react-hook-form'
+
+import { Box, Button, Stack } from '@mui/material'
 import { useCreateAccountMutation } from '../../state/asynchronous'
+import SubmitSection from '../components/CourseFrom/SubmitSection'
+import ContactSection from '../components/UserForm/ContactSection'
+import LectorSection from '../components/UserForm/LectorSection'
+import PasswordSection from '../components/UserForm/PasswordSection'
 import ProfilePictureSection from '../components/UserForm/ProfilePictureSection'
+import RoleSection from '../components/UserForm/RoleSection'
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const CreateProfile = () => {
   const [createAccount, { isSuccess, isLoading }] = useCreateAccountMutation()

@@ -1,4 +1,6 @@
 import { element } from 'prop-types'
+
+import { patch } from '@mui/material'
 import DashboardLayout from './presentation/common/DashboardLayout'
 import FormStateWrapper from './presentation/common/FormStateWrapper'
 import NotFoundPage from './presentation/pages/404'
@@ -9,6 +11,7 @@ import CourseMarketing from './presentation/pages/CourseMarketing'
 import Courses from './presentation/pages/Courses'
 import CreateCourse from './presentation/pages/CreateCourse'
 import CreateLecture from './presentation/pages/CreateLecture'
+import CreateProfile from './presentation/pages/CreateProfile'
 import EditCourse from './presentation/pages/EditCourse'
 import EditLecture from './presentation/pages/EditLecture'
 import EditLectureDraft from './presentation/pages/EditLectureDraft'
@@ -18,8 +21,6 @@ import Login from './presentation/pages/Login'
 import Profile from './presentation/pages/Profile'
 import ResetPassword from './presentation/pages/ResetPassword'
 import Users from './presentation/pages/Users'
-import CreateProfile from './presentation/pages/CreateProfile'
-import { patch } from '@mui/material'
 
 const routing = [
   {

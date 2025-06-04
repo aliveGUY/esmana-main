@@ -5,20 +5,20 @@ const MuiSelect = {
     root: ({ theme }) => ({
       width: '100%',
     }),
-    
+
     select: ({ theme }) => ({
       paddingLeft: '4px',
       paddingTop: '11px',
       paddingBottom: '10px',
       paddingRight: '32px !important', // Account for dropdown arrow
     }),
-    
+
     icon: ({ theme }) => ({
       color: theme.palette.stormWave.main,
       right: '8px',
     }),
   },
-  
+
   defaultProps: {
     MenuProps: {
       PaperProps: {

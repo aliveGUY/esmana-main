@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import { Box, Button, Divider, Grid2, Stack, Typography } from '@mui/material'
+import { useCreateCheckoutFormMutation } from '../../state/asynchronous'
 import Password from '../common/inputs/Password'
 import TextField from '../common/inputs/TextField'
-import SectionWrapper from '../common/SectionWrapper'
-import { useCreateCheckoutFormMutation, useCreatePaymentMutation } from '../../state/asynchronous'
 
 const SummaryCard = () => {
   return (
@@ -90,11 +90,16 @@ const Registration = () => {
 }
 
 const CheckoutCourses = () => {
+  const [searchParams] = useSearchParams()
+  const lectureIds = searchParams.getAll('lids')
+
   const [createCheckoutForm, { data, isLoading }] = useCreateCheckoutFormMutation()
 
   const handleBuy = () => {
+    if (isEmpty(lectureIds)) throw new Error('NO LECTURES SELECTED')
+
     createCheckoutForm({
-      lectureIds: [1, 2, 3, 4],
+      lectureIds: lectureIds,
       formData: {
         firstName: 'John',
         middleName: 'Jr',

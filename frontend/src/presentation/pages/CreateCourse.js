@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { isArray, isPlainObject, mapValues, omit } from 'lodash'
 
 import { Stack } from '@mui/material'
@@ -18,7 +19,6 @@ import ImageInputSection from '../components/CourseFrom/ImageInputSection'
 import LecturesSection from '../components/CourseFrom/LecturesSection'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import TestSection from '../components/CourseFrom/TestSection'
-import { useNavigate } from 'react-router-dom'
 
 export function removeEditorIdsDeep(value) {
   if (isArray(value)) {

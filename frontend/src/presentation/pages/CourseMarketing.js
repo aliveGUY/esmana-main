@@ -4,12 +4,12 @@ import { useParams } from 'react-router'
 
 import { Stack } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
+import { useGetCourseByIdMutation } from '../../state/asynchronous'
 import Conditions from '../components/Marketing/Conditions'
 import Hero from '../components/Marketing/Hero'
 import Image from '../components/Marketing/Image'
 import Lectors from '../components/Marketing/Lectors'
 import Lectures from '../components/Marketing/Lectures'
-import { useGetCourseByIdMutation } from '../../state/asynchronous'
 
 const CourseMarketing = () => {
   const { id } = useParams()

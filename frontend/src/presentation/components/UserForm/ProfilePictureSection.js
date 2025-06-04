@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
-import { Avatar, IconButton, Box } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
+
+import { Avatar, Box, IconButton } from '@mui/material'
 import { serveStaticImage } from '../../../state/asynchronous'
 import EmptyImage from '../../../static/images/no-image.jpg'
 

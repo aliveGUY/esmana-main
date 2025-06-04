@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import { Box, Button, Paper, Stack } from '@mui/material'
-import SectionWrapper from '../../common/SectionWrapper'
-import { useFormContext } from 'react-hook-form'
 import { ENGLISH, UKRAINIAN } from '../../../constants'
-import LanguageToggle from '../RichTextEditor/LanguageToggle'
-import RichTextEditor from '../RichTextEditor'
 import TextArea from '../../common/inputs/TextArea'
+import SectionWrapper from '../../common/SectionWrapper'
+import RichTextEditor from '../RichTextEditor'
+import LanguageToggle from '../RichTextEditor/LanguageToggle'
 
 const LectorSection = () => {
   const { setValue, watch } = useFormContext()

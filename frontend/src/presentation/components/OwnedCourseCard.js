@@ -4,8 +4,8 @@ import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
-import EmptyImage from '../../static/images/no-image.jpg'
 import { serveStaticImage } from '../../state/asynchronous'
+import EmptyImage from '../../static/images/no-image.jpg'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {

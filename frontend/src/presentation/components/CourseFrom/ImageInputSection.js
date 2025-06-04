@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Box, Stack, Typography } from '@mui/material'
+import { serveStaticImage } from '../../../state/asynchronous'
 import { setThumbnailFile } from '../../../state/reducers/courseForm'
 import SectionWrapper from '../../common/SectionWrapper'
 
 import ImageIcon from '@mui/icons-material/Image'
-import { serveStaticImage } from '../../../state/asynchronous'
 
 const ImageInputSection = () => {
   const fileInputRef = useRef(null)

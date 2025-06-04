@@ -1,11 +1,11 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Box, Stack } from '@mui/material'
 import { useGetAllUsersQuery } from '../../state/asynchronous'
 import SectionWrapper from '../common/SectionWrapper'
 import SearchHeader from '../components/SearchHeader'
 import UsersTable from '../components/UsersTable'
-import { useNavigate } from 'react-router-dom'
 
 const Users = () => {
   const { data } = useGetAllUsersQuery()

@@ -6,23 +6,23 @@ const MuiOutlinedInput = {
       paddingLeft: '12px',
       borderRadius: '8px',
       backgroundColor: theme.palette.snowFog.main,
-      
+
       [`& .${outlinedInputClasses.notchedOutline}`]: {
         borderColor: theme.palette.stormWave.main,
         borderWidth: '1px',
       },
-      
+
       [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
         borderColor: theme.palette.stormWave.main,
         borderWidth: '1px',
       },
-      
+
       [`&.${outlinedInputClasses.focused} .${outlinedInputClasses.notchedOutline}`]: {
         borderColor: theme.palette.stormWave.main,
         borderWidth: '2px',
       },
     }),
-    
+
     input: ({ theme }) => ({
       paddingLeft: '4px',
       paddingTop: '11px',

@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { Box, Paper, Stack } from '@mui/material'
-import SectionWrapper from '../../common/SectionWrapper'
 import TextField from '../../common/inputs/TextField'
+import SectionWrapper from '../../common/SectionWrapper'
 
 const ContactSection = () => {
   return (

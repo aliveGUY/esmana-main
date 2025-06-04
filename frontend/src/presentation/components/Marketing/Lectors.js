@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react'
 import { map } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 import { Box, Paper, Stack, Typography, useTheme } from '@mui/material'
-import SectionWrapper from '../../common/SectionWrapper'
 import { serveStaticImage } from '../../../state/asynchronous'
+import SectionWrapper from '../../common/SectionWrapper'
 import RichTextViewer from '../RichTextViewer'
-import { useTranslation } from 'react-i18next'
 
 const Lector = ({ lector }) => {
   const { profilePicture, firstName, middleName, lastName, lectorDetails } = lector

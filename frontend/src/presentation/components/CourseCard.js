@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { Box, Divider, Grid2, Paper, Stack, Typography } from '@mui/material'
+import { serveStaticImage } from '../../state/asynchronous'
 import { highlightCourse, removeHighlightedCourse } from '../../state/reducers/courses'
 import EmptyImage from '../../static/images/no-image.jpg'
 import { getTotalHours } from './OwnedCourseCard'
-import { serveStaticImage } from '../../state/asynchronous'
 
 export const getTotalPrice = (lectures) => {
   return lectures.reduce((sum, lecture) => {

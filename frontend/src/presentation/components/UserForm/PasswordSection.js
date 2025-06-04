@@ -1,6 +1,7 @@
 import React from 'react'
-import Password from '../../common/inputs/Password'
+
 import { Box, Paper, Stack } from '@mui/material'
+import Password from '../../common/inputs/Password'
 import SectionWrapper from '../../common/SectionWrapper'
 
 const PasswordSection = () => {
