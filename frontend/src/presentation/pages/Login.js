@@ -1,13 +1,14 @@
 import { Fragment, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { isArray, map } from 'lodash'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
-import { Box, Button, Divider, FormHelperText, Grid2, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, FormHelperText, Grid2, Stack, Typography } from '@mui/material'
 import { useGoogleLoginMutation, useLoginMutation } from '../../state/asynchronous'
 import LoginImage from '../../static/images/image1_0.jpg'
 import GoogleAuthButton from '../components/GoogleAuthButton'
 import TopBarUnauthorized from '../components/TopBarUnauthorized'
+import TextField from '../common/inputs/TextField'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -15,11 +16,7 @@ const Login = () => {
   const [googleLogin, { isLoading: isGoogleLoginLoading, isSuccess: isGoogleLoginSuccess, error: googleLoginError }] =
     useGoogleLoginMutation()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ defaultValues: { email: '', password: '' } })
+  const methods = useForm({ defaultValues: { email: '', password: '' } })
 
   const displayServerError = (error) => {
     if (!error?.data) return null
@@ -62,33 +59,33 @@ const Login = () => {
           <img alt="ESMANA logo" src={LoginImage} />
         </Grid2>
         <Grid2 size={{ xs: 4 }}>
-          <form onSubmit={handleSubmit(login)}>
-            <Stack p={4} spacing={2}>
-              <Typography variant="h4">Login</Typography>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(login)}>
+              <Stack p={4} spacing={2}>
+                <Typography variant="h4">Login</Typography>
 
-              <TextField {...register('email', { required: 'Email is required' })} />
-              {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+                <TextField name="email" label="Email" required="Email is required" />
 
-              <TextField {...register('password', { required: 'Password is required' })} />
-              {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+                <TextField name="password" label="Password" required="Password is required" />
 
-              {displayServerError(error)}
-              {displayServerError(googleLoginError)}
-              <Button type="submit" variant="primary" disabled={isLoading || isGoogleLoginLoading}>
-                Login
-              </Button>
+                {displayServerError(error)}
+                {displayServerError(googleLoginError)}
+                <Button type="submit" variant="primary" disabled={isLoading || isGoogleLoginLoading}>
+                  Login
+                </Button>
 
-              <Box sx={{ my: 2 }}>
-                <Divider>
-                  <Typography variant="body2" color="text.secondary">
-                    OR
-                  </Typography>
-                </Divider>
-              </Box>
+                <Box sx={{ my: 2 }}>
+                  <Divider>
+                    <Typography variant="body2" color="text.secondary">
+                      OR
+                    </Typography>
+                  </Divider>
+                </Box>
 
-              <GoogleAuthButton onClick={googleLogin} />
-            </Stack>
-          </form>
+                <GoogleAuthButton onClick={googleLogin} />
+              </Stack>
+            </form>
+          </FormProvider>
         </Grid2>
       </Grid2>
     </Fragment>
