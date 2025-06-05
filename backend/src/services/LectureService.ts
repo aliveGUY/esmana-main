@@ -41,29 +41,38 @@ export class LectureService implements ILectureService {
   private async createLectureWithoutUsers(lectureDto: CreateLectureDto): Promise<Lecture> {
     const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
-    const evaluation = await Promise.all(
-      lectureDto.materials.evaluation.map(evaluation => this.evaluationQuestionRepository.createEvaluationQuestion(evaluation))
-    )
-
-    const lectureMaterialsDto: Partial<LectureMaterials> = {
-      videoUrl: lectureDto.materials.videoUrl,
-      meetingUrl: meetingUrl,
-      richText: lectureDto.materials.richText,
-      evaluation: evaluation,
-    }
-
-    const lectureMaterials = await this.lectureMaterialsRepository.createLectureMaterials(lectureMaterialsDto)
-
+    // First, create the lecture without materials
     const lecture: Partial<Lecture> = {
       title: lectureDto.title,
       description: lectureDto.description,
       price: lectureDto.price,
       startTime: lectureDto.startTime,
       endTime: lectureDto.endTime,
-      materials: lectureMaterials,
     }
 
-    return await this.lectureRepository.createLecture(lecture)
+    const createdLecture = await this.lectureRepository.createLecture(lecture)
+
+    // Reload the lecture to get a properly managed entity
+    const managedLecture = await this.lectureRepository.getLectureById(createdLecture.id)
+
+    // Then create evaluation questions
+    const evaluation = await Promise.all(
+      lectureDto.materials.evaluation.map(evaluation => this.evaluationQuestionRepository.createEvaluationQuestion(evaluation))
+    )
+
+    // Now create lecture materials with the managed lecture reference
+    const lectureMaterialsDto: Partial<LectureMaterials> = {
+      videoUrl: lectureDto.materials.videoUrl,
+      meetingUrl: meetingUrl,
+      richText: lectureDto.materials.richText,
+      lecture: managedLecture,
+      evaluation: evaluation,
+    }
+
+    const lectureMaterials = await this.lectureMaterialsRepository.createLectureMaterials(lectureMaterialsDto)
+
+    // Return the lecture with materials loaded
+    return await this.lectureRepository.getLectureById(createdLecture.id)
   }
 
   private async createUserLecturesForLecture(lectureId: number, users: CreateUserLectureDto[]): Promise<UserLecture[]> {
