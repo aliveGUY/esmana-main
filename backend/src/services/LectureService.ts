@@ -13,6 +13,7 @@ import { IUserLectureRepository } from "src/repositories/UserLectureRepository"
 
 export interface ILectureService {
   createLecture(lecture: CreateLectureDto): Promise<Lecture>
+  createLectureWithCourse(lecture: CreateLectureDto, course: any): Promise<Lecture>
   editLecture(lecture: EditLectureDto): Promise<Lecture>
   deleteLecture(id: number): Promise<void>
 }
@@ -38,7 +39,18 @@ export class LectureService implements ILectureService {
     return lecture;
   }
 
-  private async createLectureWithoutUsers(lectureDto: CreateLectureDto): Promise<Lecture> {
+  async createLectureWithCourse(lectureDto: CreateLectureDto, course: any): Promise<Lecture> {
+    const lecture = await this.createLectureWithoutUsers(lectureDto, course);
+    
+    if (lectureDto.users?.length > 0) {
+      const userLectures = await this.createUserLecturesForLecture(lecture.id, lectureDto.users);
+      lecture.users = userLectures;
+    }
+    
+    return lecture;
+  }
+
+  private async createLectureWithoutUsers(lectureDto: CreateLectureDto, course?: any): Promise<Lecture> {
     const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
     // First, create the lecture without materials
@@ -48,6 +60,7 @@ export class LectureService implements ILectureService {
       price: lectureDto.price,
       startTime: lectureDto.startTime,
       endTime: lectureDto.endTime,
+      ...(course && { course: course }),
     }
 
     const createdLecture = await this.lectureRepository.createLecture(lecture)

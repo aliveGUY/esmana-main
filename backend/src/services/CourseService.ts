@@ -38,31 +38,35 @@ export class CourseService implements ICourseService {
       thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail)
     }
 
-
-    const lectures = await Promise.all(
-      courseDto.lectures.map(lecture =>
-        this.lectureService.createLecture(lecture)
-      )
-    );
-
+    // First, create BPR evaluation questions
     const bprEvaluation = await Promise.all(
       courseDto.bprEvaluation.map(evaluation =>
         this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
       )
     );
 
-    const course: Partial<Course> = {
+    // Create the course first without lectures
+    const courseWithoutLectures: Partial<Course> = {
       thumbnailUrl: thumbnailUrl,
       title: courseDto.title,
       description: courseDto.description,
       isActive: courseDto.isActive,
       participationCertificate: courseDto.participationCertificate,
       bprCertificate: courseDto.bprCertificate,
-      lectures: lectures,
       bprEvaluation: bprEvaluation,
     };
 
-    const newCourse = await this.courseRepository.createCourse(course);
+    const newCourse = await this.courseRepository.createCourse(courseWithoutLectures);
+
+    // Now create lectures with the course reference
+    const lectures = await Promise.all(
+      courseDto.lectures.map(lecture =>
+        this.lectureService.createLectureWithCourse(lecture, newCourse)
+      )
+    );
+
+    // Update the course with lectures
+    newCourse.lectures = lectures;
 
     return await this.courseRepository.getFullCourseById(newCourse.id)
   }
