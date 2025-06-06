@@ -8,13 +8,13 @@ import { LectureMaterials } from "src/models/LectureMaterials";
 import { Repository } from "typeorm";
 
 export interface ICourseRepository {
-  createCourse(course: Partial<Course>): Promise<DetailedCourseDto>
+  createCourse(course: Partial<Course>): Promise<Course>
   getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto>
   getStrippedCourseById(courseId: number): Promise<DetailedCourseDto | null>
   getFullCourseById(courseId: number): Promise<Course>
   getAllCourses(userId: number): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
-  editCourse(course: EditCourseDto): Promise<DetailedCourseDto>
+  editCourse(course: Partial<Course>): Promise<Course>
   deleteCourse(id: number): Promise<void>
 }
 
@@ -25,12 +25,8 @@ export class CourseRepository implements ICourseRepository {
     private readonly courseRepository: Repository<Course>,
   ) { }
 
-  async createCourse(course: Partial<Course>): Promise<DetailedCourseDto> {
-    const savedCourse = await this.courseRepository.save(course);
-    return await this.courseRepository.findOne({
-      where: { id: savedCourse.id },
-      relations: ['lectures', 'bprEvaluation']
-    }) as DetailedCourseDto;
+  async createCourse(course: Partial<Course>): Promise<Course> {
+    return await this.courseRepository.save(course);
   }
 
   async getStrippedCourseById(courseId: number): Promise<DetailedCourseDto | null> {
@@ -181,9 +177,8 @@ export class CourseRepository implements ICourseRepository {
       .getMany();
   }
 
-  async editCourse(course: any): Promise<DetailedCourseDto> {
-    await this.courseRepository.save(course);
-    return await this.getFullCourseById(course.id);
+  async editCourse(course: Partial<Course>): Promise<Course> {
+    return await this.courseRepository.save(course);
   }
 
   async deleteCourse(id: number): Promise<void> {

@@ -12,6 +12,10 @@ import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
 import { IGoogleClient } from "src/infrastructure/GoogleClient";
 import { Express } from 'express';
+import { EvaluationQuestion } from "src/models/EvaluationQuestion";
+import { has } from 'lodash'
+import { Lecture } from "src/models/Lecture";
+import { EditLectureDto } from "src/models/dto/EditLectureDto";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
@@ -38,14 +42,7 @@ export class CourseService implements ICourseService {
       thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail)
     }
 
-    // First, create BPR evaluation questions
-    const bprEvaluation = await Promise.all(
-      courseDto.bprEvaluation.map(evaluation =>
-        this.evaluationQuestionRepository.createEvaluationQuestion(evaluation)
-      )
-    );
 
-    // Create the course first without lectures
     const courseWithoutLectures: Partial<Course> = {
       thumbnailUrl: thumbnailUrl,
       title: courseDto.title,
@@ -53,20 +50,36 @@ export class CourseService implements ICourseService {
       isActive: courseDto.isActive,
       participationCertificate: courseDto.participationCertificate,
       bprCertificate: courseDto.bprCertificate,
-      bprEvaluation: bprEvaluation,
     };
 
     const newCourse = await this.courseRepository.createCourse(courseWithoutLectures);
 
-    // Now create lectures with the course reference
-    const lectures = await Promise.all(
-      courseDto.lectures.map(lecture =>
-        this.lectureService.createLectureWithCourse(lecture, newCourse)
-      )
-    );
+    const bprEvaluationPromises = courseDto.bprEvaluation.map(evaluation => {
+      const question: Partial<EvaluationQuestion> = {
+        questionText: evaluation.questionText,
+        correctAnswers: evaluation.correctAnswers,
+        options: evaluation.options,
+        course: newCourse
+      }
 
-    // Update the course with lectures
-    newCourse.lectures = lectures;
+      return this.evaluationQuestionRepository.createEvaluationQuestion(question)
+    })
+
+    const lecturePromises = courseDto.lectures.map(lectureDto => {
+      const lecture: Partial<Lecture> = {
+        title: lectureDto.title,
+        description: lectureDto.description,
+        price: lectureDto.price,
+        startTime: lectureDto.startTime,
+        endTime: lectureDto.endTime,
+        course: newCourse,
+      }
+
+      return this.lectureService.createLecture(lecture)
+    }
+    )
+
+    await Promise.all([bprEvaluationPromises, lecturePromises])
 
     return await this.courseRepository.getFullCourseById(newCourse.id)
   }
@@ -74,40 +87,61 @@ export class CourseService implements ICourseService {
   async editCourse(courseDto: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto> {
     const existingCourse = await this.courseRepository.getFullCourseById(courseDto.id);
 
+    let thumbnailUrl = courseDto.thumbnailUrl
     if (thumbnail) {
       await this.googleClient.deleteFileIfExists(existingCourse.thumbnailUrl);
-      courseDto.thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail);
+      thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail);
     }
 
-    if (courseDto.lectures?.length > 0) {
-      const processedLectures = await Promise.all(
-        courseDto.lectures.map(async (lecture: any) => {
-          if (lecture.id) return await this.lectureService.editLecture(lecture);
-          const newLecture = await this.lectureService.createLecture(lecture);
-          newLecture.course = existingCourse;
-          return newLecture;
-        })
-      );
+    const courseWithoutLectures: Partial<Course> = {
+      id: courseDto.id,
+      thumbnailUrl: thumbnailUrl,
+      title: courseDto.title,
+      description: courseDto.description,
+      isActive: courseDto.isActive,
+      participationCertificate: courseDto.participationCertificate,
+      bprCertificate: courseDto.bprCertificate,
+    };
 
-      const lectureMap = new Map(processedLectures.map(l => [l.id, l]));
-      const mergedLectures = existingCourse.lectures.map(existing => lectureMap.get(existing.id) || existing);
-      const newLectures = processedLectures.filter(l => !existingCourse.lectures.some(e => e.id === l.id));
+    const updatedCourse = await this.courseRepository.editCourse(courseWithoutLectures)
 
-      existingCourse.lectures = [...mergedLectures, ...newLectures];
-    }
+    const bprEvaluationPromises = courseDto.bprEvaluation.map((evaluation) => {
+      const question: Partial<EvaluationQuestion> = {
+        questionText: evaluation.questionText,
+        correctAnswers: evaluation.correctAnswers,
+        options: evaluation.options,
+        course: updatedCourse
+      }
 
-    if (courseDto.bprEvaluation?.length > 0) {
-      const processedEvaluations = await Promise.all(
-        courseDto.bprEvaluation.map(async (evaluation: any) => {
-          if (evaluation.id) return await this.evaluationQuestionRepository.editEvaluationQuestion(evaluation);
-          return await this.evaluationQuestionRepository.createEvaluationQuestion(evaluation);
-        })
-      );
-      existingCourse.bprEvaluation = processedEvaluations;
-    }
+      if (has(evaluation, 'id')) {
+        question.id = evaluation.id
+        return this.evaluationQuestionRepository.editEvaluationQuestion(question)
+      }
 
-    Object.assign(existingCourse, courseDto);
-    return await this.courseRepository.editCourse(existingCourse);
+      return this.evaluationQuestionRepository.createEvaluationQuestion(question)
+    })
+
+    const lecturePromises = courseDto.lectures.map(lectureDto => {
+      const lecture: Partial<Lecture> = {
+        title: lectureDto.title,
+        description: lectureDto.description,
+        price: lectureDto.price,
+        startTime: lectureDto.startTime,
+        endTime: lectureDto.endTime,
+        course: updatedCourse,
+      }
+
+      if (has(lectureDto, 'id')) {
+        lecture.id = lectureDto.id
+        return this.lectureService.editLecture(lecture as EditLectureDto)
+      }
+
+      return this.lectureService.createLecture(lecture)
+    })
+
+    await Promise.all([bprEvaluationPromises, lecturePromises])
+
+    return await this.courseRepository.getFullCourseById(updatedCourse.id)
   }
 
   async getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null> {

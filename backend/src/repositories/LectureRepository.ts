@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 
 export interface ILectureRepository {
   createLecture(lecture: Partial<Lecture>): Promise<Lecture>
-  editLecture(lecture: EditLectureDto): Promise<Lecture>
+  editLecture(lecture: Partial<Lecture>): Promise<Lecture>
   getLectureById(id: number): Promise<Lecture>
   deleteLecture(id: number): Promise<void>
 }
@@ -22,7 +22,7 @@ export class LectureRepository implements ILectureRepository {
     return await this.lectureRepository.save(lecture)
   }
 
-  async editLecture(lecture: EditLectureDto): Promise<Lecture> {
+  async editLecture(lecture: Partial<Lecture>): Promise<Lecture> {
     // Use save with cascade to properly handle the one-to-one relationship
     const savedLecture = await this.lectureRepository.save(lecture);
     

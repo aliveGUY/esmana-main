@@ -12,18 +12,12 @@ import { Lecture } from "./Lecture";
 
 @Entity({ name: "user_lecture" })
 export class UserLecture {
-  @PrimaryColumn({ name: "user_id" })
-  userId: number;
-
-  @PrimaryColumn({ name: "lecture_id" })
-  lectureId: number;
-
   @ManyToOne(() => User, user => user.lectures, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: "user_id" })
+  @PrimaryColumn({ name: "user_id", type: "int" })
   user: User;
 
   @ManyToOne(() => Lecture, lecture => lecture.users, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: "lecture_id" })
+  @PrimaryColumn({ name: "lecture_id", type: "int" })
   lecture: Lecture;
 
   @Column({ name: "is_completed", type: "boolean", default: false })

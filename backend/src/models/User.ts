@@ -17,13 +17,13 @@ export class User {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ unique: true })
+  @Column({ name: 'email', unique: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'phone', nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'password', nullable: true })
   password?: string;
 
   @Column({ name: 'google_id', nullable: true, unique: true })

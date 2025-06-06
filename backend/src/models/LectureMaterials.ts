@@ -21,10 +21,10 @@ export class LectureMaterials {
   meetingUrl: string;
 
   @Column({ name: "rich_text", type: "json", nullable: true })
-  richText: object;
+  richText?: object;
 
   @OneToMany(() => EvaluationQuestion, question => question.lectureMaterials, { cascade: true })
-  evaluation: EvaluationQuestion[];
+  evaluation?: EvaluationQuestion[];
 
   @OneToOne(() => Lecture, lecture => lecture.materials)
   @JoinColumn({ name: "lecture_id" })

@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 
 export interface ILectureMaterialsRepository {
   createLectureMaterials(lectureMaterials: Partial<LectureMaterials>): Promise<LectureMaterials>
-  editLectureMaterials(lectureMaterials: EditLectureMaterialsDto): Promise<LectureMaterials>
+  editLectureMaterials(lectureMaterials: Partial<LectureMaterials>): Promise<LectureMaterials>
   deleteLectureMaterials(id: number): Promise<void>
 }
 
@@ -22,7 +22,7 @@ export class LectureMaterialsRepository implements ILectureMaterialsRepository {
     return await this.lectureMaterialsRepository.save(lectureMaterials)
   }
 
-  async editLectureMaterials(lectureMaterials: EditLectureMaterialsDto): Promise<LectureMaterials> {
+  async editLectureMaterials(lectureMaterials: Partial<LectureMaterials>): Promise<LectureMaterials> {
     return await this.lectureMaterialsRepository.save(lectureMaterials)
   }
 

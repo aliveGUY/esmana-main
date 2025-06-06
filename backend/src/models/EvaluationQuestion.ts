@@ -24,9 +24,9 @@ export class EvaluationQuestion {
 
   @ManyToOne(() => LectureMaterials, materials => materials.evaluation, { nullable: true })
   @JoinColumn({ name: "materials_id" })
-  lectureMaterials: LectureMaterials;
+  lectureMaterials?: LectureMaterials;
 
   @ManyToOne(() => Course, course => course.bprEvaluation, { nullable: true })
   @JoinColumn({ name: "course_id" })
-  course: Course;
+  course?: Course;
 }

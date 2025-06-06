@@ -1,8 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common"
+import { isEmpty } from "class-validator"
 import { IGoogleClient } from "src/infrastructure/GoogleClient"
+import { Course } from "src/models/Course"
 import { CreateLectureDto } from "src/models/dto/CreateLectureDto"
-import { CreateUserLectureDto } from "src/models/dto/CreateUserLectureDto"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
+import { EvaluationQuestion } from "src/models/EvaluationQuestion"
 import { Lecture } from "src/models/Lecture"
 import { LectureMaterials } from "src/models/LectureMaterials"
 import { UserLecture } from "src/models/UserLecture"
@@ -12,8 +14,7 @@ import { ILectureRepository } from "src/repositories/LectureRepository"
 import { IUserLectureRepository } from "src/repositories/UserLectureRepository"
 
 export interface ILectureService {
-  createLecture(lecture: CreateLectureDto): Promise<Lecture>
-  createLectureWithCourse(lecture: CreateLectureDto, course: any): Promise<Lecture>
+  createLecture(lecture: Partial<Lecture>): Promise<Lecture>
   editLecture(lecture: EditLectureDto): Promise<Lecture>
   deleteLecture(id: number): Promise<void>
 }
@@ -28,129 +29,154 @@ export class LectureService implements ILectureService {
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
-  async createLecture(lectureDto: CreateLectureDto): Promise<Lecture> {
-    const lecture = await this.createLectureWithoutUsers(lectureDto);
-    
-    if (lectureDto.users?.length > 0) {
-      const userLectures = await this.createUserLecturesForLecture(lecture.id, lectureDto.users);
-      lecture.users = userLectures;
+  async createLecture(lectureDto: Partial<Lecture>): Promise<Lecture> {
+    const newLecture = await this.lectureRepository.createLecture(lectureDto)
+
+    if (lectureDto.users && !isEmpty(lectureDto.users)) {
+      const promises = lectureDto.users.map(userLectureDto => {
+        const userLecture: Partial<UserLecture> = {
+          user: userLectureDto.user,
+          lecture: newLecture,
+          isCompleted: userLectureDto.isCompleted,
+          isLector: userLectureDto.isLector,
+          isGotAcademicHours: userLectureDto.isGotAcademicHours,
+        }
+
+        return this.userLectureRepository.createUserLecture(userLecture)
+      })
+
+      await Promise.all(promises)
     }
-    
-    return lecture;
+
+    let newMaterials: LectureMaterials | null = null
+    if (lectureDto.materials && !isEmpty(lectureDto.materials)) {
+      const meetingUrl = await this.googleClient.createMeetingLink(newLecture.title, newLecture.startTime, newLecture.endTime)
+
+      const lectureMaterials: Partial<LectureMaterials> = {
+        videoUrl: newLecture.materials.videoUrl,
+        meetingUrl: meetingUrl,
+        richText: newLecture.materials.richText,
+        lecture: newLecture
+      }
+
+      newMaterials = await this.lectureMaterialsRepository.createLectureMaterials(lectureMaterials)
+    }
+
+    const materialsEvaluationDto = lectureDto.materials?.evaluation
+    if (newMaterials && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
+      const promises = materialsEvaluationDto.map(questionDto => {
+        const question: Partial<EvaluationQuestion> = {
+          questionText: questionDto.questionText,
+          correctAnswers: questionDto.correctAnswers,
+          options: questionDto.options,
+          lectureMaterials: newMaterials
+        }
+
+        return this.evaluationQuestionRepository.createEvaluationQuestion(question)
+      })
+
+      await Promise.all(promises)
+    }
+
+    return await this.lectureRepository.getLectureById(newLecture.id)
   }
 
-  async createLectureWithCourse(lectureDto: CreateLectureDto, course: any): Promise<Lecture> {
-    const lecture = await this.createLectureWithoutUsers(lectureDto, course);
-    
-    if (lectureDto.users?.length > 0) {
-      const userLectures = await this.createUserLecturesForLecture(lecture.id, lectureDto.users);
-      lecture.users = userLectures;
-    }
-    
-    return lecture;
-  }
+  async editLecture(lectureDto: EditLectureDto): Promise<Lecture> {
+    const oldLecture = await this.lectureRepository.getLectureById(lectureDto.id)
 
-  private async createLectureWithoutUsers(lectureDto: CreateLectureDto, course?: any): Promise<Lecture> {
-    const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
-
-    // First, create the lecture without materials
     const lecture: Partial<Lecture> = {
+      id: lectureDto.id,
       title: lectureDto.title,
       description: lectureDto.description,
       price: lectureDto.price,
       startTime: lectureDto.startTime,
       endTime: lectureDto.endTime,
-      ...(course && { course: course }),
+      course: oldLecture.course,
     }
 
-    const createdLecture = await this.lectureRepository.createLecture(lecture)
+    const updatedLecture = await this.lectureRepository.editLecture(lecture)
 
-    // Reload the lecture to get a properly managed entity
-    const managedLecture = await this.lectureRepository.getLectureById(createdLecture.id)
-
-    // Then create evaluation questions
-    const evaluation = await Promise.all(
-      lectureDto.materials.evaluation.map(evaluation => this.evaluationQuestionRepository.createEvaluationQuestion(evaluation))
-    )
-
-    // Now create lecture materials with the managed lecture reference
-    const lectureMaterialsDto: Partial<LectureMaterials> = {
-      videoUrl: lectureDto.materials.videoUrl,
-      meetingUrl: meetingUrl,
-      richText: lectureDto.materials.richText,
-      lecture: managedLecture,
-      evaluation: evaluation,
-    }
-
-    const lectureMaterials = await this.lectureMaterialsRepository.createLectureMaterials(lectureMaterialsDto)
-
-    // Return the lecture with materials loaded
-    return await this.lectureRepository.getLectureById(createdLecture.id)
-  }
-
-  private async createUserLecturesForLecture(lectureId: number, users: CreateUserLectureDto[]): Promise<UserLecture[]> {
-    return await Promise.all(
-      users.map(user => this.userLectureRepository.createUserLectureWithLectureId(lectureId, user))
-    )
-  }
-
-  async editLecture(lectureDto: any): Promise<Lecture> {
-    // Handle evaluation questions with smart merge
-    if (lectureDto.materials?.evaluation && lectureDto.materials.evaluation.length > 0) {
-      await Promise.all(
-        lectureDto.materials.evaluation.map(evaluation => {
-          if (evaluation.id) {
-            return this.evaluationQuestionRepository.editEvaluationQuestion(evaluation);
-          }
-          return this.evaluationQuestionRepository.createEvaluationQuestion(evaluation);
-        })
-      );
-    }
-
-    // Handle users if provided
-    if (lectureDto.users) {
-      await this.handleLectureUsers(lectureDto.id, lectureDto.users);
-    }
-
-    // Handle lecture materials if provided
-    if (lectureDto.materials) {
-      await this.lectureMaterialsRepository.editLectureMaterials(lectureDto.materials);
-    }
-
-    return await this.lectureRepository.editLecture(lectureDto)
-  }
-
-  private async handleLectureUsers(lectureId: number, users: any[]): Promise<void> {
-    if (!users || users.length === 0) return;
-
-    const existingUsers = await this.userLectureRepository.getUserLecturesByLectureId(lectureId);
-    const existingUserIds = existingUsers.map(u => u.userId);
-    const incomingUserIds = users.map(u => u.userId);
-
-    const usersToRemove = existingUsers.filter(u => !incomingUserIds.includes(u.userId));
-    if (usersToRemove.length > 0) {
-      await Promise.all(
-        usersToRemove.map(u => this.userLectureRepository.deleteUserLecture(u.userId, lectureId))
-      );
-    }
-
-    await Promise.all(
-      users.map(async (user) => {
-        const userLectureData = {
-          userId: user.userId,
-          lectureId: lectureId,
-          isCompleted: user.isCompleted || false,
-          isLector: user.isLector || false,
-          isGotAcademicHours: user.isGotAcademicHours || false
-        };
-
-        if (existingUserIds.includes(user.userId)) {
-          return await this.userLectureRepository.updateUserLecture(userLectureData);
+    if (lectureDto.users && !isEmpty(lectureDto.users)) {
+      const promises = lectureDto.users.map(userLectureDto => {
+        const userLecture: Partial<UserLecture> = {
+          user: userLectureDto.user,
+          lecture: updatedLecture,
+          isCompleted: userLectureDto.isCompleted,
+          isLector: userLectureDto.isLector,
+          isGotAcademicHours: userLectureDto.isGotAcademicHours,
         }
-        return await this.userLectureRepository.createUserLecture(userLectureData);
+
+        return this.userLectureRepository.createUserLecture(userLecture)
       })
-    );
+
+      await Promise.all(promises)
+    }
+
+    let updatedMaterials: LectureMaterials | null = null
+    if ((!oldLecture.materials || isEmpty(oldLecture.materials)) && lectureDto.materials && !isEmpty(lectureDto.materials)) {
+      const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
+
+      const lectureMaterials: Partial<LectureMaterials> = {
+        videoUrl: updatedLecture.materials.videoUrl,
+        meetingUrl: meetingUrl,
+        richText: updatedLecture.materials.richText,
+        lecture: updatedLecture
+      }
+
+      updatedMaterials = await this.lectureMaterialsRepository.createLectureMaterials(lectureMaterials)
+    }
+
+
+    if ((oldLecture.materials || !isEmpty(oldLecture.materials)) && lectureDto.materials && !isEmpty(lectureDto.materials)) {
+      const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
+
+      const lectureMaterials: Partial<LectureMaterials> = {
+        id: updatedLecture.materials.id,
+        videoUrl: updatedLecture.materials.videoUrl,
+        meetingUrl: meetingUrl,
+        richText: updatedLecture.materials.richText,
+        lecture: updatedLecture
+      }
+
+      updatedMaterials = await this.lectureMaterialsRepository.editLectureMaterials(lectureMaterials)
+    }
+
+    const materialsEvaluationDto = lectureDto.materials?.evaluation
+    const oldMaterialsEvaluation = oldLecture.materials?.evaluation
+    if (updatedMaterials && (!oldMaterialsEvaluation || isEmpty(oldMaterialsEvaluation)) && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
+      const promises = materialsEvaluationDto.map(questionDto => {
+        const question: Partial<EvaluationQuestion> = {
+          questionText: questionDto.questionText,
+          correctAnswers: questionDto.correctAnswers,
+          options: questionDto.options,
+          lectureMaterials: updatedMaterials
+        }
+
+        return this.evaluationQuestionRepository.createEvaluationQuestion(question)
+      })
+
+      await Promise.all(promises)
+    }
+
+    if (updatedMaterials && (oldMaterialsEvaluation || !isEmpty(oldMaterialsEvaluation)) && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
+      const promises = materialsEvaluationDto.map(questionDto => {
+        const question: Partial<EvaluationQuestion> = {
+          id: questionDto.id,
+          questionText: questionDto.questionText,
+          correctAnswers: questionDto.correctAnswers,
+          options: questionDto.options,
+          lectureMaterials: updatedMaterials
+        }
+
+        return this.evaluationQuestionRepository.editEvaluationQuestion(question)
+      })
+
+      await Promise.all(promises)
+    }
+
+    return await this.lectureRepository.getLectureById(updatedLecture.id)
   }
+
 
   async deleteLecture(id: number): Promise<void> {
     return await this.lectureRepository.deleteLecture(id)

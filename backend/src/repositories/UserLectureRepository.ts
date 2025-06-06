@@ -36,12 +36,12 @@ export class UserLectureRepository implements IUserLectureRepository {
   }
 
   async deleteUserLecture(userId: number, lectureId: number): Promise<void> {
-    await this.userLectureRepository.delete({ userId, lectureId });
+    await this.userLectureRepository.delete({ user: { id: userId }, lecture: { id: lectureId } });
   }
 
   async getUserLecturesByLectureId(lectureId: number): Promise<UserLecture[]> {
     return await this.userLectureRepository.find({
-      where: { lectureId },
+      where: { lecture: { id: lectureId } },
       relations: ['user']
     });
   }
