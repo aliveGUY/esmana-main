@@ -52,7 +52,7 @@ const LectureItem = ({ lecture }) => {
 
   const { date, hoursStart, hoursEnd } = useFormattedDates({ startTime, endTime })
 
-  const status = find(users, (u) => u.userId === user.id)
+  const status = find(users, (u) => u.user.id === user.id)
 
   const isPurchased = !isNull(status)
   const isAvailable = !isNull(materials)

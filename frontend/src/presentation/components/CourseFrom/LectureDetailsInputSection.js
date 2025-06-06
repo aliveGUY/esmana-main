@@ -13,10 +13,10 @@ const LectureDetailsInputSection = () => {
         <Paper>
           <Box p={2}>
             <Stack spacing={2}>
-              <TextField name="price" label="Price" />
-              <DatePicker name="date" label="Date" />
-              <TimePicker name="startTime" label="Starting hour" />
-              <TimePicker name="endTime" label="Ending hour" />
+              <TextField name="price" label="Price" required="Price is required" />
+              <DatePicker name="date" label="Date" required="Date is required" />
+              <TimePicker name="startTime" label="Starting hour" required="Starting hour is required" />
+              <TimePicker name="endTime" label="Ending hour" required="Ending hour is required" />
             </Stack>
           </Box>
         </Paper>

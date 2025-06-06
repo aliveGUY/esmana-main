@@ -16,6 +16,7 @@ import { EvaluationQuestion } from "src/models/EvaluationQuestion";
 import { has } from 'lodash'
 import { Lecture } from "src/models/Lecture";
 import { EditLectureDto } from "src/models/dto/EditLectureDto";
+import { UserLecture } from "src/models/UserLecture";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
@@ -72,6 +73,7 @@ export class CourseService implements ICourseService {
         price: lectureDto.price,
         startTime: lectureDto.startTime,
         endTime: lectureDto.endTime,
+        users: lectureDto.users as UserLecture[],
         course: newCourse,
       }
 
@@ -128,6 +130,7 @@ export class CourseService implements ICourseService {
         price: lectureDto.price,
         startTime: lectureDto.startTime,
         endTime: lectureDto.endTime,
+        users: lectureDto.users,
         course: updatedCourse,
       }
 

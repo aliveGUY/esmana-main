@@ -11,7 +11,7 @@ const GeneralLectureInputSection = () => {
         <Paper>
           <Box p={2}>
             <Stack spacing={2}>
-              <TextField name="title" label="Title" />
+              <TextField name="title" label="Title" required="Title is required" />
               <TextField name="description" label="Description" multiline minRows={3} maxRows={30} />
             </Stack>
           </Box>

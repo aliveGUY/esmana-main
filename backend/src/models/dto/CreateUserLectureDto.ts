@@ -1,15 +1,9 @@
-import { ValidateNested, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { ValidateNested, IsBoolean, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { User } from '../User';
+import { Lecture } from '../Lecture';
 
 export class CreateUserLectureDto {
-  @IsNumber()
-  userId: number;
-
-  @IsOptional()
-  @IsNumber()
-  lectureId?: number;
-
   @IsBoolean()
   isCompleted: boolean;
 
@@ -19,7 +13,12 @@ export class CreateUserLectureDto {
   @IsBoolean()
   isLector: boolean;
 
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => User)
   user: User;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Lecture)
+  lecture?: Lecture;
 }

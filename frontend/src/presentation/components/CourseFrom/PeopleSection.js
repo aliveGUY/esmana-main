@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { use, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { includes, isEmpty } from 'lodash'
 import debounce from 'lodash.debounce'
@@ -34,7 +34,7 @@ const UsersTableRow = ({ row }) => {
 
   const updateRow = (changes) => {
     const users = getValues('users')
-    const updatedUsers = users.map((u) => (u.userId === user.id ? { ...u, ...changes } : u))
+    const updatedUsers = users.map((u) => (u.user.id === user.id ? { ...u, ...changes } : u))
     setValue('users', updatedUsers)
   }
 

@@ -4,13 +4,13 @@ import { useAuth } from './useAuth'
 
 function getUserCourses(courses, userId) {
   return courses.filter((course) =>
-    course.lectures.some((lecture) => lecture.users.some((userLecture) => userLecture.userId === userId)),
+    course.lectures.some((lecture) => lecture.users.some((userLecture) => userLecture.user.id === userId)),
   )
 }
 
 function getOtherCourses(courses, userId) {
   return courses.filter((course) =>
-    course.lectures.every((lecture) => lecture.users.every((userLecture) => userLecture.userId !== userId)),
+    course.lectures.every((lecture) => lecture.users.every((userLecture) => userLecture.user.id !== userId)),
   )
 }
 

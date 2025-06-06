@@ -8,8 +8,10 @@ import { ITokenRepository } from '../repositories/TokenRepository';
 import * as bcrypt from 'bcrypt';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { ERoles } from 'src/models/enums/ERoles';
+import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 
 export interface IAuthService {
+  registerUser(newAccountData: UserRegistrationDto): Promise<UserDto>
   loginLocal(dto: UserLoginDto): Promise<{ user: UserDto; accessToken: string }>;
   loginGoogle(dto: UserGoogleLoginDto): Promise<{ user: UserDto; accessToken: string }>;
   refreshToken(accessToken: string): Promise<{ user: UserDto; accessToken: string } | null>;
@@ -23,6 +25,22 @@ export class AuthService implements IAuthService {
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
+
+  async registerUser(newAccountData: UserRegistrationDto): Promise<UserDto> {
+    const hashedPassword = await bcrypt.hash(newAccountData.password, 12);
+
+    const user: Partial<User> = {
+      firstName: newAccountData.firstName,
+      lastName: newAccountData.lastName,
+      email: newAccountData.email,
+      phone: newAccountData.phone,
+      password: hashedPassword,
+      isEmailVerified: false,
+      roles: [ERoles.ADMIN],
+    }
+
+    return await this.userRepository.create(user)
+  }
 
   async loginLocal(dto: UserLoginDto): Promise<{ user: UserDto; accessToken: string }> {
     const user = await this.userRepository.findByEmail(dto.email);

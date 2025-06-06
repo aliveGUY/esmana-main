@@ -26,7 +26,7 @@ const OwnedCourseCard = ({ course }) => {
   const lecturesCount = lectures.length
   const hoursCount = getTotalHours(lectures)
   const firstOwnedLecture = find(lectures, (lecture) =>
-    lecture.users?.some((userLecture) => userLecture.userId === user?.id),
+    lecture.users?.some((userLecture) => userLecture.user.id === user?.id),
   )
 
   const redirect = useCallback(() => {

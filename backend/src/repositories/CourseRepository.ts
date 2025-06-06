@@ -66,7 +66,7 @@ export class CourseRepository implements ICourseRepository {
       .leftJoinAndSelect(
         'lecture.users',
         'userLecture',
-        'userLecture.userId = :userId OR userLecture.isLector = true',
+        'userLecture.user.id = :userId OR userLecture.isLector = true',
         { userId }
       )
       .leftJoin('userLecture.user', 'user')
@@ -134,7 +134,7 @@ export class CourseRepository implements ICourseRepository {
         'course.isActive'
       ])
       .leftJoinAndSelect('course.lectures', 'lecture')
-      .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.userId = :userId OR userLecture.isLector = true', { userId })
+      .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.user.id = :userId OR userLecture.isLector = true', { userId })
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([

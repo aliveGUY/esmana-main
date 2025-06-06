@@ -7,12 +7,21 @@ import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { Public } from '../common/decorators/public.decorator';
 import { Inject } from '@nestjs/common';
 import { UserDto } from '../models/dto/UserDto';
+import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     @Inject('IAuthService') private readonly authService: IAuthService,
   ) { }
+
+  @Public()
+  @Post('register')
+  async register(
+    @Body() newAccountData: UserRegistrationDto
+  ): Promise<UserDto> {
+    return await this.authService.registerUser(newAccountData)
+  }
 
   @Public()
   @Post('login')

@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const LectureTopControls = ({ lecture }) => {
   const { user } = useAuth()
-  const isPurchased = find(lecture.users, (u) => u.userId === user?.id)
+  const isPurchased = find(lecture.users, (u) => u.user.id === user?.id)
   const { courseId } = useParams()
 
   return (

@@ -26,7 +26,7 @@ export class UserLectureRepository implements IUserLectureRepository {
   async createUserLectureWithLectureId(lectureId: number, userLectureData: CreateUserLectureDto): Promise<UserLecture> {
     const userLecture = {
       ...userLectureData,
-      lectureId: lectureId
+      lecture: { id: lectureId }
     };
     return await this.userLectureRepository.save(userLecture);
   }

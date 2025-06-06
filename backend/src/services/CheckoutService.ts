@@ -112,17 +112,15 @@ export class CheckoutService implements ICheckoutService {
   }
 
   private async grantAccessToLectures(lectureIdList: string[], newAccountData: User): Promise<void> {
-    const userId = newAccountData.id
     console.log('SHOULD CREATE USER', { newAccountData, lectureIdList })
 
     const promises = lectureIdList.map(lectureId => {
       const userLecture: CreateUserLectureDto = {
-        userId: userId,
-        lectureId: Number(lectureId),
         isCompleted: false,
         isGotAcademicHours: false,
         isLector: false,
-        user: newAccountData
+        user: newAccountData,
+        lecture: { id: Number(lectureId) } as any
       }
 
       return this.userLectureRepository.createUserLecture(userLecture)
