@@ -38,7 +38,7 @@ const GeneralCourseInputSection = () => {
                 minRows={3}
                 maxRows={30}
               />
-              <TextField name="eventId" label="Event Id" value={courseForm.title} onChange={handleTitleChange} />
+              <TextField name="eventId" label="Event Id" value={courseForm.eventId} onChange={handleTitleChange} />
               <Stack justifyContent="space-between" direction="row">
                 <Box>
                   <Typography lineHeight="normal">Course is active</Typography>

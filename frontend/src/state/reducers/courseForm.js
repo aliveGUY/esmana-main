@@ -6,6 +6,7 @@ export const INITIAL_STATE = {
   thumbnailFile: null,
   title: '',
   description: '',
+  eventId: '',
   isActive: false,
   participationCertificate: null,
   bprCertificate: null,
