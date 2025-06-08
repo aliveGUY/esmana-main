@@ -9,6 +9,7 @@ import LoginImage from '../../static/images/image1_0.jpg'
 import GoogleAuthButton from '../components/GoogleAuthButton'
 import TopBarUnauthorized from '../components/TopBarUnauthorized'
 import TextField from '../common/inputs/TextField'
+import Password from '../common/inputs/Password'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -66,7 +67,7 @@ const Login = () => {
 
                 <TextField name="email" label="Email" required="Email is required" />
 
-                <TextField name="password" label="Password" required="Password is required" />
+                <Password name="password" label="Password" required="Password is required" />
 
                 {displayServerError(error)}
                 {displayServerError(googleLoginError)}
