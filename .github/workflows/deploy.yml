@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.FRONTEND_USER }}
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           source: "frontend.tar.gz"
-          target:  ${{ secrets.FRONTEND_TARGET }}
+          target: ${{ secrets.FRONTEND_TARGET }}
 
       - name: Clean and Extract Frontend Archive
         uses: appleboy/ssh-action@master
@@ -68,9 +68,13 @@ jobs:
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           script: |
             cd "${{ secrets.FRONTEND_TARGET }}"
-            echo "Cleaning previous frontend deployment..."
-            # Remove all previous files except the uploaded archive
-            find . -mindepth 1 -not -name "frontend.tar.gz" -delete
+            echo "Cleaning old frontend JS artifacts..."
+            find . \
+              -type f \
+              \( -name "*.js" -o -name "*.js.map" -o -name "*.gz" -o -name "*.chunk.js" \) \
+              -not -name "index.html" \
+              -not -name ".htaccess" \
+              -delete
             echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
@@ -97,8 +101,11 @@ jobs:
             echo "Stopping PM2 process..."
             pm2 stop 0 || echo "PM2 process was not running"
             echo "Cleaning previous backend deployment..."
-            # Remove all previous files except the uploaded archive and critical config files
-            find . -mindepth 1 -not -name "backend.tar.gz" -not -name ".env*" -not -name "ecosystem.config.js" -delete
+            find . -mindepth 1 \
+              -not -name "backend.tar.gz" \
+              -not -name ".env*" \
+              -not -name "ecosystem.config.js" \
+              -delete
             echo "Extracting new backend archive..."
             tar -xzf backend.tar.gz
             rm backend.tar.gz
