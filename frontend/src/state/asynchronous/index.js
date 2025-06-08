@@ -159,6 +159,14 @@ const usersApi = createApi({
         method: 'GET',
       }),
     }),
+
+    connectGoogleAccount: builder.mutation({
+      query: (body) => ({
+        url: 'auth/google/connect',
+        method: 'PUT',
+        body,
+      }),
+    }),
   }),
 })
 
@@ -183,6 +191,7 @@ export const {
   useCreateCheckoutFormMutation,
   useCreateCheckoutFormWithGoogleMutation,
   useGetCertificateHtmlQuery,
+  useConnectGoogleAccountMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {

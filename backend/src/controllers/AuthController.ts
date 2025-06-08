@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, Req, UseGuards, Put } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UserLoginDto } from '../models/dto/UserLoginDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
@@ -68,6 +68,14 @@ export class AuthController {
     this.setAccessTokenCookie(response, result.accessToken);
 
     return result.user
+  }
+
+  @Put('google/connect')
+  async googleConnect(
+    @Req() request: Request,
+    @Body() dto: { token: string }
+  ): Promise<void> {
+    return await this.authService.connectGoogle(dto.token, request)
   }
 
   @UseGuards(TokenAuthGuard)

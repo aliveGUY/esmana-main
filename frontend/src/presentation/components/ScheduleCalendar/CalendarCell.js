@@ -2,7 +2,6 @@ import React from 'react'
 import { map } from 'lodash'
 
 import { Box, useTheme } from '@mui/material'
-import { useControlledValueWithTimezone } from '@mui/x-date-pickers/internals'
 
 const monthNameToIndex = {
   January: 0,
@@ -125,7 +124,7 @@ const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
     cellDate,
   )
 
-  // const highlightedLectures = parseLectures(highlightedCourse?.lectures, cellDate)
+  const highlightedLectures = parseLectures(highlightedCourse?.lectures, cellDate)
 
   return (
     <Box
@@ -134,9 +133,9 @@ const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
         height: '100%',
       }}
     >
-      {/* {map(highlightedLectures, (event, index) => (
+      {map(highlightedLectures, (event, index) => (
         <HighlightedLectureFactory key={index} event={event} />
-      ))} */}
+      ))}
       {map(lecturesInHour, (event, index) => (
         <OwnedLectureFactory key={index} event={event} />
       ))}

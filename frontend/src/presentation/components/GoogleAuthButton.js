@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { GoogleLogin } from '@react-oauth/google'
+
 import { Box } from '@mui/material'
 
 const GoogleAuthButton = ({ onClick, text }) => {

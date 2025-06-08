@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { find, map } from 'lodash'
 
 import { Box, Button, Paper, Stack, Typography } from '@mui/material'
+import { useGetAllCertificateTemplates } from '../../../hooks/useGetAllCertificateTemplates'
 import { setBprCertificate, setParticipationCertificate } from '../../../state/reducers/courseForm'
 import CertificateWrapper from '../../common/CertificateWrapper'
 import RightHandFlyoutMenu from '../../common/RightHandFlyoutMenu'
 import SectionWrapper from '../../common/SectionWrapper'
-import { useGetAllCertificateTemplates } from '../../../hooks/useGetAllCertificateTemplates'
 
 const TYPE_PARTICIPATION = 'TYPE_PARTICIPATION'
 const TYPE_BPR = 'TYPE_BPR'

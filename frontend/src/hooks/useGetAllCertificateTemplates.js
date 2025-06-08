@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { toPng } from 'html-to-image'
+
 import { useGetCertificateHtmlQuery } from '../state/asynchronous'
 
 export function useGetAllCertificateTemplates() {

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { Avatar, Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material'
 import SectionWrapper from '../common/SectionWrapper'
+import AuthSection from '../components/Profile/AuthSection'
 
 import PersonIcon from '@mui/icons-material/Person'
 
@@ -49,13 +50,7 @@ const Profile = () => {
           </Stack>
         </Paper>
       </SectionWrapper>
-      {/* <SectionWrapper>
-        <Paper sx={{ p: 2 }}>
-          <Button variant="error" sx={{ width: { xs: '100%', md: 'auto' } }}>
-            Change Password
-          </Button>
-        </Paper>
-      </SectionWrapper> */}
+      <AuthSection />
     </Stack>
   )
 }

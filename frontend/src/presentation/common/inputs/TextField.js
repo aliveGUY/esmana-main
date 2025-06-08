@@ -1,8 +1,8 @@
 import React from 'react'
+import { isEmpty } from 'lodash'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
-import { isEmpty } from 'lodash'
 
 const TextField = ({ name, label, onChange, placeholder, staticLabel = false, required = null, pattern, ...rest }) => {
   const {

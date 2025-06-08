@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { isEmpty, isEqual } from 'lodash'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Divider, FormControl, FormHelperText, Grid2, Stack, Typography } from '@mui/material'
 import { useCreateCheckoutFormMutation, useCreateCheckoutFormWithGoogleMutation } from '../../state/asynchronous'
 import Password from '../common/inputs/Password'
 import TextField from '../common/inputs/TextField'
-import { FormProvider, useForm } from 'react-hook-form'
 import GoogleAuthButton from '../components/GoogleAuthButton'
 
 const Registration = () => {

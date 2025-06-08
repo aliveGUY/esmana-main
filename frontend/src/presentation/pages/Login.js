@@ -6,10 +6,10 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Box, Button, Divider, FormHelperText, Grid2, Stack, Typography } from '@mui/material'
 import { useGoogleLoginMutation, useLoginMutation } from '../../state/asynchronous'
 import LoginImage from '../../static/images/image1_0.jpg'
+import Password from '../common/inputs/Password'
+import TextField from '../common/inputs/TextField'
 import GoogleAuthButton from '../components/GoogleAuthButton'
 import TopBarUnauthorized from '../components/TopBarUnauthorized'
-import TextField from '../common/inputs/TextField'
-import Password from '../common/inputs/Password'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -72,7 +72,7 @@ const Login = () => {
                 {displayServerError(error)}
                 {displayServerError(googleLoginError)}
                 <Button type="submit" variant="primary" disabled={isLoading || isGoogleLoginLoading}>
-                  Login
+                  {isLoading || isGoogleLoginLoading ? 'Loading...' : 'Login'}
                 </Button>
 
                 <Box sx={{ my: 2 }}>

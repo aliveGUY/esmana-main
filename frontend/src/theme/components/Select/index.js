@@ -1,12 +1,10 @@
-import selectClasses from '@mui/material/Select/selectClasses'
-
 const MuiSelect = {
   styleOverrides: {
-    root: ({ theme }) => ({
+    root: () => ({
       width: '100%',
     }),
 
-    select: ({ theme }) => ({
+    select: () => ({
       paddingLeft: '4px',
       paddingTop: '11px',
       paddingBottom: '10px',

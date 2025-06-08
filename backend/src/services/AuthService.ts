@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { ERoles } from 'src/models/enums/ERoles';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
+import { Request } from 'express';
 
 export interface IAuthService {
   registerUser(newAccountData: UserRegistrationDto): Promise<UserDto>
@@ -16,6 +17,7 @@ export interface IAuthService {
   loginGoogle(dto: UserGoogleLoginDto): Promise<{ user: UserDto; accessToken: string }>;
   refreshToken(accessToken: string): Promise<{ user: UserDto; accessToken: string } | null>;
   logout(accessToken: string): Promise<void>;
+  connectGoogle(googleToken: string, request: Request): Promise<void>
 }
 
 @Injectable()
@@ -117,6 +119,24 @@ export class AuthService implements IAuthService {
     if (tokenData?.refreshTokenId) {
       await this.tokenRepository.blacklistToken(tokenData.refreshTokenId);
     }
+  }
+
+  async connectGoogle(googleToken: string, request: Request): Promise<void> {
+    const accessToken = request.cookies?.access_token
+
+    if (!accessToken) {
+      throw new Error('No access token found');
+    }
+
+    const tokenData = await this.tokenRepository.validateToken(accessToken);
+    if (!tokenData) {
+      throw new Error('User not found');
+    }
+
+    const { userId } = tokenData
+    const { googleId } = await this.googleClient.verifyAuthToken(googleToken)
+
+    this.userRepository.setGoogleId(userId, googleId)
   }
 
   private async generateLinkedTokens(user: User): Promise<{ accessToken: string; refreshToken: string }> {

@@ -33,6 +33,7 @@ export interface IUserRepository {
   searchByEmail(email: string): Promise<User[]>
   getAllUsers(): Promise<User[]>
   getById(id: number): Promise<User>
+  setGoogleId(userId: number, googleId: string): Promise<void>
 }
 
 @Injectable()
@@ -119,5 +120,14 @@ export class UserRepository implements IUserRepository {
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .select([...COMMON_SELECTION, ...LECTOR_DETAILS_SELECTION])
       .getMany();
+  }
+
+  async setGoogleId(userId: number, googleId: string): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({ googleId })
+      .where({ id: userId })
+      .execute();
   }
 }

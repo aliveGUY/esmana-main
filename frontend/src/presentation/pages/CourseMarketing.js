@@ -15,7 +15,7 @@ const CourseMarketing = () => {
   const { id } = useParams()
   const { availableCourses } = useCourses()
   const course = find(availableCourses, (course) => course.id === Number(id))
-  const [getCourseById, { isLoading, data }] = useGetCourseByIdMutation()
+  const [getCourseById] = useGetCourseByIdMutation()
 
   useEffect(() => {
     if (!course) {

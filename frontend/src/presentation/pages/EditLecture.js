@@ -51,6 +51,8 @@ const EditLecture = () => {
     },
   })
 
+  const oldEvaluation = lecture?.materials?.evaluation ?? []
+
   const {
     lectureEvaluation,
     handleRemoveQuestionAnswer,
@@ -60,7 +62,7 @@ const EditLecture = () => {
     handleRemoveOption,
     handleAddQuestion,
     handleAddOption,
-  } = useLectureEvaluationFromControls(lecture?.materials?.evaluation)
+  } = useLectureEvaluationFromControls(oldEvaluation)
 
   const onSubmit = (data) => {
     const { startTime, endTime } = convertLectureDatesFormToStorage({
@@ -95,7 +97,7 @@ const EditLecture = () => {
       return
     }
 
-    setLectureEvaluation(lecture?.materials?.evaluation)
+    setLectureEvaluation(oldEvaluation)
 
     const { date, startTime, endTime } = convertLectureDatesStorageToForm({
       startTime: lecture?.startTime,
