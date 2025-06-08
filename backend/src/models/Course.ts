@@ -16,7 +16,7 @@ export class Course {
   id: number;
 
   @Column({ name: "event_id", type: "text" })
-  eventId: string
+  eventId?: string
 
   @Column({ name: "thumbnail_url", type: "varchar", length: 2048, nullable: true })
   thumbnailUrl: string;

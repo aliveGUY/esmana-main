@@ -45,6 +45,7 @@ export class CourseService implements ICourseService {
 
 
     const courseWithoutLectures: Partial<Course> = {
+      eventId: courseDto.description,
       thumbnailUrl: thumbnailUrl,
       title: courseDto.title,
       description: courseDto.description,
@@ -97,6 +98,7 @@ export class CourseService implements ICourseService {
 
     const courseWithoutLectures: Partial<Course> = {
       id: courseDto.id,
+      eventId: courseDto.description,
       thumbnailUrl: thumbnailUrl,
       title: courseDto.title,
       description: courseDto.description,

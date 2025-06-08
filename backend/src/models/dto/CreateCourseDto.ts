@@ -9,6 +9,10 @@ export class CreateCourseDto {
   title: string;
 
   @IsString()
+  @IsOptional()
+  eventId: string;
+
+  @IsString()
   @IsNotEmpty()
   description: string;
 
