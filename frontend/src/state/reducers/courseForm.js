@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { CERTIFICATE_TEMPLATE_EXAMPLE } from '../../constants'
 import generateRandomString from '../../utils/generateRandomString'
 
 export const INITIAL_STATE = {
@@ -8,8 +7,8 @@ export const INITIAL_STATE = {
   title: '',
   description: '',
   isActive: false,
-  participationCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
-  bprCertificate: CERTIFICATE_TEMPLATE_EXAMPLE,
+  participationCertificate: null,
+  bprCertificate: null,
   bprEvaluation: [],
   lectures: [],
 }

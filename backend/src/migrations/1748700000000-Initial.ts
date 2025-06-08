@@ -38,6 +38,7 @@ export class Initial1748700000000 implements MigrationInterface {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 thumbnail_url VARCHAR(2048),
                 title VARCHAR(255) NOT NULL,
+                event_id VARCHAR(255),
                 description LONGTEXT NOT NULL,
                 is_active TINYINT(1) DEFAULT 0,
                 participation_certificate VARCHAR(2048),
@@ -105,6 +106,24 @@ export class Initial1748700000000 implements MigrationInterface {
             )
         `);
 
+        // Create certificate table
+        await queryRunner.query(`
+            CREATE TABLE certificate (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                bpr_index VARCHAR(255),
+                participation_index VARCHAR(255),
+                template ENUM('CERTIFICATE_TEMPLATE_BPR_08_06_2025', 'CERTIFICATE_TEMPLATE_PARTICIPATION_08_06_2025') NOT NULL,
+                issue_date TIMESTAMP NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                user_id INT NOT NULL,
+                course_id INT NOT NULL,
+                CONSTRAINT FK_certificate_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                CONSTRAINT FK_certificate_course_id FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
+            )
+        `);
+
         // Create indexes for better performance
         await queryRunner.query(`CREATE INDEX IDX_users_email ON users (email)`);
         await queryRunner.query(`CREATE INDEX IDX_users_google_id ON users (google_id)`);
@@ -121,10 +140,18 @@ export class Initial1748700000000 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX IDX_user_lecture_lecture_id ON user_lecture (lecture_id)`);
         await queryRunner.query(`CREATE INDEX IDX_user_lecture_is_lector ON user_lecture (is_lector)`);
         await queryRunner.query(`CREATE INDEX IDX_user_lecture_is_completed ON user_lecture (is_completed)`);
+        await queryRunner.query(`CREATE INDEX IDX_certificate_user_id ON certificate (user_id)`);
+        await queryRunner.query(`CREATE INDEX IDX_certificate_course_id ON certificate (course_id)`);
+        await queryRunner.query(`CREATE INDEX IDX_certificate_template ON certificate (template)`);
+        await queryRunner.query(`CREATE INDEX IDX_certificate_issue_date ON certificate (issue_date)`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         // Drop indexes
+        await queryRunner.query(`DROP INDEX IDX_certificate_issue_date ON certificate`);
+        await queryRunner.query(`DROP INDEX IDX_certificate_template ON certificate`);
+        await queryRunner.query(`DROP INDEX IDX_certificate_course_id ON certificate`);
+        await queryRunner.query(`DROP INDEX IDX_certificate_user_id ON certificate`);
         await queryRunner.query(`DROP INDEX IDX_user_lecture_is_completed ON user_lecture`);
         await queryRunner.query(`DROP INDEX IDX_user_lecture_is_lector ON user_lecture`);
         await queryRunner.query(`DROP INDEX IDX_user_lecture_lecture_id ON user_lecture`);
@@ -142,6 +169,7 @@ export class Initial1748700000000 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX IDX_users_email ON users`);
 
         // Drop tables in reverse order (respecting foreign key dependencies)
+        await queryRunner.query(`DROP TABLE IF EXISTS certificate`);
         await queryRunner.query(`DROP TABLE IF EXISTS user_lecture`);
         await queryRunner.query(`DROP TABLE IF EXISTS evaluation_question`);
         await queryRunner.query(`DROP TABLE IF EXISTS lecture_materials`);

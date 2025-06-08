@@ -1,9 +1,8 @@
 import React from 'react'
-import dayjs from 'dayjs'
 import { Controller, useFormContext } from 'react-hook-form'
-
 import { TimePicker as MuiTimePicker } from '@mui/x-date-pickers/TimePicker'
 import { isEmpty } from 'lodash'
+import dayjs from 'dayjs'
 
 const TimePicker = ({ name, label, required = null }) => {
   const { control } = useFormContext()
@@ -20,13 +19,14 @@ const TimePicker = ({ name, label, required = null }) => {
       render={({ field: { value, onChange, ...rest }, fieldState: { error } }) => (
         <MuiTimePicker
           label={label}
-          value={value ? dayjs(new Date(value)) : null}
+          value={value ? dayjs(value) : null}
           onChange={(newValue) => {
             const normalized = newValue ? dayjs(newValue).set('second', 0).set('millisecond', 0) : null
-            onChange(normalized ? new Date(normalized.toISOString()) : null)
+            const time = normalized ? normalized.toDate() : null
+            onChange(time)
           }}
           ampm={false}
-          minutesStep={15}
+          minutesStep={30}
           slotProps={{
             textField: {
               error: !!error,

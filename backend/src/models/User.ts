@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typ
 import { ERoles } from "./enums/ERoles";
 import { UserLecture } from "./UserLecture";
 import { LectorDetails } from "./LectorDetails";
+import { Certificate } from "./Certificate";
 
 @Entity('users')
 export class User {
@@ -43,4 +44,7 @@ export class User {
 
   @OneToOne(() => LectorDetails, lectorDetails => lectorDetails.user, { nullable: true })
   lectorDetails?: LectorDetails;
+
+  @OneToMany(() => Certificate, certificate => certificate.user, { nullable: true })
+  certificates?: Certificate;
 }

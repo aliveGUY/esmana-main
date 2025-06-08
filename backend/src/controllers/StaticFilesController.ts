@@ -3,11 +3,13 @@ import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { Response } from 'express';
 import { Public } from 'src/common/decorators/public.decorator';
+import { ICertificateService } from 'src/services/CertificateService';
 
 @Controller('static')
 export class StaticFilesController {
   constructor(
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
+    @Inject('ICertificateService') private readonly certificateService: ICertificateService,
   ) { }
 
   @Public()
@@ -22,5 +24,10 @@ export class StaticFilesController {
   @Get('video')
   async searchYoutubeVideos(@Query('title') title: string) {
     return this.googleClient.searchUploadedVideos(title)
+  }
+
+  @Get('certificate')
+  async getCertificate() {
+    return await this.certificateService.getCertificateHtml()
   }
 }

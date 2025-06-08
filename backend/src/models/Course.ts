@@ -8,11 +8,15 @@ import {
 } from "typeorm";
 import { Lecture } from "./Lecture";
 import { EvaluationQuestion } from "./EvaluationQuestion";
+import { Certificate } from "./Certificate";
 
 @Entity({ name: "course" })
 export class Course {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ name: "event_id", type: "text" })
+  eventId: string
 
   @Column({ name: "thumbnail_url", type: "varchar", length: 2048, nullable: true })
   thumbnailUrl: string;
@@ -34,6 +38,10 @@ export class Course {
 
   @OneToMany(() => Lecture, lecture => lecture.course, { cascade: true })
   lectures: Lecture[];
+
+
+  @OneToMany(() => Certificate, certificate => certificate.course, { cascade: true })
+  certificates: Certificate[];
 
   @OneToMany(() => EvaluationQuestion, question => question.course, { nullable: true })
   bprEvaluation: EvaluationQuestion[];

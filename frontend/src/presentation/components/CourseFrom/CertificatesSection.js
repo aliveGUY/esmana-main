@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { map } from 'lodash'
+import { find, map } from 'lodash'
 
 import { Box, Button, Paper, Stack, Typography } from '@mui/material'
-import { CERTIFICATE_TEMPLATE_ALL } from '../../../constants/certificates'
 import { setBprCertificate, setParticipationCertificate } from '../../../state/reducers/courseForm'
 import CertificateWrapper from '../../common/CertificateWrapper'
 import RightHandFlyoutMenu from '../../common/RightHandFlyoutMenu'
 import SectionWrapper from '../../common/SectionWrapper'
+import { useGetAllCertificateTemplates } from '../../../hooks/useGetAllCertificateTemplates'
 
 const TYPE_PARTICIPATION = 'TYPE_PARTICIPATION'
 const TYPE_BPR = 'TYPE_BPR'
@@ -15,6 +15,7 @@ const TYPE_BPR = 'TYPE_BPR'
 const CertificatesSection = () => {
   const courseForm = useSelector((state) => state.courseForm)
   const [menuState, setMenuState] = useState({ closed: true, purpose: null })
+  const { certificates } = useGetAllCertificateTemplates()
   const dispatch = useDispatch()
 
   const handleOpenParticipation = useCallback(() => {
@@ -53,6 +54,11 @@ const CertificatesSection = () => {
     return false
   }
 
+  const getCertificateImage = (value) => {
+    const certificate = find(certificates, (image) => image.value === value)
+    return certificate?.image
+  }
+
   return (
     <Box px={2}>
       <SectionWrapper>
@@ -67,54 +73,39 @@ const CertificatesSection = () => {
               </Button>
             </Stack>
             <Stack direction="row" justifyContent="center" spacing={2}>
-              <CertificateWrapper
-                key={courseForm.bprCertificate}
-                certificateTemplate={courseForm.bprCertificate}
-                studentName="[NAME]"
-                date="[DATE]"
-                courseName="[COURSE NAME]"
-              />
-              <CertificateWrapper
-                key={courseForm.participationCertificate}
-                certificateTemplate={courseForm.participationCertificate}
-                studentName="[NAME]"
-                date="[DATE]"
-                courseName="[COURSE NAME]"
-              />
+              <CertificateWrapper image={getCertificateImage(courseForm.bprCertificate)} />
+              <CertificateWrapper image={getCertificateImage(courseForm.participationCertificate)} />
             </Stack>
           </Stack>
           <RightHandFlyoutMenu isCollapsed={menuState.closed} onClose={handleClose}>
             <Stack px={2} spacing={2}>
               <Typography fontWeight="bold">Templates</Typography>
               <Stack alignItems="center" spacing={1}>
-                {map(CERTIFICATE_TEMPLATE_ALL, (template) => (
-                  <Box
-                    onClick={handleTemplateSelect}
-                    id={template}
-                    sx={{
-                      p: 1,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      border: '2px dashed white',
+                {map(certificates, ({ image, value }) => {
+                  return (
+                    <Box
+                      onClick={handleTemplateSelect}
+                      id={value}
+                      sx={{
+                        p: 1,
+                        borderRadius: '12px',
+                        cursor: 'pointer',
+                        border: '2px dashed white',
 
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                      },
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                        },
 
-                      ...(isActive(template) && {
-                        border: '2px solid',
-                        borderColor: 'primary.main',
-                      }),
-                    }}
-                  >
-                    <CertificateWrapper
-                      certificateTemplate={template}
-                      studentName="[NAME]"
-                      date="[DATE]"
-                      courseName="[COURSE NAME]"
-                    />
-                  </Box>
-                ))}
+                        ...(isActive(value) && {
+                          border: '2px solid',
+                          borderColor: 'primary.main',
+                        }),
+                      }}
+                    >
+                      <CertificateWrapper image={image} />
+                    </Box>
+                  )
+                })}
               </Stack>
             </Stack>
           </RightHandFlyoutMenu>

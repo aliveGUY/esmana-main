@@ -15,6 +15,7 @@ export interface IGoogleClient {
   uploadMulterFileToDrive(file: Express.Multer.File): Promise<string>;
   getFileStreamById(fileId: string): Promise<{ stream: Readable; mimeType: string }>
   deleteFileIfExists(fileId: string): Promise<void>
+  getFileContentById(fileId: string): Promise<string>
 }
 
 @Injectable()
@@ -130,6 +131,16 @@ export class GoogleClient implements IGoogleClient {
     fs.unlinkSync(tempPath);
 
     return uploaded.data.id!;
+  }
+
+  async getFileContentById(fileId: string): Promise<string> {
+    const res = await this.drive.files.get({ fileId, alt: 'media' }, { responseType: 'stream' as const });
+    return new Promise((resolve, reject) => {
+      let data = '';
+      res.data.on('data', chunk => data += chunk);
+      res.data.on('end', () => resolve(data));
+      res.data.on('error', reject);
+    });
   }
 
   async getFileStreamById(fileId: string): Promise<{ stream: Readable; mimeType: string }> {

@@ -20,6 +20,8 @@ import { CourseModule } from './CourseModule';
 import { StaticFilesController } from 'src/controllers/StaticFilesController';
 import { UserModule } from './UserModule';
 import { CheckoutModule } from './CheckoutModule';
+import { CertificateModule } from './CertificateModule';
+import { Certificate } from 'src/models/Certificate';
 
 @Module({
   imports: [
@@ -40,7 +42,8 @@ import { CheckoutModule } from './CheckoutModule';
           Lecture,
           LectureMaterials,
           EvaluationQuestion,
-          LectorDetails
+          LectorDetails,
+          Certificate
         ],
       }),
       inject: [ConfigService],
@@ -48,7 +51,8 @@ import { CheckoutModule } from './CheckoutModule';
     AuthModule,
     CourseModule,
     UserModule,
-    CheckoutModule
+    CheckoutModule,
+    CertificateModule
   ],
   controllers: [StaticFilesController],
   providers: [

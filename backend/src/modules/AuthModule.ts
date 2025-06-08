@@ -21,6 +21,7 @@ import { AuthController } from '../controllers/AuthController';
 import { GoogleClient } from 'src/infrastructure/GoogleClient';
 import { User } from '../models/User';
 import { RedisModule } from './RedisModule';
+import { CertificateService } from 'src/services/CertificateService';
 
 @Module({
   imports: [
@@ -49,6 +50,10 @@ import { RedisModule } from './RedisModule';
     {
       provide: 'IGoogleClient',
       useClass: GoogleClient
+    },
+    {
+      provide: 'ICertificateService',
+      useClass: CertificateService
     },
 
     // Guards

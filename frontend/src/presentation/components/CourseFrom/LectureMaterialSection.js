@@ -10,7 +10,8 @@ import LanguageToggle from '../RichTextEditor/LanguageToggle'
 const LectureMaterialSection = () => {
   const { setValue, watch } = useFormContext()
   const [selectedLang, setSelectedLang] = useState(ENGLISH)
-  const richText = watch('richText')
+  const richTextForm = watch('richText')
+  const richText = richTextForm ? richTextForm[selectedLang] : ''
 
   const handleChange = (data) => {
     setValue(`richText.${selectedLang}`, data)
@@ -27,7 +28,7 @@ const LectureMaterialSection = () => {
           <Stack p={2} spacing={2}>
             <Typography fontWeight="bold">Lecture Materials</Typography>
             <LanguageToggle currentLanguage={selectedLang} onClick={setLanguage} />
-            <RichTextEditor key={selectedLang} onChange={handleChange} content={richText[selectedLang]} />
+            <RichTextEditor key={selectedLang} onChange={handleChange} content={richText} />
           </Stack>
         </Paper>
       </SectionWrapper>

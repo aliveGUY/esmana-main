@@ -152,6 +152,13 @@ const usersApi = createApi({
         }
       },
     }),
+
+    getCertificateHtml: builder.query({
+      query: () => ({
+        url: 'static/certificate',
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -175,6 +182,7 @@ export const {
   useEditAccountMutation,
   useCreateCheckoutFormMutation,
   useCreateCheckoutFormWithGoogleMutation,
+  useGetCertificateHtmlQuery,
 } = usersApi
 
 export function serveStaticImage(imageId) {

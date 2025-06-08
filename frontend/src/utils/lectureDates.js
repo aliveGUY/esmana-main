@@ -15,6 +15,8 @@ export function convertLectureDatesFormToStorage({ date, startTime, endTime }) {
   _startTime.setDate(_date)
   _startTime.setHours(startHours)
   _startTime.setMinutes(startMinutes)
+  _startTime.setSeconds(0)
+  _startTime.setMilliseconds(0)
 
   const _endTime = new Date()
   _endTime.setFullYear(year)
@@ -22,6 +24,8 @@ export function convertLectureDatesFormToStorage({ date, startTime, endTime }) {
   _endTime.setDate(_date)
   _endTime.setHours(endHours)
   _endTime.setMinutes(endMinutes)
+  _endTime.setSeconds(0)
+  _endTime.setMilliseconds(0)
 
   return { startTime: _startTime, endTime: _endTime }
 }
