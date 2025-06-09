@@ -6,7 +6,6 @@ import { StrippedCourseDto } from 'src/models/dto/StrippedCourseDto';
 import { Request } from 'express';
 import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
 import { DetailedCourseDto } from 'src/models/dto/DetailedCourseDto';
-import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditCourseDto } from 'src/models/dto/EditCourseDto';
 import { Express } from 'express';
@@ -16,7 +15,6 @@ import { AdminOnly } from 'src/common/adminOnlyDecorator';
 export class CoursesController {
   constructor(
     @Inject('ICourseService') private readonly courseService: ICourseService,
-    @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
   ) { }
 
   @Get('')
@@ -50,6 +48,12 @@ export class CoursesController {
   ): Promise<DetailedCourseDto> {
     const courseDto: EditCourseDto = JSON.parse(dataJson)
     return await this.courseService.editCourse(courseDto, thumbnail)
+  }
+
+  @Public()
+  @Get('/stripped/:id')
+  async getStrippedCourseById(@Req() request: Request, @Param('id') id: number) {
+    return await this.courseService.getCourseById(id, request)
   }
 
   @Get('/:id')

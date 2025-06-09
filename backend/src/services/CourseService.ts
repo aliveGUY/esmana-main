@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { CreateCourseDto } from "src/models/dto/CreateCourseDto";
 import { DetailedCourseDto } from "src/models/dto/DetailedCourseDto";
 import { EditCourseDto } from "src/models/dto/EditCourseDto";
@@ -22,6 +22,7 @@ export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
   editCourse(course: EditCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
   getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null>
+  getActiveCourseById(id: number): Promise<DetailedCourseDto | null>
   getAllCourses(request: Request): Promise<StrippedCourseDto[]>
   getAllActiveCourses(): Promise<StrippedCourseDto[]>
   deleteCourse(id: number): Promise<void>
@@ -150,17 +151,17 @@ export class CourseService implements ICourseService {
   }
 
   async getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null> {
-    const tokenData = request.user as AccessTokenData | undefined
-
-    if (!tokenData) {
-      return await this.courseRepository.getStrippedCourseById(id)
-    }
+    const tokenData = request.user as AccessTokenData
 
     if (tokenData.roles.includes(ERoles.ADMIN)) {
       return await this.courseRepository.getFullCourseById(id)
     }
 
     return await this.courseRepository.getOwnedCourseById(id, tokenData.userId)
+  }
+
+  async getActiveCourseById(id: number): Promise<DetailedCourseDto | null> {
+    return await this.courseRepository.getStrippedCourseById(id)
   }
 
   async getAllCourses(request: Request): Promise<StrippedCourseDto[]> {
