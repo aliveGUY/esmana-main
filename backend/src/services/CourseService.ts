@@ -6,7 +6,7 @@ import { StrippedCourseDto } from "src/models/dto/StrippedCourseDto";
 import { ERoles } from "src/models/enums/ERoles";
 import { ICourseRepository } from "src/repositories/CourseRepository";
 import { ITokenRepository } from "src/repositories/TokenRepository";
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository";
 import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
