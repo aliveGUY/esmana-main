@@ -18,6 +18,7 @@ export interface IAuthService {
   loginGoogle(response: Response, dto: UserGoogleLoginDto): Promise<UserDto>;
   logout(response: Response, accessToken: string): Promise<void>;
   connectGoogle(googleToken: string, request: Request): Promise<void>
+  refresh(response: Request): Promise<UserDto>;
 }
 
 @Injectable()
@@ -65,6 +66,17 @@ export class AuthService implements IAuthService {
     const accessToken = await this.tokenRepository.generateAccessToken(tokenData)
     await this.tokenRepository.generateRefreshToken(accessToken)
     this.setAccessTokenToCookies(response, accessToken)
+
+    return this.userToDto(user)
+  }
+
+  async refresh(request: Request): Promise<UserDto> {
+    const accessTokenData = request.user as AccessTokenData
+    const user = await this.userRepository.findByEmail(accessTokenData.email);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     return this.userToDto(user)
   }

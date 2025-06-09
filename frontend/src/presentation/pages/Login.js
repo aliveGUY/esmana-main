@@ -29,8 +29,6 @@ const Login = () => {
     return <FormHelperText>{error.data.message}</FormHelperText>
   }
 
-  console.log({ isGoogleLoginLoading, isLoading })
-
   useEffect(() => {
     if (isSuccess || isGoogleLoginSuccess) {
       navigate('dashboard/profile')

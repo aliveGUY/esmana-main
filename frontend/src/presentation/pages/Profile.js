@@ -11,7 +11,6 @@ import { useAuth } from '../../hooks/useAuth'
 const Profile = () => {
   const theme = useTheme()
   const { user } = useAuth()
-  console.log({ user })
 
   if (!user) return 'Error'
 

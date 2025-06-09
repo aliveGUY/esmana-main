@@ -31,6 +31,13 @@ export class AuthController {
     return await this.authService.loginLocal(response, dto);
   }
 
+  @Post('refresh')
+  async refresh(
+    @Req() request: Request,
+  ): Promise<UserDto> {
+    return await this.authService.refresh(request);
+  }
+
   @Public()
   @Post('google/login')
   async googleLogin(

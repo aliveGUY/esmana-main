@@ -6,16 +6,14 @@ import { setReceivedUnauthorized } from '../reducers/user'
 export const authMiddleware = (store) => (next) => (action) => {
   // Handle RTK Query rejected actions with 401 status
   if (action.type.endsWith('/rejected') && action?.payload?.status === 401) {
-    console.log('401 Unauthorized - dispatching logout')
     store.dispatch(setReceivedUnauthorized())
   }
-  
+
   // Also handle error responses in fulfilled actions
   if (action.type.endsWith('/fulfilled') && action?.error?.status === 401) {
-    console.log('401 Unauthorized in fulfilled action - dispatching logout')
     store.dispatch(setReceivedUnauthorized())
   }
-  
+
   return next(action)
 }
 
@@ -39,13 +37,20 @@ const usersApi = createApi({
         url: `/check-registration-status?paymentIntentId=${encodeURIComponent(paymentIntentId)}`,
         method: 'GET',
       }),
-    }),
+    }), //refresh
 
     login: builder.mutation({
       query: (loginData) => ({
         url: 'auth/login',
         method: 'POST',
         body: loginData,
+      }),
+    }),
+
+    refresh: builder.mutation({
+      query: () => ({
+        url: 'auth/refresh',
+        method: 'POST',
       }),
     }),
 
@@ -209,6 +214,7 @@ export const {
   useGetCertificateHtmlQuery,
   useConnectGoogleAccountMutation,
   useLogoutMutation,
+  useRefreshMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {
