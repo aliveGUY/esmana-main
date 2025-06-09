@@ -3,6 +3,8 @@ import { CanActivate } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { ITokenRepository } from '../repositories/TokenRepository';
+import { AccessTokenData } from 'src/models/Token';
+import { ERoles } from 'src/models/enums/ERoles';
 
 @Injectable()
 export class TokenAuthGuard implements CanActivate {
@@ -10,9 +12,11 @@ export class TokenAuthGuard implements CanActivate {
     private reflector: Reflector,
     @Inject('ITokenRepository') private tokenRepo: ITokenRepository,
   ) { }
-
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    if (this.reflector.getAllAndOverride<boolean>('isPublic', [ctx.getHandler(), ctx.getClass()])) return true;
+    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [ctx.getHandler(), ctx.getClass()])
+    const isAdminOnly = this.reflector.getAllAndOverride<boolean>('isAdminOnly', [ctx.getHandler(), ctx.getClass()])
+
+    if (isPublic) return true;
 
     const req = ctx.switchToHttp().getRequest<Request>();
     const res = ctx.switchToHttp().getResponse<Response>();
@@ -21,14 +25,14 @@ export class TokenAuthGuard implements CanActivate {
     if (!token) throw new UnauthorizedException('No access token');
 
     const isAccessTokenValid = !await this.tokenRepo.isAccessTokenExpired(token)
+
     if (isAccessTokenValid) {
       const data = await this.tokenRepo.getAccessTokenData(token)
       req.user = { id: data.userId, email: data.email, roles: data.roles };
-
-      return true
     }
 
     const refreshToken = await this.tokenRepo.getRefreshToken(token)
+
     if (!isAccessTokenValid && refreshToken) {
       const refreshTokenData = await this.tokenRepo.refreshAccessToken(refreshToken)
 
@@ -44,10 +48,14 @@ export class TokenAuthGuard implements CanActivate {
         email: refreshTokenData.email,
         roles: refreshTokenData.roles
       };
-
-      return true
     }
 
-    throw new UnauthorizedException()
+    const isAdmin = (req.user as AccessTokenData)?.roles.includes(ERoles.ADMIN)
+
+    if (!isAdmin && isAdminOnly) throw new UnauthorizedException()
+
+    if (!refreshToken || refreshToken === null) throw new UnauthorizedException()
+
+    return true
   }
 }

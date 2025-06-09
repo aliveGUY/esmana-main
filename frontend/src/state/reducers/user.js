@@ -11,23 +11,31 @@ const userSlice = createSlice({
   reducers: {
     setReceivedUnauthorized: (state) => {
       state.receivedUnauthorized = true
+      state.account = null // Clear user account on unauthorized
     },
 
     resetReceivedUnauthorized: (state) => {
       state.receivedUnauthorized = false
     },
+
+    logout: (state) => {
+      state.account = null
+      state.receivedUnauthorized = false
+    },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(usersEndpoints.login.matchFulfilled, (_, { payload }) => {
+    builder.addMatcher(usersEndpoints.login.matchFulfilled, (state, { payload }) => {
       state.account = payload
+      state.receivedUnauthorized = false
     })
 
-    builder.addMatcher(usersEndpoints.googleLogin.matchFulfilled, (_, { payload }) => {
+    builder.addMatcher(usersEndpoints.googleLogin.matchFulfilled, (state, { payload }) => {
       state.account = payload
+      state.receivedUnauthorized = false
     })
   },
 })
 
-export const { setReceivedUnauthorized, resetReceivedUnauthorized } = userSlice.actions
+export const { setReceivedUnauthorized, resetReceivedUnauthorized, logout } = userSlice.actions
 
 export default userSlice.reducer

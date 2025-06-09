@@ -4,9 +4,18 @@ import { BASE_URL } from '../../constants/config'
 import { setReceivedUnauthorized } from '../reducers/user'
 
 export const authMiddleware = (store) => (next) => (action) => {
-  if (action?.payload?.status === 401) {
+  // Handle RTK Query rejected actions with 401 status
+  if (action.type.endsWith('/rejected') && action?.payload?.status === 401) {
+    console.log('401 Unauthorized - dispatching logout')
     store.dispatch(setReceivedUnauthorized())
   }
+  
+  // Also handle error responses in fulfilled actions
+  if (action.type.endsWith('/fulfilled') && action?.error?.status === 401) {
+    console.log('401 Unauthorized in fulfilled action - dispatching logout')
+    store.dispatch(setReceivedUnauthorized())
+  }
+  
   return next(action)
 }
 

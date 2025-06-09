@@ -3,7 +3,7 @@ import { Response, Request } from 'express';
 import { UserLoginDto } from '../models/dto/UserLoginDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
 import { IAuthService } from '../services/AuthService';
-import { Public } from '../common/decorators/public.decorator';
+import { Public } from '../common/publicDecorator';
 import { Inject } from '@nestjs/common';
 import { UserDto } from '../models/dto/UserDto';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';

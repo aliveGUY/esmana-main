@@ -2,8 +2,9 @@ import { Controller, UseGuards, Get, Inject, Param, Res, Query } from '@nestjs/c
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { Response } from 'express';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from 'src/common/publicDecorator';
 import { ICertificateService } from 'src/services/CertificateService';
+import { AdminOnly } from 'src/common/adminOnlyDecorator';
 
 @Controller('static')
 export class StaticFilesController {
@@ -20,11 +21,13 @@ export class StaticFilesController {
     stream.pipe(res);
   }
 
+  @AdminOnly()
   @Get('video')
   async searchYoutubeVideos(@Query('title') title: string) {
     return this.googleClient.searchUploadedVideos(title)
   }
 
+  @AdminOnly()
   @Get('certificate')
   async getCertificate() {
     return await this.certificateService.getCertificateHtml()

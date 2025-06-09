@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Param, Req, Body, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
-import { Public } from '../common/decorators/public.decorator';
+import { Public } from '../common/publicDecorator';
 import { Inject } from '@nestjs/common';
 import { ICourseService } from 'src/services/CourseService';
 import { StrippedCourseDto } from 'src/models/dto/StrippedCourseDto';
@@ -10,6 +10,7 @@ import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditCourseDto } from 'src/models/dto/EditCourseDto';
 import { Express } from 'express';
+import { AdminOnly } from 'src/common/adminOnlyDecorator';
 
 @Controller('courses')
 export class CoursesController {
@@ -30,35 +31,23 @@ export class CoursesController {
   }
 
   @Post('')
+  @AdminOnly()
   @UseInterceptors(FileInterceptor('thumbnail'))
   async createCourse(
-    @Req() request: Request,
     @UploadedFile() thumbnail: Express.Multer.File,
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
-    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
-
-    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-    //   throw new ForbiddenException('Only administrators can create courses');
-    // }
-
     const courseDto: CreateCourseDto = JSON.parse(dataJson)
     return await this.courseService.createCourse(courseDto, thumbnail);
   }
 
   @Put('')
+  @AdminOnly()
   @UseInterceptors(FileInterceptor('thumbnail'))
   async editCourse(
-    @Req() request: Request,
     @UploadedFile() thumbnail: Express.Multer.File,
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
-    // const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token);
-
-    // if (!tokenData || !tokenData.roles.includes(ERoles.ADMIN)) {
-    //   throw new ForbiddenException('Only administrators can edit courses');
-    // }
-
     const courseDto: EditCourseDto = JSON.parse(dataJson)
     return await this.courseService.editCourse(courseDto, thumbnail)
   }

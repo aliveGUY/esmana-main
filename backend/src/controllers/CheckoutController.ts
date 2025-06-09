@@ -1,5 +1,5 @@
 import { Controller, Inject, Post, Body, Query } from '@nestjs/common';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from 'src/common/publicDecorator';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 import { ICheckoutService } from 'src/services/CheckoutService';
 import { TWayforpayResponseTransactionDetails } from 'wayforpay-ts-integration';
