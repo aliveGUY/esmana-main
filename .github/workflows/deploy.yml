@@ -70,7 +70,7 @@ jobs:
             cd "${{ secrets.FRONTEND_TARGET }}"
             echo "Cleaning previous frontend deployment..."
             # Remove all previous files except the uploaded archive
-            find . -mindepth 1 -not -name "frontend.tar.gz" -delete
+            find . -mindepth 1 -not -name "frontend.tar.gz" -not -name ".htaccess" -delete
             echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
