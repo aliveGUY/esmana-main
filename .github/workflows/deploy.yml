@@ -10,23 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # Clean previous build artifacts from runner
       - name: Clean Previous Build Artifacts
         run: |
           echo "Cleaning previous build artifacts from runner..."
           rm -f frontend.tar.gz backend.tar.gz || true
 
-      # Build Frontend
       - name: Build Frontend
         env:
           REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
@@ -39,7 +35,6 @@ jobs:
           npm run build
           tar -czf ../frontend.tar.gz -C build .
 
-      # Build Backend
       - name: Build Backend
         run: |
           cd backend
@@ -50,7 +45,6 @@ jobs:
           npm run build
           tar -czf ../backend.tar.gz dist package.json package-lock.json node_modules .
 
-      # Deploy Frontend to VPS
       - name: Upload Frontend Archive
         uses: appleboy/scp-action@master
         with:
@@ -68,19 +62,13 @@ jobs:
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           script: |
             cd "${{ secrets.FRONTEND_TARGET }}"
-            echo "Cleaning old frontend JS artifacts..."
-            find . \
-              -type f \
-              \( -name "*.js" -o -name "*.js.map" -o -name "*.gz" -o -name "*.chunk.js" \) \
-              -not -name "index.html" \
-              -not -name ".htaccess" \
-              -delete
+            echo "Removing old static assets..."
+            rm -rf static/ asset-manifest.json *.js *.js.map *.css *.css.map *.chunk.js || true
             echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
             echo "Frontend deployed successfully."
 
-      # Deploy Backend to VPS
       - name: Upload Backend Archive
         uses: appleboy/scp-action@master
         with:
