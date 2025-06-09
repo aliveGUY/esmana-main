@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useMatch } from 'react-router-dom'
+import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { map } from 'lodash'
 
 import { Box, Button as MuiButton, Stack, Tooltip, useMediaQuery, useTheme } from '@mui/material'
@@ -11,14 +11,18 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt'
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import PersonIcon from '@mui/icons-material/Person'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { useLogoutMutation } from '../../state/asynchronous'
 
-const NavLink = ({ path, name, defaultIcon, isCollapsed, selected, activeIcon, onClick }) => {
+const NavLink = ({ path = null, name, defaultIcon, isCollapsed, selected = false, activeIcon, onClick }) => {
   return (
     <Tooltip title={isCollapsed && name} arrow placement="right" enterDelay={1000}>
       <MuiButton
-        component={Link}
-        to={path}
-        startIcon={selected ? activeIcon : defaultIcon}
+        {...(path && {
+          component: Link,
+          to: path,
+        })}
+        startIcon={selected && activeIcon ? activeIcon : defaultIcon}
         variant="sidenav"
         isInactive={!selected}
         isCollapsed={isCollapsed}
@@ -31,6 +35,8 @@ const NavLink = ({ path, name, defaultIcon, isCollapsed, selected, activeIcon, o
 }
 
 const Navigation = ({ isCollapsed, onClose }) => {
+  const [logout, { isLoading }] = useLogoutMutation()
+  const navigate = useNavigate()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -69,6 +75,11 @@ const Navigation = ({ isCollapsed, onClose }) => {
     },
   ]
 
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   if (isMobile) {
     return (
       <MobileFlyoutMenu isCollapsed={isCollapsed} onClose={onClose}>
@@ -82,26 +93,29 @@ const Navigation = ({ isCollapsed, onClose }) => {
   }
 
   return (
-    <Box
+    <Stack
       sx={{
         width: isCollapsed ? 81 : 240,
         transition: 'width .3s',
+        height: 'calc(100vh - 64px)',
+        position: 'sticky',
+        top: 64,
       }}
     >
-      <Stack
-        spacing={1}
-        px={1}
-        py={2}
-        sx={{
-          position: 'sticky',
-          top: 64,
-        }}
-      >
+      <Stack flex={1} spacing={1} px={1} py={2}>
         {map(config, (item, index) => (
           <NavLink key={index} isCollapsed={isCollapsed} {...item} />
         ))}
       </Stack>
-    </Box>
+      <Stack spacing={1} px={1} py={2}>
+        <NavLink
+          isCollapsed={isCollapsed}
+          name={isLoading ? 'Loading...' : 'Logout'}
+          onClick={handleLogout}
+          defaultIcon={<LogoutIcon />}
+        />
+      </Stack>
+    </Stack>
   )
 }
 

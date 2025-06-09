@@ -3,15 +3,12 @@ import { CanActivate } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { ITokenRepository } from '../repositories/TokenRepository';
-import { IAuthService } from '../services/AuthService';
-import { ETokenType } from '../models/enums/ETokenType';
 
 @Injectable()
 export class TokenAuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     @Inject('ITokenRepository') private tokenRepo: ITokenRepository,
-    @Inject('IAuthService') private authService: IAuthService,
   ) { }
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
@@ -20,28 +17,37 @@ export class TokenAuthGuard implements CanActivate {
     const req = ctx.switchToHttp().getRequest<Request>();
     const res = ctx.switchToHttp().getResponse<Response>();
     const token = req.cookies?.access_token;
+
     if (!token) throw new UnauthorizedException('No access token');
 
-    let data = await this.tokenRepo.validateToken(token);
-    if (!data) {
-      const refreshed = await this.authService.refreshToken(token);
-      if (!refreshed) throw new UnauthorizedException('Token refresh failed');
-      this.setCookie(res, refreshed.accessToken);
-      data = await this.tokenRepo.validateToken(refreshed.accessToken);
-      if (!data) throw new UnauthorizedException('New token invalid');
+    const isAccessTokenValid = !await this.tokenRepo.isAccessTokenExpired(token)
+    if (isAccessTokenValid) {
+      const data = await this.tokenRepo.getAccessTokenData(token)
+      req.user = { id: data.userId, email: data.email, roles: data.roles };
+
+      return true
     }
 
-    if (data.type !== ETokenType.ACCESS) throw new UnauthorizedException('Wrong token type');
-    req.user = { id: data.userId, email: data.email, roles: data.roles };
-    return true;
-  }
+    const refreshToken = await this.tokenRepo.getRefreshToken(token)
+    if (!isAccessTokenValid && refreshToken) {
+      const refreshTokenData = await this.tokenRepo.refreshAccessToken(refreshToken)
 
-  private setCookie(res: Response, token: string) {
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000,
-    });
+      res.cookie('access_token', refreshTokenData.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000,
+      });
+
+      req.user = {
+        id: refreshTokenData.userId,
+        email: refreshTokenData.email,
+        roles: refreshTokenData.roles
+      };
+
+      return true
+    }
+
+    throw new UnauthorizedException()
   }
 }

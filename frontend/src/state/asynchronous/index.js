@@ -1,6 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { BASE_URL } from '../../constants/config'
+import { setReceivedUnauthorized } from '../reducers/user'
+
+export const authMiddleware = (store) => (next) => (action) => {
+  if (action?.payload?.status === 401) {
+    store.dispatch(setReceivedUnauthorized())
+  }
+  return next(action)
+}
 
 const usersApi = createApi({
   reducerPath: 'usersApi',
@@ -32,6 +40,13 @@ const usersApi = createApi({
       }),
     }),
 
+    logout: builder.mutation({
+      query: () => ({
+        url: 'auth/logout',
+        method: 'POST',
+      }),
+    }),
+
     register: builder.mutation({
       query: (registerData) => ({
         url: 'auth/register',
@@ -53,13 +68,6 @@ const usersApi = createApi({
         url: 'auth/google/register',
         method: 'POST',
         body: registerData,
-      }),
-    }),
-
-    updateAuth: builder.mutation({
-      query: () => ({
-        url: 'auth/refresh',
-        method: 'POST',
       }),
     }),
 
@@ -177,7 +185,6 @@ export const {
   useRegisterMutation,
   useGoogleLoginMutation,
   useGoogleRegisterMutation,
-  useUpdateAuthMutation,
   useGetAllCoursesQuery,
   useGetCourseByIdMutation,
   useCreateCourseMutation,
@@ -192,6 +199,7 @@ export const {
   useCreateCheckoutFormWithGoogleMutation,
   useGetCertificateHtmlQuery,
   useConnectGoogleAccountMutation,
+  useLogoutMutation,
 } = usersApi
 
 export function serveStaticImage(imageId) {

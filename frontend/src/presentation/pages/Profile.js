@@ -6,10 +6,11 @@ import SectionWrapper from '../common/SectionWrapper'
 import AuthSection from '../components/Profile/AuthSection'
 
 import PersonIcon from '@mui/icons-material/Person'
+import { useAuth } from '../../hooks/useAuth'
 
 const Profile = () => {
   const theme = useTheme()
-  const user = useSelector((state) => state.user)
+  const { user } = useAuth()
 
   if (!user) return 'Error'
 

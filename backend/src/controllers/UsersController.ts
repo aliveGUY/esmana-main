@@ -1,14 +1,11 @@
-import { Controller, UseGuards, Get, Query, Inject, ForbiddenException, Req, UseInterceptors, UploadedFile, Body, Param, Put } from '@nestjs/common';
-import { TokenAuthGuard } from '../guards/TokenAuthGuard';
+import { Controller, Get, Query, Inject, Req, UseInterceptors, UploadedFile, Body, Param, Put } from '@nestjs/common';
 import { IUserService } from 'src/services/UserService';
 import { User } from 'src/models/User';
-import { ERoles } from 'src/models/enums/ERoles';
 import { Request } from 'express';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditUserDto } from 'src/models/dto/EditUserDto';
 import { Express } from 'express';
-import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
 export class UserController {
@@ -18,7 +15,6 @@ export class UserController {
 
   ) { }
 
-  @UseGuards(TokenAuthGuard)
   @Put()
   @UseInterceptors(FileInterceptor('profilePicture'))
   async editAccount(
@@ -36,19 +32,16 @@ export class UserController {
     return await this.userService.editAccount(user, profilePicture)
   }
 
-  @UseGuards(TokenAuthGuard)
   @Get('')
   async getAllUsers(): Promise<User[]> {
     return await this.userService.getAllUsers()
   }
 
-  @UseGuards(TokenAuthGuard)
   @Get('search')
   async searchUser(@Query('mail') mail: string): Promise<User[]> {
     return await this.userService.searchUsers(mail)
   }
 
-  @UseGuards(TokenAuthGuard)
   @Get(':userId')
   async getUserById(@Param('userId') userId: number): Promise<User> {
     return await this.userService.getUserById(userId)

@@ -11,12 +11,12 @@ import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuesti
 import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
 import { IGoogleClient } from "src/infrastructure/GoogleClient";
-import { Express } from 'express';
 import { EvaluationQuestion } from "src/models/EvaluationQuestion";
 import { has } from 'lodash'
 import { Lecture } from "src/models/Lecture";
 import { EditLectureDto } from "src/models/dto/EditLectureDto";
 import { UserLecture } from "src/models/UserLecture";
+import { AccessTokenData } from "src/models/Token";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
@@ -150,7 +150,7 @@ export class CourseService implements ICourseService {
   }
 
   async getCourseById(id: number, request: Request): Promise<DetailedCourseDto | null> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token)
+    const tokenData = request.user as AccessTokenData | undefined
 
     if (!tokenData) {
       return await this.courseRepository.getStrippedCourseById(id)
@@ -164,7 +164,7 @@ export class CourseService implements ICourseService {
   }
 
   async getAllCourses(request: Request): Promise<StrippedCourseDto[]> {
-    const tokenData = await this.tokenRepository.validateToken(request.cookies?.access_token)
+    const tokenData = request.user as AccessTokenData | undefined
 
     if (!tokenData) throw new Error('Unauthorized')
 

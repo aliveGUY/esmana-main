@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { usersMiddleware } from './asynchronous'
+import { authMiddleware, usersMiddleware } from './asynchronous'
 import usersApi from './asynchronous'
 import { reducers } from './reducers'
 
@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(usersMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(usersMiddleware, authMiddleware),
   devTools: process.env.NODE_ENV === 'development',
 })
 

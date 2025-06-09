@@ -1,4 +1,4 @@
-import { Injectable, Inject, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { User } from '../models/User';
 import { UserLoginDto } from '../models/dto/UserLoginDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
@@ -9,14 +9,14 @@ import * as bcrypt from 'bcrypt';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
 import { ERoles } from 'src/models/enums/ERoles';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { AccessTokenData } from 'src/models/Token';
 
 export interface IAuthService {
   registerUser(newAccountData: UserRegistrationDto): Promise<UserDto>
-  loginLocal(dto: UserLoginDto): Promise<{ user: UserDto; accessToken: string }>;
-  loginGoogle(dto: UserGoogleLoginDto): Promise<{ user: UserDto; accessToken: string }>;
-  refreshToken(accessToken: string): Promise<{ user: UserDto; accessToken: string } | null>;
-  logout(accessToken: string): Promise<void>;
+  loginLocal(response: Response, dto: UserLoginDto): Promise<UserDto>;
+  loginGoogle(response: Response, dto: UserGoogleLoginDto): Promise<UserDto>;
+  logout(response: Response, accessToken: string): Promise<void>;
   connectGoogle(googleToken: string, request: Request): Promise<void>
 }
 
@@ -44,15 +44,11 @@ export class AuthService implements IAuthService {
     return await this.userRepository.create(user)
   }
 
-  async loginLocal(dto: UserLoginDto): Promise<{ user: UserDto; accessToken: string }> {
+  async loginLocal(response: Response, dto: UserLoginDto): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
-    }
-
-    if (user.googleId) {
-      throw new BadRequestException('Please use Google login for this account');
     }
 
     const isPasswordValid = await this.validatePassword(user, dto.password);
@@ -60,12 +56,20 @@ export class AuthService implements IAuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { accessToken } = await this.generateLinkedTokens(user);
+    const tokenData: AccessTokenData = {
+      userId: user.id,
+      email: user.email,
+      roles: user.roles
+    }
 
-    return { user: this.userToDto(user), accessToken };
+    const accessToken = await this.tokenRepository.generateAccessToken(tokenData)
+    await this.tokenRepository.generateRefreshToken(accessToken)
+    this.setAccessTokenToCookies(response, accessToken)
+
+    return this.userToDto(user)
   }
 
-  async loginGoogle(dto: UserGoogleLoginDto): Promise<{ user: UserDto; accessToken: string }> {
+  async loginGoogle(response: Response, dto: UserGoogleLoginDto): Promise<UserDto> {
     const { googleId } = await this.googleClient.verifyAuthToken(dto.token)
     const user = await this.userRepository.findByGoogleId(googleId);
 
@@ -73,52 +77,22 @@ export class AuthService implements IAuthService {
       throw new UnauthorizedException('Google account not found');
     }
 
-    const { accessToken } = await this.generateLinkedTokens(user);
+    const tokenData: AccessTokenData = {
+      userId: user.id,
+      email: user.email,
+      roles: user.roles
+    }
 
-    return { user: this.userToDto(user), accessToken };
+    const accessToken = await this.tokenRepository.generateAccessToken(tokenData)
+    await this.tokenRepository.generateRefreshToken(accessToken)
+    this.setAccessTokenToCookies(response, accessToken)
+
+    return this.userToDto(user)
   }
 
-  async refreshToken(accessToken: string): Promise<{ user: UserDto; accessToken: string } | null> {
-    try {
-      const tokenData = await this.tokenRepository.validateToken(accessToken);
-
-      if (!tokenData) {
-        return null;
-      }
-
-      const refreshTokenId = tokenData.refreshTokenId;
-      if (!refreshTokenId) {
-        return null;
-      }
-
-      const refreshTokenData = await this.tokenRepository.validateToken(refreshTokenId);
-      if (!refreshTokenData || refreshTokenData.type !== 'refresh') {
-        return null;
-      }
-
-      const user = await this.userRepository.findById(tokenData.userId);
-      if (!user) {
-        return null;
-      }
-
-      const { accessToken: newAccessToken } = await this.generateLinkedTokens(user);
-
-      await this.tokenRepository.blacklistToken(accessToken);
-
-      return { user: this.userToDto(user), accessToken: newAccessToken };
-    } catch (error) {
-      return null;
-    }
-  }
-
-  async logout(accessToken: string): Promise<void> {
-    const tokenData = await this.tokenRepository.validateToken(accessToken);
-
-    await this.tokenRepository.blacklistToken(accessToken);
-
-    if (tokenData?.refreshTokenId) {
-      await this.tokenRepository.blacklistToken(tokenData.refreshTokenId);
-    }
+  async logout(response: Response, accessToken: string): Promise<void> {
+    await this.tokenRepository.deleteAccessAndRefreshTokens(accessToken);
+    response.clearCookie('access_token');
   }
 
   async connectGoogle(googleToken: string, request: Request): Promise<void> {
@@ -128,7 +102,7 @@ export class AuthService implements IAuthService {
       throw new Error('No access token found');
     }
 
-    const tokenData = await this.tokenRepository.validateToken(accessToken);
+    const tokenData = await this.tokenRepository.getAccessTokenData(accessToken);
     if (!tokenData) {
       throw new Error('User not found');
     }
@@ -137,21 +111,6 @@ export class AuthService implements IAuthService {
     const { googleId } = await this.googleClient.verifyAuthToken(googleToken)
 
     this.userRepository.setGoogleId(userId, googleId)
-  }
-
-  private async generateLinkedTokens(user: User): Promise<{ accessToken: string; refreshToken: string }> {
-    const refreshToken = await this.tokenRepository.generateRefreshToken(user.id, {
-      email: user.email,
-      roles: user.roles,
-    });
-
-    const accessToken = await this.tokenRepository.generateAccessToken(user.id, {
-      email: user.email,
-      roles: user.roles,
-      refreshTokenId: refreshToken,
-    });
-
-    return { accessToken, refreshToken };
   }
 
   private async validatePassword(user: User, password: string): Promise<boolean> {
@@ -172,5 +131,14 @@ export class AuthService implements IAuthService {
       isEmailVerified: user.isEmailVerified,
       roles: user.roles,
     };
+  }
+
+  private setAccessTokenToCookies(response: Response, accessToken: string) {
+    response.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000,
+    });
   }
 }

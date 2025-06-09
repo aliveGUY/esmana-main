@@ -1,250 +1,104 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TokenData } from '../models/Token';
-import { ETokenType } from '../models/enums/ETokenType';
+import { AccessTokenData, RefreshTokenData } from '../models/Token';
 import * as crypto from 'crypto';
 import { IRedisClient } from 'src/infrastructure/RedisClient';
 
 export interface ITokenRepository {
-  generateAccessToken(userId: number, metadata?: any): Promise<string>;
-  generateRefreshToken(userId: number, metadata?: any): Promise<string>;
-  validateToken(token: string): Promise<TokenData | null>;
-  getTokenData(token: string): Promise<TokenData | null>;
-  revokeToken(token: string): Promise<void>;
-  revokeUserTokens(userId: number, type?: ETokenType): Promise<void>;
-  isTokenBlacklisted(token: string): Promise<boolean>;
-  blacklistToken(token: string): Promise<void>;
-  getTokenExpirationTime(type: ETokenType): number;
+  generateAccessToken(user: AccessTokenData): Promise<string>
+  generateRefreshToken(accessToken: string): Promise<void>
+  isAccessTokenExpired(accessToken: string): Promise<boolean>
+  getRefreshToken(accessToken: string): Promise<string | null>
+  getAccessTokenData(accessToken: string): Promise<AccessTokenData>
+  refreshAccessToken(refreshToken: string): Promise<RefreshTokenData>
+  deleteAccessAndRefreshTokens(accessToken: string): Promise<void>
 }
+
+const FIFTEEN_MINUTES = 15 * 60 * 1000
+const ONE_DAY = 24 * 60 * 60 * 1000
 
 @Injectable()
 export class TokenRepository implements ITokenRepository {
-  private readonly TOKEN_PREFIX = 'token';
-  private readonly USER_TOKENS_PREFIX = 'user_tokens';
-  private readonly BLACKLIST_PREFIX = 'token_blacklist';
-
   constructor(
-    private readonly configService: ConfigService,
     @Inject('IRedisClient') private readonly redisClient: IRedisClient,
   ) { }
 
-  async generateAccessToken(userId: number, metadata: any = {}): Promise<string> {
-    const token = this.generateSecureToken();
-    const expirationTime = this.getTokenExpirationTime(ETokenType.ACCESS);
-    const expiresAt = new Date(Date.now() + expirationTime * 1000);
+  async generateAccessToken(user: AccessTokenData): Promise<string> {
+    const token = this.generateSecureToken()
+    const tokenData: AccessTokenData = {
+      userId: user.userId,
+      email: user.email,
+      roles: user.roles,
+    }
 
-    const tokenData: TokenData = {
-      userId,
-      type: ETokenType.ACCESS,
-      email: metadata.email || '',
-      roles: metadata.roles || [],
-      createdAt: new Date(),
-      expiresAt,
-      isRevoked: false,
-      refreshTokenId: metadata.refreshTokenId,
-      metadata,
-    };
-
-    // Store token data in Redis with TTL
-    await this.redisClient.saveKey(
-      `${this.TOKEN_PREFIX}:${token}`,
-      JSON.stringify(tokenData),
-      expirationTime,
-    );
-
-    // Add to user's token set
-    await this.redisClient.saveKey(
-      `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.ACCESS}:${token}`,
-      token,
-      expirationTime,
-    );
-
-    return token;
+    await this.redisClient.saveKey(`access:${token}`, JSON.stringify(tokenData), FIFTEEN_MINUTES)
+    return token
   }
 
-  async generateRefreshToken(userId: number, metadata: any = {}): Promise<string> {
-    const token = this.generateSecureToken();
-    const expirationTime = this.getTokenExpirationTime(ETokenType.REFRESH);
-    const expiresAt = new Date(Date.now() + expirationTime * 1000);
+  async generateRefreshToken(accessToken: string): Promise<void> {
+    const token = this.generateSecureToken()
+    const data = await this.getAccessTokenData(accessToken)
+    const refreshData: RefreshTokenData = {
+      userId: data.userId,
+      email: data.email,
+      roles: data.roles,
+      accessToken: accessToken
+    }
 
-    const tokenData: TokenData = {
-      userId,
-      type: ETokenType.REFRESH,
-      email: metadata.email || '',
-      roles: metadata.roles || [],
-      createdAt: new Date(),
-      expiresAt,
-      isRevoked: false,
-      metadata,
-    };
-
-    // Store token data in Redis with TTL
-    await this.redisClient.saveKey(
-      `${this.TOKEN_PREFIX}:${token}`,
-      JSON.stringify(tokenData),
-      expirationTime,
-    );
-
-    // Add to user's token set
-    await this.redisClient.saveKey(
-      `${this.USER_TOKENS_PREFIX}:${userId}:${ETokenType.REFRESH}:${token}`,
-      token,
-      expirationTime,
-    );
-
-    return token;
+    await this.redisClient.saveKey(`refresh:${token}`, JSON.stringify(refreshData), ONE_DAY)
   }
 
-  async validateToken(token: string): Promise<TokenData | null> {
-    // Check if token is blacklisted
-    if (await this.isTokenBlacklisted(token)) {
-      return null;
-    }
-
-    const tokenData = await this.getTokenData(token);
-
-    if (!tokenData) {
-      return null;
-    }
-
-    // Check if token is expired
-    if (new Date() > tokenData.expiresAt) {
-      await this.revokeToken(token);
-      return null;
-    }
-
-    // Check if token is revoked
-    if (tokenData.isRevoked) {
-      return null;
-    }
-
-    return tokenData;
+  async isAccessTokenExpired(accessToken: string): Promise<boolean> {
+    const token = await this.redisClient.getKey(`access:${accessToken}`)
+    return token === null
   }
 
-  async getTokenData(token: string): Promise<TokenData | null> {
-    try {
-      const data = await this.redisClient.getKey(`${this.TOKEN_PREFIX}:${token}`);
-
-      if (!data) {
-        return null;
-      }
-
-      const tokenData = JSON.parse(data);
-      return {
-        ...tokenData,
-        createdAt: new Date(tokenData.createdAt),
-        expiresAt: new Date(tokenData.expiresAt),
-      };
-    } catch (error) {
-      return null;
-    }
+  async getRefreshToken(accessToken: string): Promise<string | null> {
+    const refreshToken = await this.redisClient.findKeyByValue(accessToken)
+    return refreshToken?.replace('refresh:', '') || null
   }
 
-  async revokeToken(token: string): Promise<void> {
-    const tokenData = await this.getTokenData(token);
+  async getAccessTokenData(accessToken: string): Promise<AccessTokenData> {
+    const token = await this.redisClient.getKey(`access:${accessToken}`)
+    if (!token) throw new Error('Token not found')
+    const data: AccessTokenData = JSON.parse(token)
 
-    if (!tokenData) {
-      return;
-    }
-
-    // Mark token as revoked
-    const updatedTokenData = {
-      ...tokenData,
-      isRevoked: true,
-    };
-
-    const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
-
-    if (remainingTtl > 0) {
-      await this.redisClient.saveKey(
-        `${this.TOKEN_PREFIX}:${token}`,
-        JSON.stringify(updatedTokenData),
-        remainingTtl,
-      );
-    }
-
-    // Remove from user's token set
-    await this.redisClient.deleteKey(`${this.USER_TOKENS_PREFIX}:${tokenData.userId}:${tokenData.type}:${token}`);
+    return data
   }
 
-  async revokeUserTokens(userId: number, type?: ETokenType): Promise<void> {
-    const pattern = type
-      ? `${this.USER_TOKENS_PREFIX}:${userId}:${type}:*`
-      : `${this.USER_TOKENS_PREFIX}:${userId}:*`;
+  private async getRefreshTokenData(refreshToken: string): Promise<RefreshTokenData> {
+    const token = await this.redisClient.getKey(`refresh:${refreshToken}`)
+    if (!token) throw new Error('Token not found')
+    const data: RefreshTokenData = JSON.parse(token)
 
-    const tokenKeys = await this.redisClient.findKeys(pattern);
-
-    for (const key of tokenKeys) {
-      const token = await this.redisClient.getKey(key);
-      if (token) {
-        await this.revokeToken(token);
-      }
-    }
+    return data
   }
 
-  async isTokenBlacklisted(token: string): Promise<boolean> {
-    return this.redisClient.isKeyExists(`${this.BLACKLIST_PREFIX}:${token}`);
-  }
+  async refreshAccessToken(refreshToken: string): Promise<RefreshTokenData> {
+    const data = await this.getRefreshTokenData(refreshToken)
 
-  async blacklistToken(token: string): Promise<void> {
-    const tokenData = await this.getTokenData(token);
-
-    if (tokenData) {
-      const remainingTtl = Math.max(0, Math.floor((tokenData.expiresAt.getTime() - Date.now()) / 1000));
-
-      if (remainingTtl > 0) {
-        await this.redisClient.saveKey(
-          `${this.BLACKLIST_PREFIX}:${token}`,
-          'blacklisted',
-          remainingTtl,
-        );
-      }
-    } else {
-      // If we can't get token data, blacklist for a default period
-      await this.redisClient.saveKey(
-        `${this.BLACKLIST_PREFIX}:${token}`,
-        'blacklisted',
-        24 * 60 * 60, // 24 hours
-      );
+    const accessTokenData: AccessTokenData = {
+      userId: data.userId,
+      email: data.email,
+      roles: data.roles
     }
 
-    // Also revoke the token
-    await this.revokeToken(token);
+    const accessToken = await this.generateAccessToken(accessTokenData)
+
+    data.accessToken = accessToken
+
+    await this.redisClient.editKey(`refresh:${refreshToken}`, JSON.stringify(data))
+
+    return data
   }
 
-  getTokenExpirationTime(type: ETokenType): number {
-    const config = this.configService.get('token') || {};
+  async deleteAccessAndRefreshTokens(accessToken: string): Promise<void> {
+    const refreshToken = await this.getRefreshToken(accessToken)
 
-    switch (type) {
-      case ETokenType.ACCESS:
-        return this.parseExpirationTime(config.accessTokenExpiresIn || '15m');
-      case ETokenType.REFRESH:
-        return this.parseExpirationTime(config.refreshTokenExpiresIn || '7d');
-      default:
-        return 900; // 15 minutes default
-    }
+    if (refreshToken) await this.redisClient.deleteKey(refreshToken)
+    await this.redisClient.deleteKey(`access:${accessToken}`)
   }
 
   private generateSecureToken(): string {
-    // Generate a cryptographically secure random token
     return crypto.randomBytes(32).toString('hex');
-  }
-
-  private parseExpirationTime(expiresIn: string): number {
-    const unit = expiresIn.slice(-1);
-    const value = parseInt(expiresIn.slice(0, -1));
-
-    switch (unit) {
-      case 's':
-        return value;
-      case 'm':
-        return value * 60;
-      case 'h':
-        return value * 60 * 60;
-      case 'd':
-        return value * 24 * 60 * 60;
-      default:
-        return 900; // 15 minutes default
-    }
   }
 }

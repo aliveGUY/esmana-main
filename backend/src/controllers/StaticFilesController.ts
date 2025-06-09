@@ -20,7 +20,6 @@ export class StaticFilesController {
     stream.pipe(res);
   }
 
-  @UseGuards(TokenAuthGuard)
   @Get('video')
   async searchYoutubeVideos(@Query('title') title: string) {
     return this.googleClient.searchUploadedVideos(title)

@@ -5,7 +5,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './AuthModule';
 import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import redisConfig from '../config/redis.config';
-import tokenConfig from '../config/token.config';
 import googleConfig from '../config/google.config';
 import databaseConfig from '../config/database.config';
 import wayForPayConfig from '../config/wayForPay.config';
@@ -26,7 +25,7 @@ import { Certificate } from 'src/models/Certificate';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [redisConfig, tokenConfig, googleConfig, databaseConfig, wayForPayConfig],
+      load: [redisConfig, googleConfig, databaseConfig, wayForPayConfig],
       isGlobal: true,
       envFilePath: '.env',
 

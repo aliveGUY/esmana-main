@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Configuration
-import tokenConfig from '../config/token.config';
 import googleConfig from '../config/google.config';
 
 // Repositories
@@ -25,7 +24,6 @@ import { CertificateService } from 'src/services/CertificateService';
 
 @Module({
   imports: [
-    ConfigModule.forFeature(tokenConfig),
     ConfigModule.forFeature(googleConfig),
     TypeOrmModule.forFeature([User]),
     RedisModule,

@@ -1,5 +1,4 @@
-import { Controller, Post, UseGuards, Get, Param, Req, Body, ForbiddenException, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
-import { TokenAuthGuard } from '../guards/TokenAuthGuard';
+import { Controller, Post, Get, Param, Req, Body, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { Public } from '../common/decorators/public.decorator';
 import { Inject } from '@nestjs/common';
 import { ICourseService } from 'src/services/CourseService';
@@ -7,7 +6,6 @@ import { StrippedCourseDto } from 'src/models/dto/StrippedCourseDto';
 import { Request } from 'express';
 import { CreateCourseDto } from 'src/models/dto/CreateCourseDto';
 import { DetailedCourseDto } from 'src/models/dto/DetailedCourseDto';
-import { ERoles } from 'src/models/enums/ERoles';
 import { ITokenRepository } from 'src/repositories/TokenRepository';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditCourseDto } from 'src/models/dto/EditCourseDto';
@@ -20,7 +18,6 @@ export class CoursesController {
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
   ) { }
 
-  @UseGuards(TokenAuthGuard)
   @Get('')
   async getAllCourses(@Req() request: Request): Promise<StrippedCourseDto[]> {
     return await this.courseService.getAllCourses(request)
@@ -32,7 +29,6 @@ export class CoursesController {
     return await this.courseService.getAllActiveCourses()
   }
 
-  @UseGuards(TokenAuthGuard)
   @Post('')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async createCourse(
@@ -50,7 +46,6 @@ export class CoursesController {
     return await this.courseService.createCourse(courseDto, thumbnail);
   }
 
-  @UseGuards(TokenAuthGuard)
   @Put('')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async editCourse(

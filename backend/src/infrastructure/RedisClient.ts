@@ -4,10 +4,12 @@ import Redis from "ioredis";
 
 export interface IRedisClient {
   saveKey(key: string, value: string, ttl: number): Promise<void>
+  editKey(key: string, value: string): Promise<void>
   getKey(key: string): Promise<string | null>
   deleteKey(key: string): Promise<void>
   isKeyExists(key: string): Promise<boolean>
   findKeys(pattern: string): Promise<string[]>
+  findKeyByValue(targetValue: string): Promise<string | null>
 }
 
 @Injectable()
@@ -77,10 +79,15 @@ export class RedisClient implements IRedisClient, OnModuleInit, OnModuleDestroy 
 
   async saveKey(key: string, value: string, ttl: number): Promise<void> {
     if (ttl) {
-      await this.client.setex(key, ttl, value);
+      await this.client.set(key, value, 'PX', ttl);
     } else {
       await this.client.set(key, value);
     }
+  }
+
+  async editKey(key: string, value: string): Promise<void> {
+    const ttl = await this.client.pttl(key);
+    if (ttl > 0) await this.client.set(key, value, 'PX', ttl);
   }
 
   async getKey(key: string): Promise<string | null> {
@@ -109,5 +116,25 @@ export class RedisClient implements IRedisClient, OnModuleInit, OnModuleDestroy 
       this.logger.warn(`Error getting keys with pattern ${pattern}:`, error.message);
       return [];
     }
+  }
+
+  async findKeyByValue(targetValue: string): Promise<string | null> {
+    let cursor = '0';
+    do {
+      const [nextCursor, keys] = await this.client.scan(cursor, 'MATCH', 'refresh:*', 'COUNT', 100);
+      cursor = nextCursor;
+      for (const key of keys) {
+        const value = await this.client.get(key);
+
+        if (!value) continue
+
+        const data = JSON.parse(value);
+
+        if (data.accessToken === targetValue) {
+          return key;
+        }
+      }
+    } while (cursor !== '0');
+    return null;
   }
 }

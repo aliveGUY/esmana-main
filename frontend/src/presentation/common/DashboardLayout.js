@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
-import { useUpdateAuthMutation } from '../../state/asynchronous'
 import Navigation from '../components/Navigation'
 import TopBarNavigation from '../components/TopBarNavigation'
 
@@ -11,8 +10,7 @@ const DashboardLayout = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(isMobile)
-  const { isAuthorized } = useAuth()
-  const [updateAuth] = useUpdateAuthMutation()
+  useAuth()
 
   const burgerToggle = useCallback(() => {
     setIsNavigationCollapsed((prev) => !prev)
@@ -21,12 +19,6 @@ const DashboardLayout = () => {
   const handleClose = useCallback(() => {
     setIsNavigationCollapsed(true)
   }, [])
-
-  useEffect(() => {
-    if (!isAuthorized) {
-      updateAuth()
-    }
-  }, [isAuthorized])
 
   return (
     <Stack minHeight="100vh">
