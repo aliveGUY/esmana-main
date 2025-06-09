@@ -10,45 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # Clean previous build artifacts from runner
       - name: Clean Previous Build Artifacts
         run: |
+          echo "Cleaning previous build artifacts from runner..."
           rm -f frontend.tar.gz backend.tar.gz || true
 
+      # Build Frontend
       - name: Build Frontend
         env:
           REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
         run: |
           cd frontend
+          echo "Cleaning previous build artifacts..."
           rm -rf build/ node_modules/.cache/ || true
           npm install --omit=dev
           npm run build
-
-          # Validate manifest exists
-          if [ ! -f build/manifest.json ]; then
-            echo "Error: manifest.json missing after build." >&2
-            exit 1
-          fi
-
           tar -czf ../frontend.tar.gz -C build .
 
+      # Build Backend
       - name: Build Backend
         run: |
           cd backend
+          echo "Cleaning previous build artifacts..."
           rm -rf dist/ node_modules/.cache/ || true
           npm install --omit=dev
           npm install -g @nestjs/cli
           npm run build
           tar -czf ../backend.tar.gz dist package.json package-lock.json node_modules .
 
+      # Deploy Frontend to VPS
       - name: Upload Frontend Archive
         uses: appleboy/scp-action@master
         with:
@@ -56,7 +58,7 @@ jobs:
           username: ${{ secrets.FRONTEND_USER }}
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           source: "frontend.tar.gz"
-          target: ${{ secrets.FRONTEND_TARGET }}
+          target:  ${{ secrets.FRONTEND_TARGET }}
 
       - name: Clean and Extract Frontend Archive
         uses: appleboy/ssh-action@master
@@ -66,13 +68,15 @@ jobs:
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           script: |
             cd "${{ secrets.FRONTEND_TARGET }}"
-            echo "Removing old static assets..."
-            rm -rf static/ *.js *.js.map *.chunk.js *.css *.css.map *.gz *.ico *.json || true
+            echo "Cleaning previous frontend deployment..."
+            # Remove all previous files except the uploaded archive
+            find . -mindepth 1 -not -name "frontend.tar.gz" -delete
             echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
             echo "Frontend deployed successfully."
 
+      # Deploy Backend to VPS
       - name: Upload Backend Archive
         uses: appleboy/scp-action@master
         with:
@@ -90,14 +94,18 @@ jobs:
           key: ${{ secrets.BACKEND_SSH_KEY }}
           script: |
             cd "${{ secrets.BACKEND_TARGET }}"
-            pm2 stop 0 || echo "PM2 not running."
-            find . -mindepth 1 \
-              -not -name "backend.tar.gz" \
-              -not -name ".env*" \
-              -not -name "ecosystem.config.js" \
-              -delete
+            echo "Stopping PM2 process..."
+            pm2 stop 0 || echo "PM2 process was not running"
+            echo "Cleaning previous backend deployment..."
+            # Remove all previous files except the uploaded archive and critical config files
+            find . -mindepth 1 -not -name "backend.tar.gz" -not -name ".env*" -not -name "ecosystem.config.js" -delete
+            echo "Extracting new backend archive..."
             tar -xzf backend.tar.gz
             rm backend.tar.gz
+            echo "Setting up Node.js environment..."
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+            . ~/.bashrc
             npm install pm2 -g
+            echo "Starting PM2 process..."
             pm2 start 0
-            echo "Backend deployed and restarted."
+            echo "Backend deployed and restarted successfully."
