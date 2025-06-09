@@ -20,7 +20,6 @@ jobs:
 
       - name: Clean Previous Build Artifacts
         run: |
-          echo "Cleaning previous build artifacts from runner..."
           rm -f frontend.tar.gz backend.tar.gz || true
 
       - name: Build Frontend
@@ -29,16 +28,21 @@ jobs:
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
         run: |
           cd frontend
-          echo "Cleaning previous build artifacts..."
           rm -rf build/ node_modules/.cache/ || true
           npm install --omit=dev
           npm run build
+
+          # Validate manifest exists
+          if [ ! -f build/manifest.json ]; then
+            echo "Error: manifest.json missing after build." >&2
+            exit 1
+          fi
+
           tar -czf ../frontend.tar.gz -C build .
 
       - name: Build Backend
         run: |
           cd backend
-          echo "Cleaning previous build artifacts..."
           rm -rf dist/ node_modules/.cache/ || true
           npm install --omit=dev
           npm install -g @nestjs/cli
@@ -63,7 +67,7 @@ jobs:
           script: |
             cd "${{ secrets.FRONTEND_TARGET }}"
             echo "Removing old static assets..."
-            rm -rf static/ asset-manifest.json *.js *.js.map *.css *.css.map *.chunk.js || true
+            rm -rf static/ *.js *.js.map *.chunk.js *.css *.css.map *.gz *.ico *.json || true
             echo "Extracting new frontend archive..."
             tar -xzf frontend.tar.gz
             rm frontend.tar.gz
@@ -86,21 +90,14 @@ jobs:
           key: ${{ secrets.BACKEND_SSH_KEY }}
           script: |
             cd "${{ secrets.BACKEND_TARGET }}"
-            echo "Stopping PM2 process..."
-            pm2 stop 0 || echo "PM2 process was not running"
-            echo "Cleaning previous backend deployment..."
+            pm2 stop 0 || echo "PM2 not running."
             find . -mindepth 1 \
               -not -name "backend.tar.gz" \
               -not -name ".env*" \
               -not -name "ecosystem.config.js" \
               -delete
-            echo "Extracting new backend archive..."
             tar -xzf backend.tar.gz
             rm backend.tar.gz
-            echo "Setting up Node.js environment..."
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-            . ~/.bashrc
             npm install pm2 -g
-            echo "Starting PM2 process..."
             pm2 start 0
-            echo "Backend deployed and restarted successfully."
+            echo "Backend deployed and restarted."
