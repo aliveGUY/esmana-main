@@ -52,8 +52,8 @@ export class CoursesController {
 
   @Public()
   @Get('/stripped/:id')
-  async getStrippedCourseById(@Req() request: Request, @Param('id') id: number) {
-    return await this.courseService.getCourseById(id, request)
+  async getStrippedCourseById(@Param('id') id: number) {
+    return await this.courseService.getActiveCourseById(id)
   }
 
   @Get('/:id')
