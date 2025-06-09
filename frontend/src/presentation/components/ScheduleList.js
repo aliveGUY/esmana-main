@@ -63,8 +63,8 @@ const ScheduleList = () => {
       <Typography fontWeight="bold" mb={2}>
         Your Events
       </Typography>
-      {map(lectures, (lecture) => (
-        <LectureItem lecture={lecture} />
+      {map(lectures, (lecture, index) => (
+        <LectureItem ley={index} lecture={lecture} />
       ))}
     </Stack>
   )

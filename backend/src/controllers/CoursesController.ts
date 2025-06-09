@@ -52,10 +52,8 @@ export class CoursesController {
     return await this.courseService.editCourse(courseDto, thumbnail)
   }
 
-  @Public()
   @Get('/:id')
   async getCourseById(@Req() request: Request, @Param('id') id: number) {
     return await this.courseService.getCourseById(id, request)
   }
-
 }
