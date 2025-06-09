@@ -28,7 +28,8 @@ export class TokenAuthGuard implements CanActivate {
 
     if (isAccessTokenValid) {
       const data = await this.tokenRepo.getAccessTokenData(token)
-      req.user = { id: data.userId, email: data.email, roles: data.roles };
+
+      req.user = { userId: data.userId, email: data.email, roles: data.roles } as AccessTokenData;
     }
 
     const refreshToken = await this.tokenRepo.getRefreshToken(token)
@@ -44,10 +45,10 @@ export class TokenAuthGuard implements CanActivate {
       });
 
       req.user = {
-        id: refreshTokenData.userId,
+        userId: refreshTokenData.userId,
         email: refreshTokenData.email,
         roles: refreshTokenData.roles
-      };
+      } as AccessTokenData;
     }
 
     const isAdmin = (req.user as AccessTokenData)?.roles.includes(ERoles.ADMIN)
