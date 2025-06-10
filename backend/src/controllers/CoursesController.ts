@@ -47,6 +47,7 @@ export class CoursesController {
     @Body('data') dataJson: string,
   ): Promise<DetailedCourseDto> {
     const courseDto: EditCourseDto = JSON.parse(dataJson)
+    console.log({ courseDto, dataJson })
     return await this.courseService.editCourse(courseDto, thumbnail)
   }
 

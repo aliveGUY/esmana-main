@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { CreateCourseDto } from "src/models/dto/CreateCourseDto";
 import { DetailedCourseDto } from "src/models/dto/DetailedCourseDto";
 import { EditCourseDto } from "src/models/dto/EditCourseDto";
@@ -126,7 +126,7 @@ export class CourseService implements ICourseService {
       return this.evaluationQuestionRepository.createEvaluationQuestion(question)
     })
 
-    const lecturePromises = courseDto.lectures.map(lectureDto => {
+    const lecturePromises = courseDto.lectures.map((lectureDto: Partial<Lecture>) => {
       const lecture: Partial<Lecture> = {
         title: lectureDto.title,
         description: lectureDto.description,
@@ -135,10 +135,10 @@ export class CourseService implements ICourseService {
         endTime: lectureDto.endTime,
         users: lectureDto.users,
         course: updatedCourse,
+        materials: lectureDto.materials
       }
 
       if (has(lectureDto, 'id')) {
-        lecture.id = lectureDto.id
         return this.lectureService.editLecture(lecture as EditLectureDto)
       }
 

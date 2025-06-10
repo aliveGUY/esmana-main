@@ -1,0 +1,8 @@
+- Create Course with lecture
+- Edit course
+- Edit lecture
+- Add new Lecture
+- Add lecture materials
+- Edit lecture materials
+- Add user to lecture
+- Delete user from lecture

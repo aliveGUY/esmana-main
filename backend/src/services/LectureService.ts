@@ -1,8 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common"
 import { isEmpty } from "class-validator"
 import { IGoogleClient } from "src/infrastructure/GoogleClient"
-import { Course } from "src/models/Course"
-import { CreateLectureDto } from "src/models/dto/CreateLectureDto"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
 import { EvaluationQuestion } from "src/models/EvaluationQuestion"
 import { Lecture } from "src/models/Lecture"
@@ -30,7 +28,17 @@ export class LectureService implements ILectureService {
   ) { }
 
   async createLecture(lectureDto: Partial<Lecture>): Promise<Lecture> {
-    const newLecture = await this.lectureRepository.createLecture(lectureDto)
+    const lecture: Partial<Lecture> = {
+      title: lectureDto.title,
+      description: lectureDto.description,
+      price: lectureDto.price,
+      startTime: lectureDto.startTime,
+      endTime: lectureDto.endTime,
+      users: lectureDto.users,
+      course: lectureDto.course,
+    }
+
+    const newLecture = await this.lectureRepository.createLecture(lecture)
 
     if (lectureDto.users && !isEmpty(lectureDto.users)) {
       const promises = lectureDto.users.map(userLectureDto => {
@@ -53,9 +61,9 @@ export class LectureService implements ILectureService {
       const meetingUrl = await this.googleClient.createMeetingLink(newLecture.title, newLecture.startTime, newLecture.endTime)
 
       const lectureMaterials: Partial<LectureMaterials> = {
-        videoUrl: newLecture.materials.videoUrl,
+        videoUrl: lectureDto.materials.videoUrl,
         meetingUrl: meetingUrl,
-        richText: newLecture.materials.richText,
+        richText: lectureDto.materials.richText,
         lecture: newLecture
       }
 
@@ -117,9 +125,9 @@ export class LectureService implements ILectureService {
       const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
       const lectureMaterials: Partial<LectureMaterials> = {
-        videoUrl: updatedLecture.materials.videoUrl,
+        videoUrl: lectureDto.materials.videoUrl,
         meetingUrl: meetingUrl,
-        richText: updatedLecture.materials.richText,
+        richText: lectureDto.materials.richText,
         lecture: updatedLecture
       }
 
@@ -132,9 +140,9 @@ export class LectureService implements ILectureService {
 
       const lectureMaterials: Partial<LectureMaterials> = {
         id: updatedLecture.materials.id,
-        videoUrl: updatedLecture.materials.videoUrl,
+        videoUrl: lectureDto.materials.videoUrl,
         meetingUrl: meetingUrl,
-        richText: updatedLecture.materials.richText,
+        richText: lectureDto.materials.richText,
         lecture: updatedLecture
       }
 

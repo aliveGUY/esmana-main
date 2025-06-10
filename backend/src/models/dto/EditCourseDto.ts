@@ -1,3 +1,4 @@
+import { Lecture } from "../Lecture";
 import { CreateEvaluationQuestionDto } from "./CreateEvaluationQuestionDto";
 import { CreateLectureDto } from "./CreateLectureDto";
 import { EditEvaluationQuestionDto } from "./EditEvaluationQuestionDto";
@@ -11,6 +12,6 @@ export class EditCourseDto {
   isActive?: boolean;
   participationCertificate?: string;
   bprCertificate?: string;
-  lectures: EditLectureDto[] | CreateLectureDto[];
+  lectures: Partial<Lecture>[];
   bprEvaluation: EditEvaluationQuestionDto[] | CreateEvaluationQuestionDto[];
 }
