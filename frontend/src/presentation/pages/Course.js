@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { find } from 'lodash'
+import { find, isEmpty } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Box } from '@mui/material'
@@ -19,7 +19,7 @@ const Course = () => {
     getCourseById(courseId)
   }, [])
 
-  if (!ownedCourses) return
+  if (!ownedCourses || isEmpty(ownedCourses)) return
 
   const course = find(ownedCourses, (course) => course.id === Number(courseId))
   const lecture = find(course.lectures, (lecture) => lecture.id === Number(lectureId))
