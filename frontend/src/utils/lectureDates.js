@@ -40,5 +40,7 @@ export function convertLectureDatesStorageToInterface({ startTime, endTime }) {
 
 export function convertLectureDatesStorageToForm({ startTime, endTime }) {
   const date = dayjs(startTime).format('DD.MM.YYYY')
+
+  console.log({ input: { startTime, endTime }, output: { date, startTime, endTime } })
   return { date, startTime, endTime }
 }
