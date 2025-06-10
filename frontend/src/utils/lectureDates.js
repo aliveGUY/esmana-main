@@ -31,15 +31,14 @@ export function convertLectureDatesFormToStorage({ date, startTime, endTime }) {
 }
 
 export function convertLectureDatesStorageToInterface({ startTime, endTime }) {
-  const date = dayjs(new Date(startTime)).format('DD.MM.YYYY')
-  const _startTime = dayjs(new Date(startTime)).format('HH:mm')
-  const _endTime = dayjs(new Date(endTime)).format('HH:mm')
+  const date = dayjs(startTime).format('DD.MM.YYYY')
+  const _startTime = dayjs(startTime).format('HH:mm')
+  const _endTime = dayjs(endTime).format('HH:mm')
 
   return { date, startTime: _startTime, endTime: _endTime }
 }
 
 export function convertLectureDatesStorageToForm({ startTime, endTime }) {
-  const date = dayjs(new Date(startTime)).format('DD.MM.YYYY')
-
+  const date = dayjs(startTime).format('DD.MM.YYYY')
   return { date, startTime, endTime }
 }

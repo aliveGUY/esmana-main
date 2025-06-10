@@ -90,6 +90,7 @@ export class LectureService implements ILectureService {
   }
 
   async editLecture(lectureDto: EditLectureDto): Promise<Lecture> {
+    console.log("SHOULD EIT LECTURE")
     const oldLecture = await this.lectureRepository.getLectureById(lectureDto.id)
 
     const lecture: Partial<Lecture> = {
@@ -139,7 +140,7 @@ export class LectureService implements ILectureService {
       const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
       const lectureMaterials: Partial<LectureMaterials> = {
-        id: updatedLecture.materials.id,
+        id: lectureDto.materials.id,
         videoUrl: lectureDto.materials.videoUrl,
         meetingUrl: meetingUrl,
         richText: lectureDto.materials.richText,

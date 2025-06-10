@@ -139,9 +139,12 @@ export class CourseService implements ICourseService {
       }
 
       if (has(lectureDto, 'id')) {
+        lecture.id = lectureDto.id
+        console.log("SHOULD EDIT LECTURE", {})
         return this.lectureService.editLecture(lecture as EditLectureDto)
       }
 
+      console.log("SHOULD CREATE LECTURE")
       return this.lectureService.createLecture(lecture)
     })
 
