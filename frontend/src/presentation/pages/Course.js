@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import dayjs from 'dayjs'
-import { find, head, isEmpty, last, sortBy } from 'lodash'
-import { useParams } from 'react-router'
+import { filter, find, head, isEmpty, last, map, some, sortBy } from 'lodash'
+import { useNavigate, useParams } from 'react-router'
 
 import { Box } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
@@ -10,15 +10,43 @@ import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
 import LectureTopControls from '../components/LectureTopControls'
+import { useAuth } from '../../hooks/useAuth'
+
+const getBlockedLectures = (lectures, user) => {
+  const firstIncompleteLecture = find(lectures, (lecture) => !lecture.isCompleted)
+
+  const incompleteLectures = filter(lectures, (lecture) => {
+    const isPurchased = some(lecture.users, (userLecture) => userLecture.user.id === user?.id)
+    return isPurchased && !lecture.isCompleted && lecture.id !== firstIncompleteLecture?.id
+  })
+
+  return map(incompleteLectures, 'id')
+}
 
 const Course = () => {
+  const { user } = useAuth()
   const { lectureId, courseId } = useParams()
   const { ownedCourses } = useCourses()
   const [getCourseById] = useGetCourseByIdMutation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     getCourseById(courseId)
   }, [])
+
+  useEffect(() => {
+    const course = find(ownedCourses, (course) => course.id === Number(courseId))
+    if (!course) return
+    
+    const sortedLectures = sortBy(course.lectures, (item) => dayjs(item?.startTime).valueOf())
+    const blockedLectures = getBlockedLectures(sortedLectures, user)
+    const shouldRedirect = blockedLectures.includes(Number(lectureId))
+
+    if (shouldRedirect) {
+      const firstIncompleteLecture = find(sortedLectures, (lecture) => !lecture.isCompleted)
+      navigate(`/dashboard/course/${courseId}/${firstIncompleteLecture.id}`)
+    }
+  }, [lectureId, ownedCourses])
 
   if (!ownedCourses || isEmpty(ownedCourses)) return
 

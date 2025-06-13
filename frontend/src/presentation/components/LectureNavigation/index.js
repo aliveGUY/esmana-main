@@ -21,9 +21,8 @@ const getIncompleteLectureIds = (lectures) => {
 
 const LectureNavigation = ({ lectures }) => {
   const theme = useTheme()
-  const { lectureId, courseId } = useParams()
+  const { lectureId } = useParams()
   const [isExpanded, setIsExpanded] = useState(false)
-  const navigate = useNavigate()
   const lecture = find(lectures, (lecture) => lecture.id === Number(lectureId))
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -32,15 +31,6 @@ const LectureNavigation = ({ lectures }) => {
   const handleToggle = useCallback(() => {
     setIsExpanded((prev) => !prev)
   }, [])
-
-  useEffect(() => {
-    const shouldRedirect = incompleteLectures.includes(Number(lectureId))
-
-    if (shouldRedirect) {
-      const firstIncompleteLecture = find(lectures, (lecture) => !lecture.isCompleted)
-      navigate(`/dashboard/course/${courseId}/${firstIncompleteLecture.id}`)
-    }
-  }, [lectureId, incompleteLectures])
 
   return (
     <Stack
