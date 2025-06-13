@@ -6,10 +6,10 @@ import TouchRipple from '@mui/material/ButtonBase/TouchRipple'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../../hooks/useAuth'
-import { useFormattedDates } from '../../../hooks/useFormattedDates'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import LockIcon from '@mui/icons-material/Lock'
+import { useFormattedDates } from '../../../utils/lectureDates'
 
 const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
   if (!isPurchased) {

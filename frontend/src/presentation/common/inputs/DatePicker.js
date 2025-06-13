@@ -2,11 +2,9 @@ import React from 'react'
 import dayjs from 'dayjs'
 import { isEmpty } from 'lodash'
 import { Controller, useFormContext } from 'react-hook-form'
-
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker'
 
 import 'dayjs/locale/en-gb'
-
 dayjs.locale('en-gb')
 
 const DatePicker = ({ name, label, required = null }) => {
@@ -25,9 +23,9 @@ const DatePicker = ({ name, label, required = null }) => {
         <MuiDatePicker
           label={label}
           format="DD/MM/YYYY"
-          value={value ? dayjs(new Date(value)) : null}
+          value={value ? dayjs(value) : null}
           onChange={(newValue) => {
-            onChange(newValue ? new Date(newValue).toString() : null)
+            onChange(newValue ? newValue.toISOString() : null)
           }}
           slotProps={{
             textField: {

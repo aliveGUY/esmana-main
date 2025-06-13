@@ -11,24 +11,23 @@ import CalendarRow from './CalendarRow'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-function getWeekFromDate(inputDate) {
-  const date = new Date(inputDate)
-  const dayIndex = date.getDay()
+import dayjs from 'dayjs'
 
-  const weekStart = new Date(date)
-  weekStart.setDate(date.getDate() - dayIndex)
+function getWeekFromDate(inputDate) {
+  const date = dayjs(inputDate)
+  const dayIndex = date.day()
+
+  const weekStart = date.subtract(dayIndex, 'day')
 
   const week = []
 
   for (let i = 0; i < 7; i++) {
-    const current = new Date(weekStart)
-    current.setDate(weekStart.getDate() + i)
-
+    const current = weekStart.add(i, 'day')
     week.push({
-      day: WEEK[current.getDay()],
-      date: current.getDate(),
-      month: MONTHS[current.getMonth()],
-      year: current.getFullYear(),
+      day: WEEK[current.day()],
+      date: current.date(),
+      month: MONTHS[current.month()],
+      year: current.year(),
     })
   }
 
@@ -36,35 +35,27 @@ function getWeekFromDate(inputDate) {
 }
 
 const ScheduleCalendar = () => {
-  const [anchorDate, setAnchorDate] = useState(new Date())
+  const [anchorDate, setAnchorDate] = useState(dayjs())
   const week = getWeekFromDate(anchorDate)
-  const month = MONTHS[anchorDate.getMonth()]
+  const month = MONTHS[anchorDate.month()]
   const calendarRef = useRef()
 
   const { highlightedCourse } = useSelector((state) => state.courses)
   const { ownedCourses } = useCourses()
 
   const swipeRight = () => {
-    setAnchorDate((prev) => {
-      const nextDate = new Date(prev)
-      nextDate.setDate(nextDate.getDate() + 7)
-      return nextDate
-    })
+    setAnchorDate((prev) => prev.add(7, 'day'))
   }
 
   const swipeLeft = () => {
-    setAnchorDate((prev) => {
-      const prevDate = new Date(prev)
-      prevDate.setDate(prevDate.getDate() - 7)
-      return prevDate
-    })
+    setAnchorDate((prev) => prev.subtract(7, 'day'))
   }
 
   useEffect(() => {
     if (!calendarRef.current) return
-    const currentTime = new Date()
-    const currentHour = currentTime.getHours()
-    const currentMinutes = currentTime.getMinutes() / 30 > 0 ? '00' : '30'
+    const currentTime = dayjs()
+    const currentHour = currentTime.hour()
+    const currentMinutes = currentTime.minute() >= 30 ? '30' : '00'
 
     const targetElement = calendarRef.current.querySelector(`#hour${currentHour}-${currentMinutes}`)
     if (targetElement) {

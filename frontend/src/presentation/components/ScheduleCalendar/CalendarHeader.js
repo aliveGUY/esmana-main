@@ -3,14 +3,15 @@ import { map } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { WEEK } from '../../../constants/calendar'
+import dayjs from 'dayjs'
 
 const CalendarHeader = ({ week }) => {
-  const today = new Date()
-  const _day = WEEK[today.getDay()]
-  const _date = today.getDate()
+  const today = dayjs()
+  const _day = WEEK[today.day()]
+  const _date = today.date()
 
   const isToday = (day, date) => {
-    return day === _day && _date === date
+    return day === _day && date === _date
   }
 
   return (

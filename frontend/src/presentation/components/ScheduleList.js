@@ -4,7 +4,8 @@ import { concat, map, sortBy } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
-import { useFormattedDates } from '../../hooks/useFormattedDates'
+import dayjs from 'dayjs'
+import { useFormattedDates } from '../../utils/lectureDates'
 
 const LectureItem = ({ lecture }) => {
   const { description, title, startTime, owned } = lecture
@@ -49,7 +50,7 @@ const ScheduleList = () => {
       }))
     : []
 
-  const lectures = sortBy(concat(ownedLectures, highlightedLectures), (item) => new Date(item?.startTime))
+  const lectures = sortBy(concat(ownedLectures, highlightedLectures), (item) => dayjs(item?.startTime).valueOf())
 
   return (
     <Stack

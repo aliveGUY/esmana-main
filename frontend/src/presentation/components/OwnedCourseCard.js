@@ -6,14 +6,16 @@ import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
 import { serveStaticImage } from '../../state/asynchronous'
 import EmptyImage from '../../static/images/no-image.jpg'
+import dayjs from 'dayjs'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {
-    const start = new Date(lecture.startTime)
-    const end = new Date(lecture.endTime)
-    const durationMs = end.getTime() - start.getTime()
+    const start = dayjs(lecture.startTime)
+    const end = dayjs(lecture.endTime)
 
-    const hours = durationMs / (1000 * 60 * 60) // convert ms → hours
+    const durationMs = end.diff(start)
+    const hours = durationMs / (1000 * 60 * 60)
+
     return sum + hours
   }, 0)
 }

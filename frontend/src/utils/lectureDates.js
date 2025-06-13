@@ -1,46 +1,64 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import 'dayjs/locale/en-gb'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.extend(localizedFormat)
+
+dayjs.locale('en-gb')
 
 export function convertLectureDatesFormToStorage({ date, startTime, endTime }) {
-  const year = new Date(date).getFullYear()
-  const month = new Date(date).getMonth()
-  const _date = new Date(date).getDate()
-  const startHours = new Date(startTime).getHours()
-  const startMinutes = new Date(startTime).getMinutes()
-  const endHours = new Date(endTime).getHours()
-  const endMinutes = new Date(endTime).getMinutes()
+  const baseDate = dayjs(date)
 
-  const _startTime = new Date()
-  _startTime.setFullYear(year)
-  _startTime.setMonth(month)
-  _startTime.setDate(_date)
-  _startTime.setHours(startHours)
-  _startTime.setMinutes(startMinutes)
-  _startTime.setSeconds(0)
-  _startTime.setMilliseconds(0)
+  const _startTime = baseDate
+    .hour(dayjs(startTime).hour())
+    .minute(dayjs(startTime).minute())
+    .second(0)
+    .millisecond(0)
+    .utc()
 
-  const _endTime = new Date()
-  _endTime.setFullYear(year)
-  _endTime.setMonth(month)
-  _endTime.setDate(_date)
-  _endTime.setHours(endHours)
-  _endTime.setMinutes(endMinutes)
-  _endTime.setSeconds(0)
-  _endTime.setMilliseconds(0)
+  const _endTime = baseDate.hour(dayjs(endTime).hour()).minute(dayjs(endTime).minute()).second(0).millisecond(0).utc() // Convert to UTC
 
-  return { startTime: _startTime, endTime: _endTime }
+  return {
+    startTime: _startTime.toISOString(),
+    endTime: _endTime.toISOString(),
+  }
 }
 
 export function convertLectureDatesStorageToInterface({ startTime, endTime }) {
-  const date = dayjs(startTime).format('DD.MM.YYYY')
-  const _startTime = dayjs(startTime).format('HH:mm')
-  const _endTime = dayjs(endTime).format('HH:mm')
+  const start = dayjs.utc(startTime).local()
+  const end = dayjs.utc(endTime).local()
 
-  return { date, startTime: _startTime, endTime: _endTime }
+  return {
+    date: start.format('DD.MM.YYYY'),
+    startTime: start.format('HH:mm'),
+    endTime: end.format('HH:mm'),
+  }
 }
 
 export function convertLectureDatesStorageToForm({ startTime, endTime }) {
-  const date = dayjs(startTime).format('DD.MM.YYYY')
+  const start = dayjs.utc(startTime).local()
+  const end = dayjs.utc(endTime).local()
 
-  console.log({ input: { startTime, endTime }, output: { date, startTime, endTime } })
-  return { date, startTime, endTime }
+  const date = start.format('DD.MM.YYYY')
+
+  return {
+    date,
+    startTime: start.toISOString(),
+    endTime: end.toISOString(),
+  }
+}
+
+export function useFormattedDates({ startTime = dayjs(), endTime = dayjs() }) {
+  const start = dayjs.utc(startTime).local().locale('en-gb')
+  const end = dayjs.utc(endTime).local().locale('en-gb')
+
+  return {
+    date: start.format('D MMMM YYYY'),
+    hoursStart: start.format('HH:mm'),
+    hoursEnd: end.format('HH:mm'),
+  }
 }

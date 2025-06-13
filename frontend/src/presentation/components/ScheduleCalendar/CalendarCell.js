@@ -2,6 +2,7 @@ import React from 'react'
 import { map } from 'lodash'
 
 import { Box, useTheme } from '@mui/material'
+import dayjs from 'dayjs'
 
 const monthNameToIndex = {
   January: 0,
@@ -23,17 +24,19 @@ const parseLectures = (lectures, cellDate) => {
 
   return lectures
     .map((lecture) => {
-      const start = new Date(lecture.startTime)
-      const end = new Date(lecture.endTime)
+      const start = dayjs(lecture.startTime)
+      const end = dayjs(lecture.endTime)
 
-      const isMatchingDate = cellDate.getDate() === start.getDate()
-      const isMatchingDay = cellDate.getDay() === start.getDay()
+      const isMatchingDate = cellDate.isSame(start, 'date')
+      const isMatchingDay = cellDate.day() === start.day()
+
       if (!isMatchingDate || !isMatchingDay) return null
 
-      const isInCell = start <= cellDate && end >= cellDate
+      const isInCell =
+        (cellDate.isAfter(start) && cellDate.isBefore(end)) || cellDate.isSame(start) || cellDate.isSame(end)
 
-      const isFirstCell = cellDate.getTime() === start.getTime()
-      const isLastCell = cellDate.getTime() === end.getTime()
+      const isFirstCell = cellDate.isSame(start)
+      const isLastCell = cellDate.isSame(end)
 
       return isInCell
         ? {
@@ -110,14 +113,19 @@ const OwnedLectureFactory = ({ event }) => {
     />
   )
 }
-
 const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
   const monthIndex = monthNameToIndex[day.month]
 
-  const parsedHour = parseInt(hour.split(':')[0], 10)
-  const parsedMinutes = parseInt(hour.split(':')[1], 10)
+  const [parsedHour, parsedMinutes] = hour.split(':').map(Number)
 
-  const cellDate = new Date(day.year, monthIndex, day.date, parsedHour, parsedMinutes, 0, 0)
+  const cellDate = dayjs()
+    .set('year', day.year)
+    .set('month', monthIndex)
+    .set('date', day.date)
+    .set('hour', parsedHour)
+    .set('minute', parsedMinutes)
+    .set('second', 0)
+    .set('millisecond', 0)
 
   const lecturesInHour = parseLectures(
     ownedCourses?.flatMap((course) => course.lectures),
@@ -127,12 +135,7 @@ const CalendarCell = ({ day, hour, ownedCourses, highlightedCourse }) => {
   const highlightedLectures = parseLectures(highlightedCourse?.lectures, cellDate)
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        height: '100%',
-      }}
-    >
+    <Box sx={{ position: 'relative', height: '100%' }}>
       {map(highlightedLectures, (event, index) => (
         <HighlightedLectureFactory key={index} event={event} />
       ))}
