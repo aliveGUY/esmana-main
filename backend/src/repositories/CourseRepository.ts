@@ -71,6 +71,16 @@ export class CourseRepository implements ICourseRepository {
       )
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
+      .addSelect([
+        'user.id',
+        'user.firstName',
+        'user.middleName',
+        'user.lastName',
+        'user.profilePicture',
+        'lectorDetails.id',
+        'lectorDetails.credentials',
+        'lectorDetails.biography'
+      ])
       .leftJoinAndSelect(
         'lecture.materials',
         'materials',
@@ -82,7 +92,12 @@ export class CourseRepository implements ICourseRepository {
         )`,
         { userId }
       )
-      .leftJoinAndSelect('materials.evaluation', 'lectureEvaluation')
+      .leftJoin('materials.evaluation', 'lectureEvaluation')
+      .addSelect([
+        'lectureEvaluation.id',
+        'lectureEvaluation.questionText',
+        'lectureEvaluation.options'
+      ])
       .where('course.id = :courseId', { courseId })
       .getOne();
 

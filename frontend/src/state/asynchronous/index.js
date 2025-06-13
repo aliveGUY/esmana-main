@@ -1,3 +1,4 @@
+import { isRejectedWithValue } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { BASE_URL } from '../../constants/config'
@@ -195,11 +196,11 @@ export const {
 } = usersApi
 
 export const authMiddleware = (store) => (next) => (action) => {
-  if (action.type.endsWith('/rejected') && action?.payload?.status === 401) {
-    store.dispatch(setReceivedUnauthorized())
-  }
-
-  if (action.type.endsWith('/fulfilled') && action?.error?.status === 401) {
+  if (
+    isRejectedWithValue(action) &&
+    action.payload?.status === 401 &&
+    action.meta?.baseQueryMeta?.request?.url?.startsWith(BASE_URL)
+  ) {
     store.dispatch(setReceivedUnauthorized())
   }
 

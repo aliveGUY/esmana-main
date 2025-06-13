@@ -1,4 +1,5 @@
 import React from 'react'
+import { some } from 'lodash'
 import { Link, useParams } from 'react-router'
 
 import { Button, Stack } from '@mui/material'
@@ -7,8 +8,8 @@ import { useAuth } from '../../../hooks/useAuth'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const LectureTopControls = ({ lecture }) => {
-  const { user } = useAuth()
-  const isPurchased = find(lecture.users, (u) => u.user.id === user?.id)
+  const { user, isAdmin } = useAuth()
+  const isPurchased = some(lecture.users, (userLecture) => userLecture.user.id === user?.id)
   const { courseId } = useParams()
 
   return (
@@ -17,9 +18,11 @@ const LectureTopControls = ({ lecture }) => {
         Back
       </Button>
       <Stack direction="row" spacing={2}>
-        <Button variant="outlined" to={`/dashboard/course/edit/${courseId}`} component={Link}>
-          Edit
-        </Button>
+        {isAdmin && (
+          <Button variant="outlined" to={`/dashboard/course/edit/${courseId}`} component={Link}>
+            Edit
+          </Button>
+        )}
         {!isPurchased && <Button variant="primary">Purchase</Button>}
       </Stack>
     </Stack>

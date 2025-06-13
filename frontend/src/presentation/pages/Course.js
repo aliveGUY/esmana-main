@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { find, isEmpty } from 'lodash'
+import dayjs from 'dayjs'
+import { find, head, isEmpty, last, sortBy } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Box } from '@mui/material'
@@ -23,6 +24,9 @@ const Course = () => {
 
   const course = find(ownedCourses, (course) => course.id === Number(courseId))
   const lecture = find(course.lectures, (lecture) => lecture.id === Number(lectureId))
+  const sortedLectures = sortBy(course.lectures, (item) => dayjs(item?.startTime).valueOf())
+  const isFirstLecture = head(sortedLectures).id === Number(lectureId)
+  const isLastLecture = last(sortedLectures).id === Number(lectureId)
 
   return (
     <SectionWrapper>
@@ -39,8 +43,8 @@ const Course = () => {
         <Box sx={{ gridColumn: '1 / -1' }} pt={2}>
           <LectureTopControls lecture={lecture} />
         </Box>
-        <LectureNavigation lectures={course.lectures} />
-        <LectureContent lecture={lecture} />
+        <LectureNavigation lectures={sortedLectures} />
+        <LectureContent lecture={lecture} isFirstLecture={isFirstLecture} isLastLecture={isLastLecture} />
       </Box>
     </SectionWrapper>
   )

@@ -29,7 +29,6 @@ jobs:
       # Build Frontend
       - name: Build Frontend
         env:
-          REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
         run: |
           cd frontend

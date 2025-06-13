@@ -52,7 +52,7 @@ const UsersTableRow = ({ row }) => {
 
   const handleDelete = () => {
     const users = getValues('users')
-    const filtered = users.filter((u) => u.userId !== user.id)
+    const filtered = users.filter((u) => u.user.id !== user.id)
     setValue('users', filtered)
   }
 

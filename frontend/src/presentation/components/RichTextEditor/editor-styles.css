@@ -175,6 +175,25 @@
   text-decoration: none !important;
 }
 
+/* External Link */
+.external-link {
+  color: #1a73e8 !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+
+.external-link:hover {
+  text-decoration: none !important;
+}
+
+/* Optional: Add external link icon */
+.external-link::after {
+  content: ' ↗';
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
 /* Table */
 .editor-table {
   border-collapse: collapse !important;

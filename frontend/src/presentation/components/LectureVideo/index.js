@@ -4,7 +4,7 @@ import { Box, Stack, Typography } from '@mui/material'
 
 import LockIcon from '@mui/icons-material/Lock'
 
-const LectureVideo = ({ embeddedVideo, isPurchased }) => {
+const LectureVideo = ({ videoId, isPurchased }) => {
   if (!isPurchased) {
     return (
       <Stack
@@ -34,7 +34,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
     )
   }
 
-  if (!embeddedVideo) {
+  if (!videoId) {
     return (
       <Stack
         justifyContent="center"
@@ -52,6 +52,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
       </Stack>
     )
   }
+
   return (
     <Box
       sx={{
@@ -62,7 +63,7 @@ const LectureVideo = ({ embeddedVideo, isPurchased }) => {
       <iframe
         width="100%"
         height="100%"
-        src={embeddedVideo}
+        src={`https://www.youtube.com/embed/${videoId}`}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

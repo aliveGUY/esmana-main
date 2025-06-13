@@ -1,5 +1,5 @@
 import React, { Fragment, useRef } from 'react'
-import { isNull } from 'lodash'
+import { find, some } from 'lodash'
 import { useNavigate, useParams } from 'react-router'
 
 import TouchRipple from '@mui/material/ButtonBase/TouchRipple'
@@ -43,8 +43,8 @@ const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
   }
 }
 
-const LectureItem = ({ lecture }) => {
-  const { title, startTime, endTime, users, materials, id } = lecture
+const LectureItem = ({ lecture, isIncomplete }) => {
+  const { title, startTime, endTime, users, id } = lecture
   const rippleRef = useRef(null)
   const { lectureId, courseId } = useParams()
   const navigate = useNavigate()
@@ -54,10 +54,10 @@ const LectureItem = ({ lecture }) => {
 
   const status = find(users, (u) => u.user.id === user.id)
 
-  const isPurchased = !isNull(status)
-  const isAvailable = !isNull(materials)
+  const isPurchased = some(users, (userLecture) => userLecture.user.id === user?.id)
   const isCompleted = isPurchased && status.isCompleted
   const isSelected = Number(lectureId) === id
+  const isAvailable = isPurchased && !isIncomplete
 
   const { color, backgroundColor, icon } = itemStylesFactory({
     isPurchased,

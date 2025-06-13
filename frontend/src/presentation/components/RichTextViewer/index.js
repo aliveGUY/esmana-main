@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 
-import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
@@ -11,6 +10,8 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
+
+import { ExternalLinkNode } from './ExternalLinkNode'
 
 import '../RichTextEditor/editor-styles.css'
 
@@ -69,7 +70,7 @@ const RichTextViewer = ({ content }) => {
     namespace: 'RichViewer',
     theme,
     editable: false,
-    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, TableNode, TableCellNode, TableRowNode],
+    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, ExternalLinkNode, TableNode, TableCellNode, TableRowNode],
   }
 
   return (

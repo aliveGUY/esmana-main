@@ -13,6 +13,7 @@ export const useAuth = () => {
   const dispatch = useDispatch()
 
   const isAuthorized = !isEmpty(account)
+  const isAdmin = account?.roles.includes('admin')
 
   useEffect(() => {
     if (isAuthorized) return
@@ -27,6 +28,7 @@ export const useAuth = () => {
 
   return {
     isAuthorized: !isEmpty(account),
+    isAdmin,
     user: account,
   }
 }

@@ -113,6 +113,28 @@ const MuiButton = {
             },
           }),
         },
+        {
+          props: { variant: 'secondary', disabled: true },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.snowFog.main,
+            color: theme.palette.stormWave.main,
+
+            '&:hover': {
+              backgroundColor: theme.palette.snowFog.main,
+            },
+          }),
+        },
+        {
+          props: { variant: 'primary', disabled: true },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.snowFog.main,
+            color: theme.palette.stormWave.main,
+
+            '&:hover': {
+              backgroundColor: theme.palette.snowFog.main,
+            },
+          }),
+        },
       ],
     },
   },
