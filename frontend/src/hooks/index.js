@@ -1,7 +1,5 @@
 export * from './useAuth'
-export * from './useCertificateFactory'
 export * from './useCurrentRoute'
-export * from './useFormattedDates'
 export * from './useInputFactory'
 export * from './useInterval'
 export * from './useLectureEvaluationFromControls'

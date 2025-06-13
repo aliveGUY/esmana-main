@@ -1,32 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { filter, find, map } from 'lodash'
-import { useNavigate, useParams } from 'react-router'
+import React, { useCallback, useState } from 'react'
+import { find, map } from 'lodash'
+import { useParams } from 'react-router'
 
 import { Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import LectureItem from './LectureItem'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-
-const getIncompleteLectureIds = (lectures) => {
-  const firstIncompleteLecture = find(lectures, (lecture) => !lecture.isCompleted)
-
-  const incompleteLectures = filter(
-    lectures,
-    (lecture) => !lecture.isCompleted && lecture.id !== firstIncompleteLecture?.id,
-  )
-
-  return map(incompleteLectures, 'id')
-}
+import { useCourses } from '../../../hooks'
 
 const LectureNavigation = ({ lectures }) => {
   const theme = useTheme()
   const { lectureId } = useParams()
   const [isExpanded, setIsExpanded] = useState(false)
   const lecture = find(lectures, (lecture) => lecture.id === Number(lectureId))
-
+  const { blockedLectureIds } = useCourses()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const incompleteLectures = getIncompleteLectureIds(lectures)
 
   const handleToggle = useCallback(() => {
     setIsExpanded((prev) => !prev)
@@ -66,7 +55,7 @@ const LectureNavigation = ({ lectures }) => {
       <Collapse in={!isMobile || isExpanded}>
         <Stack spacing={1} sx={{ pb: 2 }}>
           {map(lectures, (lecture) => (
-            <LectureItem lecture={lecture} isIncomplete={incompleteLectures.includes(lecture.id)} />
+            <LectureItem lecture={lecture} isIncomplete={blockedLectureIds.includes(lecture.id)} />
           ))}
         </Stack>
       </Collapse>

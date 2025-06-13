@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import dayjs from 'dayjs'
-import { filter, find, head, isEmpty, last, map, some, sortBy } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router'
 
 import { Box } from '@mui/material'
@@ -10,23 +9,18 @@ import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
 import LectureTopControls from '../components/LectureTopControls'
-import { useAuth } from '../../hooks/useAuth'
-
-const getBlockedLectures = (lectures, user) => {
-  const firstIncompleteLecture = find(lectures, (lecture) => !lecture.isCompleted)
-
-  const incompleteLectures = filter(lectures, (lecture) => {
-    const isPurchased = some(lecture.users, (userLecture) => userLecture.user.id === user?.id)
-    return isPurchased && !lecture.isCompleted && lecture.id !== firstIncompleteLecture?.id
-  })
-
-  return map(incompleteLectures, 'id')
-}
 
 const Course = () => {
-  const { user } = useAuth()
   const { lectureId, courseId } = useParams()
-  const { ownedCourses } = useCourses()
+  const {
+    ownedCourses,
+    blockedLectureIds,
+    firstIncompleteLectureId,
+    sortedLectures,
+    isFirstLecture,
+    isLastLecture,
+    currentLecture,
+  } = useCourses()
   const [getCourseById] = useGetCourseByIdMutation()
   const navigate = useNavigate()
 
@@ -35,26 +29,14 @@ const Course = () => {
   }, [])
 
   useEffect(() => {
-    const course = find(ownedCourses, (course) => course.id === Number(courseId))
-    if (!course) return
-    
-    const sortedLectures = sortBy(course.lectures, (item) => dayjs(item?.startTime).valueOf())
-    const blockedLectures = getBlockedLectures(sortedLectures, user)
-    const shouldRedirect = blockedLectures.includes(Number(lectureId))
+    const shouldRedirect = blockedLectureIds.includes(Number(lectureId))
 
-    if (shouldRedirect) {
-      const firstIncompleteLecture = find(sortedLectures, (lecture) => !lecture.isCompleted)
-      navigate(`/dashboard/course/${courseId}/${firstIncompleteLecture.id}`)
+    if (shouldRedirect && firstIncompleteLectureId) {
+      navigate(`/dashboard/course/${courseId}/${firstIncompleteLectureId}`)
     }
-  }, [lectureId, ownedCourses])
+  }, [blockedLectureIds, firstIncompleteLectureId])
 
   if (!ownedCourses || isEmpty(ownedCourses)) return
-
-  const course = find(ownedCourses, (course) => course.id === Number(courseId))
-  const lecture = find(course.lectures, (lecture) => lecture.id === Number(lectureId))
-  const sortedLectures = sortBy(course.lectures, (item) => dayjs(item?.startTime).valueOf())
-  const isFirstLecture = head(sortedLectures).id === Number(lectureId)
-  const isLastLecture = last(sortedLectures).id === Number(lectureId)
 
   return (
     <SectionWrapper>
@@ -69,10 +51,10 @@ const Course = () => {
         }}
       >
         <Box sx={{ gridColumn: '1 / -1' }} pt={2}>
-          <LectureTopControls lecture={lecture} />
+          <LectureTopControls lecture={currentLecture} />
         </Box>
         <LectureNavigation lectures={sortedLectures} />
-        <LectureContent lecture={lecture} isFirstLecture={isFirstLecture} isLastLecture={isLastLecture} />
+        <LectureContent lecture={currentLecture} isFirstLecture={isFirstLecture} isLastLecture={isLastLecture} />
       </Box>
     </SectionWrapper>
   )

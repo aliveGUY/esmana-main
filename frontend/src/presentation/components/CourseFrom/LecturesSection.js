@@ -6,6 +6,7 @@ import { isEmpty, map } from 'lodash'
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDates'
 import SectionWrapper from '../../common/SectionWrapper'
+import { useCourses } from '../../../hooks'
 
 const LectureItem = ({ lecture, isEdit = false }) => {
   const { courseId } = useParams()
@@ -41,6 +42,8 @@ const LectureItem = ({ lecture, isEdit = false }) => {
 const LecturesSection = ({ isEdit = false }) => {
   const { courseId } = useParams()
   const data = useSelector((state) => state.courseForm.lectures)
+  const { sortLectures } = useCourses()
+  const sortedLectures = sortLectures(data)
 
   const redirect = isEdit ? `/dashboard/course/edit/${courseId}/lecture/new` : '/dashboard/course/new/lecture/new'
 
@@ -66,12 +69,12 @@ const LecturesSection = ({ isEdit = false }) => {
                 },
               }}
             >
-              {isEmpty(data) ? (
+              {isEmpty(sortedLectures) ? (
                 <Typography textAlign="center" fontWeight="bold" color="stormWave.main" py={2}>
                   *empty*
                 </Typography>
               ) : (
-                map(data, (lecture) => (
+                map(sortedLectures, (lecture) => (
                   <Fragment>
                     <LectureItem lecture={lecture} isEdit={isEdit} />
                     <Divider sx={{ borderColor: 'stormWave.main', mx: 1 }} />

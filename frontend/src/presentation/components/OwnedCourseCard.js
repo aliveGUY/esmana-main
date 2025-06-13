@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
-import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
-import { useAuth } from '../../hooks/useAuth'
 import { serveStaticImage } from '../../state/asynchronous'
 import EmptyImage from '../../static/images/no-image.jpg'
+import { useCourses } from '../../hooks'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -21,18 +20,16 @@ export const getTotalHours = (lectures) => {
 }
 
 const OwnedCourseCard = ({ course }) => {
+  const { getFirstIncompleteLectureId } = useCourses()
   const navigate = useNavigate()
-  const { user } = useAuth()
 
   const { title, description, lectures, thumbnailUrl, id } = course
   const lecturesCount = lectures.length
   const hoursCount = getTotalHours(lectures)
-  const firstOwnedLecture = find(lectures, (lecture) =>
-    lecture.users?.some((userLecture) => userLecture.user.id === user?.id),
-  )
+  const firstOwnedLectureId = getFirstIncompleteLectureId(lectures)
 
   const redirect = useCallback(() => {
-    navigate(`/dashboard/course/${id}/${firstOwnedLecture.id}`)
+    navigate(`/dashboard/course/${id}/${firstOwnedLectureId}`)
   }, [navigate])
 
   return (
