@@ -1,8 +1,8 @@
 import React from 'react'
+import dayjs from 'dayjs'
 import { map } from 'lodash'
 
 import { Box, useTheme } from '@mui/material'
-import dayjs from 'dayjs'
 
 const monthNameToIndex = {
   January: 0,

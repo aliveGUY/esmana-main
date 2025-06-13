@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
+import dayjs from 'dayjs'
 import { map } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { WEEK } from '../../../constants/calendar'
-import dayjs from 'dayjs'
 
 const CalendarHeader = ({ week }) => {
   const today = dayjs()

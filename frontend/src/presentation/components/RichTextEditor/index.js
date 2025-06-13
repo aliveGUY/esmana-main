@@ -55,13 +55,11 @@ const theme = {
   },
 }
 
-// Component to handle initial content loading only
 const ContentUpdater = ({ content }) => {
   const [editor] = useLexicalComposerContext()
   const [hasLoadedInitialContent, setHasLoadedInitialContent] = useState(false)
 
   useEffect(() => {
-    // Only load content once when component mounts and content is available
     if (editor && content && content.trim() !== '' && !hasLoadedInitialContent) {
       try {
         const parsedContent = JSON.parse(content)
@@ -69,8 +67,7 @@ const ContentUpdater = ({ content }) => {
         editor.setEditorState(editorState)
         setHasLoadedInitialContent(true)
       } catch (e) {
-        console.warn('Failed to parse editor content:', e)
-        setHasLoadedInitialContent(true) // Mark as loaded even if failed to prevent retries
+        setHasLoadedInitialContent(true)
       }
     }
   }, [editor, content, hasLoadedInitialContent])
@@ -114,7 +111,6 @@ const RichTextEditor = ({ content, onChange, readOnly = false }) => {
             }}
           />
         )}
-        {/* Load initial content only once */}
         {content && <ContentUpdater content={content} />}
       </Box>
     </LexicalComposer>

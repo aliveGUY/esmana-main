@@ -12,9 +12,6 @@ export class LectorDetails {
   @Column({ name: "biography", type: "json", nullable: true })
   biography: object;
 
-  @Column({ name: "user_id", unique: true })
-  userId: number;
-
   @OneToOne(() => User, user => user.lectorDetails)
   @JoinColumn({ name: "user_id" })
   user: User;

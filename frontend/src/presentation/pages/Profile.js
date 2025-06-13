@@ -1,12 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 
 import { Avatar, Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { useAuth } from '../../hooks/useAuth'
 import SectionWrapper from '../common/SectionWrapper'
 import AuthSection from '../components/Profile/AuthSection'
 
 import PersonIcon from '@mui/icons-material/Person'
-import { useAuth } from '../../hooks/useAuth'
 
 const Profile = () => {
   const theme = useTheme()

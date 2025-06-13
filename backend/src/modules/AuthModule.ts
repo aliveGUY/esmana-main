@@ -8,6 +8,7 @@ import googleConfig from '../config/google.config';
 // Repositories
 import { UserRepository } from '../repositories/UserRepository';
 import { TokenRepository } from '../repositories/TokenRepository';
+import { LectorDetailsRepository } from '../repositories/LectorDetailsRepository';
 
 // Services
 import { AuthService } from '../services/AuthService';
@@ -19,13 +20,14 @@ import { TokenAuthGuard } from '../guards/TokenAuthGuard';
 import { AuthController } from '../controllers/AuthController';
 import { GoogleClient } from 'src/infrastructure/GoogleClient';
 import { User } from '../models/User';
+import { LectorDetails } from '../models/LectorDetails';
 import { RedisModule } from './RedisModule';
 import { CertificateService } from 'src/services/CertificateService';
 
 @Module({
   imports: [
     ConfigModule.forFeature(googleConfig),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, LectorDetails]),
     RedisModule,
 
   ],
@@ -39,6 +41,10 @@ import { CertificateService } from 'src/services/CertificateService';
     {
       provide: 'ITokenRepository',
       useClass: TokenRepository,
+    },
+    {
+      provide: 'ILectorDetailsRepository',
+      useClass: LectorDetailsRepository,
     },
     // Services
     {

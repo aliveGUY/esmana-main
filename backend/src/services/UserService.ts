@@ -31,7 +31,7 @@ export class UserService implements IUserService {
     }
 
     if (userDto.lectorDetails && existingUser.lectorDetails) await this.lectorDetailsRepository.updateLectorDetails({ ...userDto.lectorDetails, id: existingUser.lectorDetails.id, userId: existingUser.id });
-    if (userDto.lectorDetails && !existingUser.lectorDetails) await this.lectorDetailsRepository.createLectorDetails({ ...userDto.lectorDetails, userId: existingUser.id });
+    if (userDto.lectorDetails && !existingUser.lectorDetails) await this.lectorDetailsRepository.createLectorDetails({ ...userDto.lectorDetails, user: existingUser });
     if (!userDto.lectorDetails && existingUser.lectorDetails) await this.lectorDetailsRepository.deleteLectorDetails(existingUser.lectorDetails.id);
 
     const updateData: Partial<User> = {

@@ -2,17 +2,17 @@ import React from 'react'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { map } from 'lodash'
 
-import { Box, Button as MuiButton, Stack, Tooltip, useMediaQuery, useTheme } from '@mui/material'
+import { Button as MuiButton, Stack, Tooltip, useMediaQuery, useTheme } from '@mui/material'
+import { useLogoutMutation } from '../../state/asynchronous'
 import MobileFlyoutMenu from '../common/MobileFlyoutMenu'
 
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined'
+import LogoutIcon from '@mui/icons-material/Logout'
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt'
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import PersonIcon from '@mui/icons-material/Person'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
-import LogoutIcon from '@mui/icons-material/Logout'
-import { useLogoutMutation } from '../../state/asynchronous'
 
 const NavLink = ({ path = null, name, defaultIcon, isCollapsed, selected = false, activeIcon, onClick }) => {
   return (
@@ -48,6 +48,8 @@ const Navigation = ({ isCollapsed, onClose }) => {
   const editLectureDraft = useMatch('/dashboard/course/new/lecture/:id')
   const editLecture = useMatch('/dashboard/course/edit/:courseId/lecture/:id')
   const users = useMatch('/dashboard/users')
+  const createUser = useMatch('/dashboard/users/new')
+  const editUser = useMatch('/dashboard/users/:id')
   const profile = useMatch('/dashboard/profile')
 
   const config = [
@@ -63,7 +65,7 @@ const Navigation = ({ isCollapsed, onClose }) => {
       path: '/dashboard/users',
       defaultIcon: <PeopleAltOutlinedIcon />,
       activeIcon: <PeopleAltIcon />,
-      selected: users,
+      selected: users || createUser || editUser,
     },
     {
       name: 'Courses',

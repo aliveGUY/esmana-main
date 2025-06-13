@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import dayjs from 'dayjs'
 import { concat, map, sortBy } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
-import dayjs from 'dayjs'
 import { useFormattedDates } from '../../utils/lectureDates'
 
 const LectureItem = ({ lecture }) => {

@@ -3,20 +3,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BASE_URL } from '../../constants/config'
 import { setReceivedUnauthorized } from '../reducers/user'
 
-export const authMiddleware = (store) => (next) => (action) => {
-  // Handle RTK Query rejected actions with 401 status
-  if (action.type.endsWith('/rejected') && action?.payload?.status === 401) {
-    store.dispatch(setReceivedUnauthorized())
-  }
-
-  // Also handle error responses in fulfilled actions
-  if (action.type.endsWith('/fulfilled') && action?.error?.status === 401) {
-    store.dispatch(setReceivedUnauthorized())
-  }
-
-  return next(action)
-}
-
 const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: fetchBaseQuery({
@@ -37,7 +23,7 @@ const usersApi = createApi({
         url: `/check-registration-status?paymentIntentId=${encodeURIComponent(paymentIntentId)}`,
         method: 'GET',
       }),
-    }), //refresh
+    }),
 
     login: builder.mutation({
       query: (loginData) => ({
@@ -127,14 +113,6 @@ const usersApi = createApi({
       query: () => 'users',
     }),
 
-    createAccount: builder.mutation({
-      query: (accountData) => ({
-        url: 'users',
-        method: 'POST',
-        body: accountData,
-      }),
-    }),
-
     editAccount: builder.mutation({
       query: (accountData) => ({
         url: 'users',
@@ -206,7 +184,6 @@ export const {
   useEditCourseMutation,
   useSearchUsersMutation,
   useGetAllUsersQuery,
-  useCreateAccountMutation,
   useGetUserByIdMutation,
   useEditAccountMutation,
   useCreateCheckoutFormMutation,
@@ -216,6 +193,18 @@ export const {
   useLogoutMutation,
   useRefreshMutation,
 } = usersApi
+
+export const authMiddleware = (store) => (next) => (action) => {
+  if (action.type.endsWith('/rejected') && action?.payload?.status === 401) {
+    store.dispatch(setReceivedUnauthorized())
+  }
+
+  if (action.type.endsWith('/fulfilled') && action?.error?.status === 401) {
+    store.dispatch(setReceivedUnauthorized())
+  }
+
+  return next(action)
+}
 
 export function serveStaticImage(imageId) {
   return `${BASE_URL}/static/images/${imageId}`

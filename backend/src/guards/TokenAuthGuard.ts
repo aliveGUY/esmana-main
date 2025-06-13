@@ -2,7 +2,7 @@ import { Injectable, ExecutionContext, UnauthorizedException, Inject } from '@ne
 import { CanActivate } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
-import { ITokenRepository } from '../repositories/TokenRepository';
+import { ITokenRepository, ONE_DAY } from '../repositories/TokenRepository';
 import { AccessTokenData } from 'src/models/Token';
 import { ERoles } from 'src/models/enums/ERoles';
 
@@ -41,7 +41,7 @@ export class TokenAuthGuard implements CanActivate {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 15 * 60 * 1000,
+        maxAge: ONE_DAY,
       });
 
       req.user = {

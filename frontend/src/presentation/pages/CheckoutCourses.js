@@ -161,7 +161,7 @@ const CheckoutCourses = () => {
           <Stack spacing={3} pt={3} pb={10}>
             <Stack alignItems="center">
               <Typography textAlign="center" fontSize={32} fontWeight="bold" maxWidth={360}>
-                Let's Get You Signed Up Before Checkout
+                Let&apos;s Get You Signed Up Before Checkout
               </Typography>
             </Stack>
             <Registration />

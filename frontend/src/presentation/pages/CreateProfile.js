@@ -4,7 +4,7 @@ import { isEmpty, isEqual, omit } from 'lodash'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Box, Button, Stack } from '@mui/material'
-import { useCreateAccountMutation } from '../../state/asynchronous'
+import { useRegisterMutation } from '../../state/asynchronous'
 import SubmitSection from '../components/CourseFrom/SubmitSection'
 import ContactSection from '../components/UserForm/ContactSection'
 import LectorSection from '../components/UserForm/LectorSection'
@@ -15,7 +15,7 @@ import RoleSection from '../components/UserForm/RoleSection'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const CreateProfile = () => {
-  const [createAccount, { isSuccess, isLoading }] = useCreateAccountMutation()
+  const [register, { isSuccess, isLoading }] = useRegisterMutation()
   const navigate = useNavigate()
   const methods = useForm({
     defaultValues: {
@@ -52,7 +52,7 @@ const CreateProfile = () => {
       formData.append('profilePicture', accountForm.profilePicture)
     }
 
-    createAccount(formData)
+    register(formData)
   }
 
   useEffect(() => {

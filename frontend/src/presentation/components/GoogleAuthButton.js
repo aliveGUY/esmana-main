@@ -13,15 +13,7 @@ const GoogleAuthButton = ({ onClick, text }) => {
   return (
     <Box width="100%" display="flex" justifyContent="center">
       <Box width="100%">
-        <GoogleLogin
-          shape="pill"
-          size="large"
-          theme="filled_black"
-          text={text}
-          onSuccess={handleSuccess}
-          onError={() => console.error('Google login failed')}
-          useOneTap
-        />
+        <GoogleLogin shape="pill" size="large" theme="filled_black" text={text} onSuccess={handleSuccess} useOneTap />
       </Box>
     </Box>
   )

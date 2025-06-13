@@ -4,16 +4,17 @@ import { UserLoginDto } from '../models/dto/UserLoginDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
 import { UserDto } from '../models/dto/UserDto';
 import { IUserRepository } from '../repositories/UserRepository';
-import { ITokenRepository } from '../repositories/TokenRepository';
+import { ITokenRepository, ONE_DAY } from '../repositories/TokenRepository';
 import * as bcrypt from 'bcrypt';
 import { IGoogleClient } from 'src/infrastructure/GoogleClient';
-import { ERoles } from 'src/models/enums/ERoles';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 import { Request, Response } from 'express';
 import { AccessTokenData } from 'src/models/Token';
+import { ILectorDetailsRepository } from 'src/repositories/LectorDetailsRepository';
+import { CreateLectorDetailsDto } from 'src/models/dto/CreateLectorDetailsDto';
 
 export interface IAuthService {
-  registerUser(newAccountData: UserRegistrationDto): Promise<UserDto>
+  registerUser(newAccountData: UserRegistrationDto, profilePictureFile?: Express.Multer.File): Promise<UserDto>
   loginLocal(response: Response, dto: UserLoginDto): Promise<UserDto>;
   loginGoogle(response: Response, dto: UserGoogleLoginDto): Promise<UserDto>;
   logout(response: Response, accessToken: string): Promise<void>;
@@ -25,12 +26,18 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
   constructor(
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+    @Inject('ILectorDetailsRepository') private readonly lectorDetailsRepository: ILectorDetailsRepository,
     @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
-  async registerUser(newAccountData: UserRegistrationDto): Promise<UserDto> {
+  async registerUser(newAccountData: UserRegistrationDto, profilePictureFile?: Express.Multer.File): Promise<UserDto> {
     const hashedPassword = await bcrypt.hash(newAccountData.password, 12);
+
+    let profilePicture = '';
+    if (profilePictureFile) {
+      profilePicture = await this.googleClient.uploadMulterFileToDrive(profilePictureFile);
+    }
 
     const user: Partial<User> = {
       firstName: newAccountData.firstName,
@@ -39,10 +46,22 @@ export class AuthService implements IAuthService {
       phone: newAccountData.phone,
       password: hashedPassword,
       isEmailVerified: false,
-      roles: [ERoles.ADMIN],
+      roles: newAccountData.roles,
+      profilePicture
     }
 
-    return await this.userRepository.create(user)
+    const newUser = await this.userRepository.create(user)
+
+    if (newAccountData.lectorDetails) {
+      const details: CreateLectorDetailsDto = {
+        credentials: newAccountData.lectorDetails.credentials,
+        biography: newAccountData.lectorDetails.biography,
+        user: newUser
+      }
+      await this.lectorDetailsRepository.createLectorDetails(details)
+    }
+
+    return await this.userRepository.getById(newUser.id)
   }
 
   async loginLocal(response: Response, dto: UserLoginDto): Promise<UserDto> {
@@ -150,7 +169,7 @@ export class AuthService implements IAuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 15 * 60 * 1000,
+      maxAge: ONE_DAY,
     });
   }
 }

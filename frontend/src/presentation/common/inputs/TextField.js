@@ -4,7 +4,17 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
 
-const TextField = ({ name, label, onChange, placeholder, staticLabel = false, required = null, pattern, ...rest }) => {
+const TextField = ({
+  name,
+  label,
+  onChange,
+  placeholder,
+  staticLabel = false,
+  autoComplete = 'on',
+  required = null,
+  pattern,
+  ...rest
+}) => {
   const {
     control,
     formState: { errors },
@@ -39,6 +49,7 @@ const TextField = ({ name, label, onChange, placeholder, staticLabel = false, re
               id={name}
               placeholder={placeholder}
               onChange={handleChange}
+              autoComplete={autoComplete}
               {...field}
               {...rest}
               {...(!staticLabel && { label })}

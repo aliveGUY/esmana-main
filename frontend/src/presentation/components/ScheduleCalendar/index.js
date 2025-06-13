@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import dayjs from 'dayjs'
 import { map } from 'lodash'
 
 import { Box, IconButton, Stack, Typography } from '@mui/material'
@@ -10,8 +11,6 @@ import CalendarRow from './CalendarRow'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-
-import dayjs from 'dayjs'
 
 function getWeekFromDate(inputDate) {
   const date = dayjs(inputDate)

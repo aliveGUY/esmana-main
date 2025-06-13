@@ -1,9 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
 import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { resetReceivedUnauthorized } from '../state/reducers/user'
+import { isEmpty } from 'lodash'
+
 import { useRefreshMutation } from '../state/asynchronous'
+import { resetReceivedUnauthorized } from '../state/reducers/user'
 
 export const useAuth = () => {
   const { account, receivedUnauthorized } = useSelector((state) => state.user)

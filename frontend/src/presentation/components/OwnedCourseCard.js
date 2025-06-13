@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import dayjs from 'dayjs'
 import { find } from 'lodash'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
 import { serveStaticImage } from '../../state/asynchronous'
 import EmptyImage from '../../static/images/no-image.jpg'
-import dayjs from 'dayjs'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {

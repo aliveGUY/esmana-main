@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Req, Put } from '@nestjs/common';
+import { Controller, Post, Body, Res, Req, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UserLoginDto } from '../models/dto/UserLoginDto';
 import { UserGoogleLoginDto } from '../models/dto/UserGoogleLoginDto';
@@ -7,6 +7,7 @@ import { Public } from '../common/publicDecorator';
 import { Inject } from '@nestjs/common';
 import { UserDto } from '../models/dto/UserDto';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -16,10 +17,13 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @UseInterceptors(FileInterceptor('profilePicture'))
   async register(
-    @Body() newAccountData: UserRegistrationDto
+    @UploadedFile() profilePicture: Express.Multer.File,
+    @Body('data') dataJson: string
   ): Promise<UserDto> {
-    return await this.authService.registerUser(newAccountData)
+    const newAccountData: UserRegistrationDto = JSON.parse(dataJson)
+    return await this.authService.registerUser(newAccountData, profilePicture)
   }
 
   @Public()
