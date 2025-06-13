@@ -10,8 +10,8 @@ const PasswordSection = () => {
       <SectionWrapper>
         <Paper>
           <Stack p={2} spacing={2}>
-            <Password name="password" label="Password" />
-            <Password name="confirmPassword" label="Confirm Password" />
+            <Password name="password" label="Password" required="Password is required" />
+            <Password name="confirmPassword" label="Confirm Password" required="Password is required" />
           </Stack>
         </Paper>
       </SectionWrapper>

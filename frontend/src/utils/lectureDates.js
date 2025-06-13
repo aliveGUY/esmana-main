@@ -43,10 +43,8 @@ export function convertLectureDatesStorageToForm({ startTime, endTime }) {
   const start = dayjs.utc(startTime).local()
   const end = dayjs.utc(endTime).local()
 
-  const date = start.format('DD.MM.YYYY')
-
   return {
-    date,
+    date: start.format('YYYY-MM-DD'),
     startTime: start.toISOString(),
     endTime: end.toISOString(),
   }

@@ -27,8 +27,8 @@ module.exports = merge(common, {
             warnings: false,
             comparisons: false,
             inline: 2,
-            drop_console: true,
             drop_debugger: true,
+            drop_console: false,
             pure_funcs: ['console.log', 'console.info', 'console.debug'],
           },
           mangle: {
