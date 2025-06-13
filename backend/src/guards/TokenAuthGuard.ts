@@ -53,9 +53,9 @@ export class TokenAuthGuard implements CanActivate {
 
     const isAdmin = (req.user as AccessTokenData)?.roles.includes(ERoles.ADMIN)
 
-    if (!isAdmin && isAdminOnly) throw new UnauthorizedException()
+    if (!isAdmin && isAdminOnly) throw new UnauthorizedException('Is admin only')
 
-    if (!refreshToken || refreshToken === null) throw new UnauthorizedException()
+    if (!refreshToken || refreshToken === null) throw new UnauthorizedException('No refresh token')
 
     return true
   }

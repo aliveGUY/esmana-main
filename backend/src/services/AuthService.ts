@@ -12,6 +12,7 @@ import { Request, Response } from 'express';
 import { AccessTokenData } from 'src/models/Token';
 import { ILectorDetailsRepository } from 'src/repositories/LectorDetailsRepository';
 import { CreateLectorDetailsDto } from 'src/models/dto/CreateLectorDetailsDto';
+import { Express } from 'express';
 
 export interface IAuthService {
   registerUser(newAccountData: UserRegistrationDto, profilePictureFile?: Express.Multer.File): Promise<UserDto>

@@ -8,6 +8,7 @@ import { Inject } from '@nestjs/common';
 import { UserDto } from '../models/dto/UserDto';
 import { UserRegistrationDto } from 'src/models/dto/UserRegistrationDto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 
 @Controller('auth')
 export class AuthController {
