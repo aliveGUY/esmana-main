@@ -10,6 +10,7 @@ import { useFormattedDates } from '../../../utils/lectureDates'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import LockIcon from '@mui/icons-material/Lock'
+import dayjs from 'dayjs'
 
 const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
   if (!isPurchased) {
@@ -58,6 +59,7 @@ const LectureItem = ({ lecture, isIncomplete }) => {
   const isCompleted = isPurchased && status.isCompleted
   const isSelected = Number(lectureId) === id
   const isAvailable = isPurchased && !isIncomplete
+  const isEndInPast = dayjs(endTime).isBefore(dayjs(), 'day')
 
   const { color, backgroundColor, icon } = itemStylesFactory({
     isPurchased,
@@ -118,9 +120,14 @@ const LectureItem = ({ lecture, isIncomplete }) => {
 
       <Stack direction="row" justifyContent="space-between" display={{ xs: 'none', md: 'flex' }} sx={{ pt: 1 }}>
         <Typography>{date}</Typography>
-        <Typography>
-          {hoursStart} - {hoursEnd}
-        </Typography>
+
+        {isEndInPast ? (
+          <Typography>Video</Typography>
+        ) : (
+          <Typography>
+            {hoursStart} - {hoursEnd}
+          </Typography>
+        )}
       </Stack>
 
       <Box sx={{ color: 'stormWave.light' }}>

@@ -40,7 +40,7 @@ const LectureContent = ({ lecture, isFirstLecture = false, isLastLecture = false
           <Typography fontWeight="bold">{title}</Typography>
           <Typography>{description}</Typography>
         </Box>
-        {!isEndInPast && (
+        {!isEndInPast && materials?.meetingUrl && (
           <Box minWidth={200}>
             <Typography sx={{ color: 'stormWave.main', mb: 1 }}>{meetingMessage}</Typography>
             <Button
