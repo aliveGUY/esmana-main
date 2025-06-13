@@ -83,10 +83,10 @@ export class TokenRepository implements ITokenRepository {
     }
 
     const accessToken = await this.generateAccessToken(accessTokenData)
+    await this.generateRefreshToken(accessToken)
+    await this.redisClient.deleteKey(`refresh:${refreshToken}`)
 
     data.accessToken = accessToken
-
-    await this.redisClient.editKey(`refresh:${refreshToken}`, JSON.stringify(data))
 
     return data
   }
