@@ -2,14 +2,13 @@ import { Inject, Injectable } from "@nestjs/common"
 import { isEmpty } from "class-validator"
 import { IGoogleClient } from "src/infrastructure/GoogleClient"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
-import { EvaluationQuestion } from "src/models/EvaluationQuestion"
 import { Lecture } from "src/models/Lecture"
 import { LectureMaterials } from "src/models/LectureMaterials"
 import { UserLecture } from "src/models/UserLecture"
-import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository"
 import { ILectureMaterialsRepository } from "src/repositories/LectureMaterialsRepository"
 import { ILectureRepository } from "src/repositories/LectureRepository"
 import { IUserLectureRepository } from "src/repositories/UserLectureRepository"
+import { IEvaluationQuestionService } from "./EvaluationQuestionService"
 
 export interface ILectureService {
   createLecture(lecture: Partial<Lecture>): Promise<Lecture>
@@ -22,7 +21,7 @@ export class LectureService implements ILectureService {
   constructor(
     @Inject('ILectureRepository') private readonly lectureRepository: ILectureRepository,
     @Inject('ILectureMaterialsRepository') private readonly lectureMaterialsRepository: ILectureMaterialsRepository,
-    @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
+    @Inject('IEvaluationQuestionService') private readonly evaluationQuestionService: IEvaluationQuestionService,
     @Inject('IUserLectureRepository') private readonly userLectureRepository: IUserLectureRepository,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
@@ -72,26 +71,15 @@ export class LectureService implements ILectureService {
 
     const materialsEvaluationDto = lectureDto.materials?.evaluation
     if (newMaterials && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
-      const promises = materialsEvaluationDto.map(questionDto => {
-        const question: Partial<EvaluationQuestion> = {
-          questionText: questionDto.questionText,
-          correctAnswers: questionDto.correctAnswers,
-          options: questionDto.options,
-          lectureMaterials: newMaterials
-        }
-
-        return this.evaluationQuestionRepository.createEvaluationQuestion(question)
-      })
-
-      await Promise.all(promises)
+      await this.evaluationQuestionService.saveEvaluationQuestionsForLecture(newMaterials, materialsEvaluationDto)
     }
 
     return await this.lectureRepository.getLectureById(newLecture.id)
   }
 
   async editLecture(lectureDto: EditLectureDto): Promise<Lecture> {
-    console.log("SHOULD EIT LECTURE")
     const oldLecture = await this.lectureRepository.getLectureById(lectureDto.id)
+    const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
     const lecture: Partial<Lecture> = {
       id: lectureDto.id,
@@ -123,7 +111,6 @@ export class LectureService implements ILectureService {
 
     let updatedMaterials: LectureMaterials | null = null
     if ((!oldLecture.materials || isEmpty(oldLecture.materials)) && lectureDto.materials && !isEmpty(lectureDto.materials)) {
-      const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
 
       const lectureMaterials: Partial<LectureMaterials> = {
         videoUrl: lectureDto.materials.videoUrl,
@@ -137,8 +124,6 @@ export class LectureService implements ILectureService {
 
 
     if ((oldLecture.materials || !isEmpty(oldLecture.materials)) && lectureDto.materials && !isEmpty(lectureDto.materials)) {
-      const meetingUrl = await this.googleClient.createMeetingLink(lectureDto.title, lectureDto.startTime, lectureDto.endTime)
-
       const lectureMaterials: Partial<LectureMaterials> = {
         id: lectureDto.materials.id,
         videoUrl: lectureDto.materials.videoUrl,
@@ -152,40 +137,12 @@ export class LectureService implements ILectureService {
 
     const materialsEvaluationDto = lectureDto.materials?.evaluation
     const oldMaterialsEvaluation = oldLecture.materials?.evaluation
-    if (updatedMaterials && (!oldMaterialsEvaluation || isEmpty(oldMaterialsEvaluation)) && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
-      const promises = materialsEvaluationDto.map(questionDto => {
-        const question: Partial<EvaluationQuestion> = {
-          questionText: questionDto.questionText,
-          correctAnswers: questionDto.correctAnswers,
-          options: questionDto.options,
-          lectureMaterials: updatedMaterials
-        }
-
-        return this.evaluationQuestionRepository.createEvaluationQuestion(question)
-      })
-
-      await Promise.all(promises)
-    }
-
-    if (updatedMaterials && (oldMaterialsEvaluation || !isEmpty(oldMaterialsEvaluation)) && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
-      const promises = materialsEvaluationDto.map(questionDto => {
-        const question: Partial<EvaluationQuestion> = {
-          id: questionDto.id,
-          questionText: questionDto.questionText,
-          correctAnswers: questionDto.correctAnswers,
-          options: questionDto.options,
-          lectureMaterials: updatedMaterials
-        }
-
-        return this.evaluationQuestionRepository.editEvaluationQuestion(question)
-      })
-
-      await Promise.all(promises)
+    if (updatedMaterials && materialsEvaluationDto && !isEmpty(materialsEvaluationDto)) {
+      await this.evaluationQuestionService.saveEvaluationQuestionsForLecture(updatedMaterials, materialsEvaluationDto, oldMaterialsEvaluation)
     }
 
     return await this.lectureRepository.getLectureById(updatedLecture.id)
   }
-
 
   async deleteLecture(id: number): Promise<void> {
     return await this.lectureRepository.deleteLecture(id)

@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateEvaluationQuestionDto } from "src/models/dto/CreateEvaluationQuestionDto";
 import { EvaluationQuestion } from "src/models/EvaluationQuestion";
 import { Repository } from "typeorm";
 

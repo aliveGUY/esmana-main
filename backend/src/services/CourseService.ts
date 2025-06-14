@@ -6,16 +6,15 @@ import { StrippedCourseDto } from "src/models/dto/StrippedCourseDto";
 import { ERoles } from "src/models/enums/ERoles";
 import { ICourseRepository } from "src/repositories/CourseRepository";
 import { Request, Express } from 'express';
-import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository";
 import { Course } from "src/models/Course";
 import { ILectureService } from "./LectureService";
 import { IGoogleClient } from "src/infrastructure/GoogleClient";
-import { EvaluationQuestion } from "src/models/EvaluationQuestion";
 import { has } from 'lodash'
 import { Lecture } from "src/models/Lecture";
 import { EditLectureDto } from "src/models/dto/EditLectureDto";
 import { UserLecture } from "src/models/UserLecture";
 import { AccessTokenData } from "src/models/Token";
+import { IEvaluationQuestionService } from "./EvaluationQuestionService";
 
 export interface ICourseService {
   createCourse(course: CreateCourseDto, thumbnail?: Express.Multer.File): Promise<DetailedCourseDto>
@@ -31,7 +30,7 @@ export interface ICourseService {
 export class CourseService implements ICourseService {
   constructor(
     @Inject('ICourseRepository') private readonly courseRepository: ICourseRepository,
-    @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
+    @Inject('IEvaluationQuestionService') private readonly evaluationQuestionService: IEvaluationQuestionService,
     @Inject('ILectureService') private readonly lectureService: ILectureService,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
   ) { }
@@ -41,7 +40,6 @@ export class CourseService implements ICourseService {
     if (thumbnail) {
       thumbnailUrl = await this.googleClient.uploadMulterFileToDrive(thumbnail)
     }
-
 
     const courseWithoutLectures: Partial<Course> = {
       eventId: courseDto.description,
@@ -54,17 +52,7 @@ export class CourseService implements ICourseService {
     };
 
     const newCourse = await this.courseRepository.createCourse(courseWithoutLectures);
-
-    const bprEvaluationPromises = courseDto.bprEvaluation.map(evaluation => {
-      const question: Partial<EvaluationQuestion> = {
-        questionText: evaluation.questionText,
-        correctAnswers: evaluation.correctAnswers,
-        options: evaluation.options,
-        course: newCourse
-      }
-
-      return this.evaluationQuestionRepository.createEvaluationQuestion(question)
-    })
+    const bprEvaluationPromise = this.evaluationQuestionService.saveEvaluationQuestionsForCourse(newCourse, courseDto.bprEvaluation)
 
     const lecturePromises = courseDto.lectures.map(lectureDto => {
       const lecture: Partial<Lecture> = {
@@ -81,7 +69,7 @@ export class CourseService implements ICourseService {
     }
     )
 
-    await Promise.all([bprEvaluationPromises, lecturePromises])
+    await Promise.all([bprEvaluationPromise, ...lecturePromises])
 
     return await this.courseRepository.getFullCourseById(newCourse.id)
   }
@@ -108,21 +96,7 @@ export class CourseService implements ICourseService {
 
     const updatedCourse = await this.courseRepository.editCourse(courseWithoutLectures)
 
-    const bprEvaluationPromises = courseDto.bprEvaluation.map((evaluation) => {
-      const question: Partial<EvaluationQuestion> = {
-        questionText: evaluation.questionText,
-        correctAnswers: evaluation.correctAnswers,
-        options: evaluation.options,
-        course: updatedCourse
-      }
-
-      if (has(evaluation, 'id')) {
-        question.id = evaluation.id
-        return this.evaluationQuestionRepository.editEvaluationQuestion(question)
-      }
-
-      return this.evaluationQuestionRepository.createEvaluationQuestion(question)
-    })
+    const bprEvaluationPromise = this.evaluationQuestionService.saveEvaluationQuestionsForCourse(updatedCourse, courseDto.bprEvaluation, existingCourse.bprEvaluation)
 
     const lecturePromises = courseDto.lectures.map((lectureDto: Partial<Lecture>) => {
       const lecture: Partial<Lecture> = {
@@ -144,7 +118,7 @@ export class CourseService implements ICourseService {
       return this.lectureService.createLecture(lecture)
     })
 
-    await Promise.all([bprEvaluationPromises, lecturePromises])
+    await Promise.all([bprEvaluationPromise, ...lecturePromises])
 
     return await this.courseRepository.getFullCourseById(updatedCourse.id)
   }
