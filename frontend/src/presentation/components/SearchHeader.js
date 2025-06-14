@@ -12,7 +12,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import CheckboxCollection from '../common/CheckboxCollection'
 import LargePopover from '../common/LargePopover'
 import SectionWrapper from '../common/SectionWrapper'
 
@@ -23,7 +22,7 @@ import SortIcon from '@mui/icons-material/Sort'
 
 const FilterAction = () => {
   return (
-    <LargePopover content={<CheckboxCollection />}>
+    <LargePopover>
       <IconButton>
         <FilterAltIcon />
       </IconButton>
@@ -33,7 +32,7 @@ const FilterAction = () => {
 
 const SortAction = () => {
   return (
-    <LargePopover content={<CheckboxCollection />}>
+    <LargePopover>
       <IconButton>
         <SortIcon />
       </IconButton>

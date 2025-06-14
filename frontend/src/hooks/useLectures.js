@@ -41,6 +41,7 @@ export function useLectures() {
   let isFirstLecture = false
   let isLastLecture = false
   let currentLecture = null
+  let currentUserLecture = null
   let firstIncompleteLectureId = null
   let nextAvailableLectureLink = null
   let previousAvailableLectureLink = null
@@ -79,9 +80,10 @@ export function useLectures() {
     return _getFirstIncompleteLectureId(sortedLectures)
   }
 
-  if (currentCourse) {
+  if (currentCourse && lectureId) {
     sortedLectures = sortBy(currentCourse?.lectures, (item) => dayjs(item?.startTime).valueOf())
     currentLecture = find(sortedLectures, (lecture) => lecture.id === Number(lectureId))
+    currentUserLecture = find(currentLecture.users, (userLecture) => userLecture.user.id === user.id)
     userLectures = filter(flatMap(sortedLectures, 'users'), (userLecture) => userLecture.user.id === user.id)
     isFirstLecture = head(sortedLectures).id === Number(lectureId)
     isLastLecture = last(sortedLectures).id === Number(lectureId)
@@ -98,6 +100,7 @@ export function useLectures() {
     isFirstLecture,
     isLastLecture,
     currentLecture,
+    currentUserLecture,
     firstIncompleteLectureId,
     nextAvailableLectureLink,
     previousAvailableLectureLink,

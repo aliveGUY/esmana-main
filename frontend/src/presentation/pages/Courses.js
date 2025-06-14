@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { map } from 'lodash'
+import { isEmpty, map } from 'lodash'
 
 import { Box, Grid2, Paper, Stack } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
@@ -25,7 +25,7 @@ const Courses = () => {
     <Stack>
       <SearchHeader title="Courses" buttonText="Create Course" onPrimaryActionClick={handleRedirect} />
       <Stack sx={{ px: 3 }} spacing={3}>
-        {ownedCourses && (
+        {!isEmpty(ownedCourses) && (
           <SectionWrapper>
             <Paper sx={{ p: 3 }}>
               <Stack direction="row">

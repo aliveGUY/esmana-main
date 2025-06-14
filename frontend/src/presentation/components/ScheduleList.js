@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
-import { concat, map, sortBy } from 'lodash'
+import { concat, isEmpty, map, sortBy } from 'lodash'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { useCourses } from '../../hooks/useCourses'
@@ -50,7 +50,12 @@ const ScheduleList = () => {
       }))
     : []
 
-  const lectures = sortBy(concat(ownedLectures, highlightedLectures), (item) => dayjs(item?.startTime).valueOf())
+  const now = dayjs()
+
+  const lectures = sortBy(
+    concat(ownedLectures, highlightedLectures).filter((item) => dayjs(item?.endTime).isAfter(now)),
+    (item) => dayjs(item?.startTime).valueOf(),
+  )
 
   return (
     <Stack
@@ -67,6 +72,8 @@ const ScheduleList = () => {
       {map(lectures, (lecture, index) => (
         <LectureItem ley={index} lecture={lecture} />
       ))}
+
+      {isEmpty(lectures) && <Typography pl={2}>No upcoming events</Typography>}
     </Stack>
   )
 }

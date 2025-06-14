@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { isEmpty, some } from 'lodash'
 import { useTranslation } from 'react-i18next'
@@ -12,12 +12,21 @@ import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
+import { FormProvider, useForm } from 'react-hook-form'
+import SubmitButtonFactory from './SubmitButtonFactory'
+import { useEffect } from 'react'
 
 const LectureContent = () => {
   const { user } = useAuth()
+  const { lectureId } = useParams()
   const { i18n } = useTranslation()
-  const { isFirstLecture, isLastLecture, currentLecture, nextAvailableLectureLink, previousAvailableLectureLink } =
-    useLectures()
+  const { isFirstLecture, currentLecture, previousAvailableLectureLink } = useLectures()
+
+  const methods = useForm({
+    defaultValues: {
+      collection: [],
+    },
+  })
 
   const { description, title, materials, startTime, endTime } = currentLecture
   const currentLang = i18n.language
@@ -33,6 +42,10 @@ const LectureContent = () => {
   const meetingMessage = isStartToday
     ? `Starts today at ${formattedStartTime}`
     : `Meeting will start at ${formattedStartTimeLarge}`
+
+  useEffect(() => {
+    methods.reset()
+  }, [lectureId])
 
   return (
     <Stack sx={{ pb: 5 }} spacing={3}>
@@ -70,35 +83,31 @@ const LectureContent = () => {
         )}
       </Stack>
 
-      <Box flex={1}>
-        {isAvailable && (
-          <Stack spacing={3}>
-            <RichTextViewer content={materials.richText[currentLang]} />
-            <LectureTest test={materials.evaluation} />
-          </Stack>
-        )}
-      </Box>
+      <FormProvider {...methods}>
+        <Box flex={1}>
+          {isAvailable && (
+            <Stack spacing={3}>
+              <RichTextViewer content={materials.richText[currentLang]} />
+              <LectureTest test={materials.evaluation} />
+            </Stack>
+          )}
+        </Box>
 
-      <Stack direction="row" sx={{ mt: 4 }}>
-        {!isFirstLecture && (
-          <Button
-            variant="outlined"
-            component={Link}
-            to={previousAvailableLectureLink}
-            disabled={!previousAvailableLectureLink}
-          >
-            Previous
-          </Button>
-        )}
-        <Box flex={1} />
-        {isLastLecture ? (
-          <Button variant="primary">Finish</Button>
-        ) : (
-          <Button variant="primary" component={Link} to={nextAvailableLectureLink} disabled={!nextAvailableLectureLink}>
-            Next
-          </Button>
-        )}
-      </Stack>
+        <Stack direction="row" sx={{ mt: 4 }}>
+          {!isFirstLecture && (
+            <Button
+              variant="outlined"
+              component={Link}
+              to={previousAvailableLectureLink}
+              disabled={!previousAvailableLectureLink}
+            >
+              Previous
+            </Button>
+          )}
+          <Box flex={1} />
+          <SubmitButtonFactory />
+        </Stack>
+      </FormProvider>
     </Stack>
   )
 }

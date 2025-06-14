@@ -1,17 +1,14 @@
 import React from 'react'
 import { map } from 'lodash'
 
-import { Stack, Typography } from '@mui/material'
-import CheckboxCollection from '../../common/CheckboxCollection'
+import { Stack } from '@mui/material'
+import CheckboxCollection from '../../common/inputs/CheckboxCollection'
 
 const LectureTest = ({ test }) => {
   return (
     <Stack spacing={2}>
-      {map(test, ({ questionText, options }) => (
-        <Stack>
-          <Typography fontWeight="bold">{questionText}</Typography>
-          <CheckboxCollection options={options} />
-        </Stack>
+      {map(test, ({ id, questionText, options }, index) => (
+        <CheckboxCollection key={index} name={id} options={options} label={questionText} />
       ))}
     </Stack>
   )
