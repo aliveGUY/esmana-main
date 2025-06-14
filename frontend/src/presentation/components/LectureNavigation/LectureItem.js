@@ -1,4 +1,5 @@
 import React, { Fragment, useRef } from 'react'
+import dayjs from 'dayjs'
 import { find, some } from 'lodash'
 import { useNavigate, useParams } from 'react-router'
 
@@ -10,7 +11,6 @@ import { useFormattedDates } from '../../../utils/lectureDates'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import LockIcon from '@mui/icons-material/Lock'
-import dayjs from 'dayjs'
 
 const itemStylesFactory = ({ isPurchased, isAvailable, isCompleted }) => {
   if (!isPurchased) {

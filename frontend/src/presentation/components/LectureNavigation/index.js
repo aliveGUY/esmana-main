@@ -3,11 +3,11 @@ import { find, map } from 'lodash'
 import { useParams } from 'react-router'
 
 import { Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { useLectures } from '../../../hooks'
 import LectureItem from './LectureItem'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { useLectures } from '../../../hooks'
 
 const LectureNavigation = () => {
   const { sortedLectures } = useLectures()

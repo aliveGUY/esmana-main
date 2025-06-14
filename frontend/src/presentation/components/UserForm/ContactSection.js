@@ -10,11 +10,11 @@ const ContactSection = () => {
       <SectionWrapper>
         <Paper>
           <Stack p={2} spacing={2}>
-            <TextField autoComplete="off" name="firstName" label="First name" required="First name is required" />
-            <TextField autoComplete="off" name="middleName" label="Middle name" />
-            <TextField autoComplete="off" name="lastName" label="Last name" required="Last name is required" />
-            <TextField autoComplete="off" name="phone" label="Phone" />
-            <TextField autoComplete="off" name="email" label="Email" required="Email name is required" />
+            <TextField name="firstName" label="First name" required="First name is required" />
+            <TextField name="middleName" label="Middle name" />
+            <TextField name="lastName" label="Last name" required="Last name is required" />
+            <TextField name="phone" label="Phone" />
+            <TextField name="email" label="Email" required="Email name is required" />
           </Stack>
         </Paper>
       </SectionWrapper>

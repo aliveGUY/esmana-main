@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
+import { useLectures } from '../../hooks'
 import { serveStaticImage } from '../../state/asynchronous'
 import EmptyImage from '../../static/images/no-image.jpg'
-import { useLectures } from '../../hooks'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {

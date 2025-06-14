@@ -4,6 +4,7 @@ import { isEmpty, some } from 'lodash'
 import { useTranslation } from 'react-i18next'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
+import { useLectures } from '../../../hooks'
 import { useAuth } from '../../../hooks/useAuth'
 import GoogleMeetSvg from '../../../static/images/google-meet-colored.svg'
 import LectureVideo from '../LectureVideo'
@@ -11,16 +12,14 @@ import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
-import { useLectures } from '../../../hooks'
 
 const LectureContent = () => {
-  const { currentLecture } = useLectures()
-
-  const { description, title, materials, startTime, endTime } = currentLecture
   const { user } = useAuth()
   const { i18n } = useTranslation()
-  const { isFirstLecture, isLastLecture } = useLectures()
+  const { isFirstLecture, isLastLecture, currentLecture, nextAvailableLectureLink, previousAvailableLectureLink } =
+    useLectures()
 
+  const { description, title, materials, startTime, endTime } = currentLecture
   const currentLang = i18n.language
 
   const isAvailable = !isEmpty(materials)
@@ -81,9 +80,24 @@ const LectureContent = () => {
       </Box>
 
       <Stack direction="row" sx={{ mt: 4 }}>
-        {!isFirstLecture && <Button variant="outlined">Previous</Button>}
+        {!isFirstLecture && (
+          <Button
+            variant="outlined"
+            component={Link}
+            to={previousAvailableLectureLink}
+            disabled={!previousAvailableLectureLink}
+          >
+            Previous
+          </Button>
+        )}
         <Box flex={1} />
-        {isLastLecture ? <Button variant="primary">Finish</Button> : <Button variant="primary">Next</Button>}
+        {isLastLecture ? (
+          <Button variant="primary">Finish</Button>
+        ) : (
+          <Button variant="primary" component={Link} to={nextAvailableLectureLink} disabled={!nextAvailableLectureLink}>
+            Next
+          </Button>
+        )}
       </Stack>
     </Stack>
   )

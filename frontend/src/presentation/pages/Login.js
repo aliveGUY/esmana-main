@@ -65,9 +65,9 @@ const Login = () => {
               <Stack p={4} spacing={2}>
                 <Typography variant="h4">Login</Typography>
 
-                <TextField name="email" label="Email" required="Email is required" />
+                <TextField autoComplete="on" name="email" label="Email" required="Email is required" />
 
-                <Password name="password" label="Password" required="Password is required" />
+                <Password autoComplete="on" name="password" label="Password" required="Password is required" />
 
                 {displayServerError(error)}
                 {displayServerError(googleLoginError)}

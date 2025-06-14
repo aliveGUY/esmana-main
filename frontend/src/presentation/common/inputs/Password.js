@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { FormControl, FormHelperText, TextField as MuiTextField, Typography } from '@mui/material'
 
-const Password = ({ name, label, placeholder, staticLabel = false, required = null }) => {
+const Password = ({ name, label, placeholder, staticLabel = false, required = null, autoComplete = 'off' }) => {
   const {
     control,
     formState: { errors },
@@ -35,6 +35,7 @@ const Password = ({ name, label, placeholder, staticLabel = false, required = nu
             id={name}
             type="password"
             placeholder={placeholder}
+            autoComplete={autoComplete}
             {...(!staticLabel && { label })}
             {...field}
           />

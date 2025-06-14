@@ -10,7 +10,7 @@ const TextField = ({
   onChange,
   placeholder,
   staticLabel = false,
-  autoComplete = 'on',
+  autoComplete = 'off',
   required = null,
   pattern,
   ...rest

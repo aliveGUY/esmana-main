@@ -1,8 +1,19 @@
-import { useParams } from 'react-router-dom'
-import { useAuth } from './useAuth'
 import { useSelector } from 'react-redux'
-import { filter, find, flatMap, head, last, map, sortBy } from 'lodash'
+import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { filter, find, findIndex, flatMap, head, isEmpty, last, map, slice, sortBy } from 'lodash'
+
+import { useAuth } from './useAuth'
+
+function getSubarrayBetweenIds(array, startId, endId, offset = 0) {
+  const startIndex = findIndex(array, { id: startId })
+  const endIndex = findIndex(array, { id: endId })
+  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    return []
+  }
+
+  return slice(array, startIndex + offset, endIndex + offset)
+}
 
 const getIncompleteLectureIds = (userLectures) => {
   const firstIncompleteLecture = find(userLectures, (userLecture) => {
@@ -22,7 +33,7 @@ export function useLectures() {
   const { courseId, lectureId } = useParams()
   const { user } = useAuth()
 
-  const course = find(courses, (course) => course.id === Number(courseId))
+  const currentCourse = find(courses, (course) => course.id === Number(courseId))
 
   let sortedLectures = []
   let userLectures = []
@@ -31,6 +42,8 @@ export function useLectures() {
   let isLastLecture = false
   let currentLecture = null
   let firstIncompleteLectureId = null
+  let nextAvailableLectureLink = null
+  let previousAvailableLectureLink = null
 
   const sortLectures = (lectures) => {
     return sortBy(lectures, (item) => dayjs(item?.startTime).valueOf())
@@ -43,20 +56,39 @@ export function useLectures() {
       }),
     ).id
   }
+  const _getNextAvailableLecture = (sortedLectures, firstIncompleteLectureId) => {
+    const nextLectures = getSubarrayBetweenIds(sortedLectures, Number(lectureId), firstIncompleteLectureId, 1)
+
+    if (isEmpty(nextLectures)) return null
+
+    const nextNavigableLecture = head(nextLectures)
+    return `/dashboard/course/${courseId}/${nextNavigableLecture.id}`
+  }
+
+  const _getPreviousLecture = (sortedLectures) => {
+    const firstLecture = head(sortedLectures)
+    const previousLectures = getSubarrayBetweenIds(sortedLectures, firstLecture.id, Number(lectureId))
+    if (isEmpty(previousLectures)) return null
+
+    const previousLecture = last(previousLectures)
+    return `/dashboard/course/${courseId}/${previousLecture.id}`
+  }
 
   const getFirstIncompleteLectureId = (lectures) => {
     const sortedLectures = sortLectures(lectures)
     return _getFirstIncompleteLectureId(sortedLectures)
   }
 
-  if (course) {
-    sortedLectures = sortBy(course?.lectures, (item) => dayjs(item?.startTime).valueOf())
+  if (currentCourse) {
+    sortedLectures = sortBy(currentCourse?.lectures, (item) => dayjs(item?.startTime).valueOf())
     currentLecture = find(sortedLectures, (lecture) => lecture.id === Number(lectureId))
     userLectures = filter(flatMap(sortedLectures, 'users'), (userLecture) => userLecture.user.id === user.id)
     isFirstLecture = head(sortedLectures).id === Number(lectureId)
     isLastLecture = last(sortedLectures).id === Number(lectureId)
     blockedLectureIds = getIncompleteLectureIds(userLectures)
     firstIncompleteLectureId = _getFirstIncompleteLectureId(sortedLectures)
+    nextAvailableLectureLink = _getNextAvailableLecture(sortedLectures, firstIncompleteLectureId)
+    previousAvailableLectureLink = _getPreviousLecture(sortedLectures)
   }
 
   return {
@@ -67,6 +99,8 @@ export function useLectures() {
     isLastLecture,
     currentLecture,
     firstIncompleteLectureId,
+    nextAvailableLectureLink,
+    previousAvailableLectureLink,
     sortLectures,
     getFirstIncompleteLectureId,
   }

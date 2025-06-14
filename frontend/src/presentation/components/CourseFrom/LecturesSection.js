@@ -4,9 +4,9 @@ import { Link, useParams } from 'react-router-dom'
 import { isEmpty, map } from 'lodash'
 
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
+import { useLectures } from '../../../hooks'
 import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDates'
 import SectionWrapper from '../../common/SectionWrapper'
-import { useLectures } from '../../../hooks'
 
 const LectureItem = ({ lecture, isEdit = false }) => {
   const { courseId } = useParams()

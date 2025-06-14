@@ -26,7 +26,7 @@ const CheckboxCollection = ({ options = [] }) => {
         return (
           <ListItem key={value} disablePadding>
             <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-              <ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 'unset', mr: 1 }}>
                 <Checkbox
                   edge="start"
                   checked={checked.includes(value)}

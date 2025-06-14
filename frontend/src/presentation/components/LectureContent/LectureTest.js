@@ -6,9 +6,9 @@ import CheckboxCollection from '../../common/CheckboxCollection'
 
 const LectureTest = ({ test }) => {
   return (
-    <Stack spacing={3}>
+    <Stack spacing={2}>
       {map(test, ({ questionText, options }) => (
-        <Stack spacing={2}>
+        <Stack>
           <Typography fontWeight="bold">{questionText}</Typography>
           <CheckboxCollection options={options} />
         </Stack>
