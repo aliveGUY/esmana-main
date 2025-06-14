@@ -38,7 +38,7 @@ export class EvaluationService implements IEvaluationService {
     const isPassed = !isPassedArray.includes(false)
 
     if (isPassed) {
-      await this.userLectureRepository.setIsCompletedByUserAndLecture(lectureId, userId, isPassed)
+      await this.userLectureRepository.setIsCompletedByUserAndLecture(userId, lectureId, isPassed)
       result.isPassed = isPassed
     }
 

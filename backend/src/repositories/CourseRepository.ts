@@ -4,7 +4,6 @@ import { Course } from "src/models/Course";
 import { DetailedCourseDto } from "src/models/dto/DetailedCourseDto";
 import { EditCourseDto } from "src/models/dto/EditCourseDto";
 import { StrippedCourseDto } from "src/models/dto/StrippedCourseDto";
-import { LectureMaterials } from "src/models/LectureMaterials";
 import { Repository } from "typeorm";
 
 export interface ICourseRepository {
@@ -41,6 +40,8 @@ export class CourseRepository implements ICourseRepository {
       ])
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.isLector = true')
+      .leftJoin('userLecture.lecture', 'ulLecture')
+      .addSelect('ulLecture.id')
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
@@ -56,7 +57,7 @@ export class CourseRepository implements ICourseRepository {
       .where('course.id = :courseId AND course.isActive = :isActive', { courseId, isActive: true })
       .getOne();
 
-    return course
+    return course;
   }
 
   async getOwnedCourseById(courseId: number, userId: number): Promise<DetailedCourseDto> {
@@ -69,6 +70,8 @@ export class CourseRepository implements ICourseRepository {
         'userLecture.user.id = :userId OR userLecture.isLector = true',
         { userId }
       )
+      .leftJoin('userLecture.lecture', 'ulLecture')
+      .addSelect('ulLecture.id')
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
@@ -113,6 +116,8 @@ export class CourseRepository implements ICourseRepository {
       .createQueryBuilder('course')
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture')
+      .leftJoin('userLecture.lecture', 'ulLecture')
+      .addSelect('ulLecture.id')
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
@@ -150,6 +155,8 @@ export class CourseRepository implements ICourseRepository {
       ])
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.user.id = :userId OR userLecture.isLector = true', { userId })
+      .leftJoin('userLecture.lecture', 'ulLecture')
+      .addSelect('ulLecture.id')
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([
@@ -176,6 +183,8 @@ export class CourseRepository implements ICourseRepository {
       ])
       .leftJoinAndSelect('course.lectures', 'lecture')
       .leftJoinAndSelect('lecture.users', 'userLecture', 'userLecture.isLector = true')
+      .leftJoin('userLecture.lecture', 'ulLecture')
+      .addSelect('ulLecture.id')
       .leftJoin('userLecture.user', 'user')
       .leftJoinAndSelect('user.lectorDetails', 'lectorDetails')
       .addSelect([

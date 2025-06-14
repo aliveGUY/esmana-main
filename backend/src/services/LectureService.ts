@@ -4,11 +4,10 @@ import { IGoogleClient } from "src/infrastructure/GoogleClient"
 import { EditLectureDto } from "src/models/dto/EditLectureDto"
 import { Lecture } from "src/models/Lecture"
 import { LectureMaterials } from "src/models/LectureMaterials"
-import { UserLecture } from "src/models/UserLecture"
 import { ILectureMaterialsRepository } from "src/repositories/LectureMaterialsRepository"
 import { ILectureRepository } from "src/repositories/LectureRepository"
-import { IUserLectureRepository } from "src/repositories/UserLectureRepository"
 import { IEvaluationQuestionService } from "./EvaluationQuestionService"
+import { IUserLectureService } from "./UserLectureService"
 
 export interface ILectureService {
   createLecture(lecture: Partial<Lecture>): Promise<Lecture>
@@ -22,7 +21,7 @@ export class LectureService implements ILectureService {
     @Inject('ILectureRepository') private readonly lectureRepository: ILectureRepository,
     @Inject('ILectureMaterialsRepository') private readonly lectureMaterialsRepository: ILectureMaterialsRepository,
     @Inject('IEvaluationQuestionService') private readonly evaluationQuestionService: IEvaluationQuestionService,
-    @Inject('IUserLectureRepository') private readonly userLectureRepository: IUserLectureRepository,
+    @Inject('IUserLectureService') private readonly userLectureService: IUserLectureService,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient
   ) { }
 
@@ -33,26 +32,13 @@ export class LectureService implements ILectureService {
       price: lectureDto.price,
       startTime: lectureDto.startTime,
       endTime: lectureDto.endTime,
-      users: lectureDto.users,
       course: lectureDto.course,
     }
 
     const newLecture = await this.lectureRepository.createLecture(lecture)
 
     if (lectureDto.users && !isEmpty(lectureDto.users)) {
-      const promises = lectureDto.users.map(userLectureDto => {
-        const userLecture: Partial<UserLecture> = {
-          user: userLectureDto.user,
-          lecture: newLecture,
-          isCompleted: userLectureDto.isCompleted,
-          isLector: userLectureDto.isLector,
-          isGotAcademicHours: userLectureDto.isGotAcademicHours,
-        }
-
-        return this.userLectureRepository.createUserLecture(userLecture)
-      })
-
-      await Promise.all(promises)
+      await this.userLectureService.saveUserLecture(newLecture, lectureDto.users)
     }
 
     let newMaterials: LectureMaterials | null = null
@@ -94,19 +80,7 @@ export class LectureService implements ILectureService {
     const updatedLecture = await this.lectureRepository.editLecture(lecture)
 
     if (lectureDto.users && !isEmpty(lectureDto.users)) {
-      const promises = lectureDto.users.map(userLectureDto => {
-        const userLecture: Partial<UserLecture> = {
-          user: userLectureDto.user,
-          lecture: updatedLecture,
-          isCompleted: userLectureDto.isCompleted,
-          isLector: userLectureDto.isLector,
-          isGotAcademicHours: userLectureDto.isGotAcademicHours,
-        }
-
-        return this.userLectureRepository.createUserLecture(userLecture)
-      })
-
-      await Promise.all(promises)
+      await this.userLectureService.saveUserLecture(updatedLecture, lectureDto.users, updatedLecture.users)
     }
 
     let updatedMaterials: LectureMaterials | null = null

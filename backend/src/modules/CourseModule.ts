@@ -17,6 +17,7 @@ import { CoursesController } from "src/controllers/CoursesController";
 import { EvaluationController } from "src/controllers/EvaluationController";
 import { EvaluationService } from "src/services/EvaluationService";
 import { EvaluationQuestionService } from "src/services/EvaluationQuestionService";
+import { UserLectureService } from "src/services/UserLectureService";
 
 @Module({
   imports: [
@@ -60,6 +61,10 @@ import { EvaluationQuestionService } from "src/services/EvaluationQuestionServic
     {
       provide: 'IEvaluationQuestionService',
       useClass: EvaluationQuestionService
+    },
+    {
+      provide: 'IUserLectureService',
+      useClass: UserLectureService
     }
   ],
   exports: ['ICourseService', 'IUserLectureRepository'],

@@ -30,7 +30,7 @@ export class LectureRepository implements ILectureRepository {
   async getLectureById(id: number): Promise<Lecture> {
     const lecture = await this.lectureRepository.findOne({
       where: { id },
-      relations: ['materials', 'materials.evaluation']
+      relations: ['materials', 'materials.evaluation', 'users', 'users.lecture', 'users.user']
     });
 
     if (!lecture) {

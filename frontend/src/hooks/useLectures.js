@@ -15,19 +15,6 @@ function getSubarrayBetweenIds(array, startId, endId, offset = 0) {
   return slice(array, startIndex + offset, endIndex + offset)
 }
 
-const getIncompleteLectureIds = (userLectures) => {
-  const firstIncompleteLecture = find(userLectures, (userLecture) => {
-    return !userLecture.isCompleted
-  })
-
-  const incompleteLectures = filter(
-    userLectures,
-    (userLecture) => !userLecture.isCompleted && userLecture.lecture !== firstIncompleteLecture?.lecture,
-  )
-
-  return map(incompleteLectures, 'lecture')
-}
-
 export function useLectures() {
   const courses = useSelector((state) => state.courses.collection)
   const { courseId, lectureId } = useParams()
@@ -59,6 +46,23 @@ export function useLectures() {
     if (!firstIncompleteLecture) return null
     return firstIncompleteLecture.id
   }
+
+  const _getIncompleteLectureIds = (userLectures) => {
+    const firstIncompleteLecture = find(userLectures, (userLecture) => {
+      return !userLecture.isCompleted && userLecture.user.id === user.id
+    })
+
+    const incompleteLectures = filter(
+      userLectures,
+      (userLecture) =>
+        !userLecture.isCompleted &&
+        userLecture.user.id === user.id &&
+        userLecture.lecture !== firstIncompleteLecture?.lecture,
+    )
+
+    return map(incompleteLectures, 'lecture.id')
+  }
+
   const _getNextAvailableLecture = (sortedLectures, firstIncompleteLectureId) => {
     const nextLectures = getSubarrayBetweenIds(sortedLectures, Number(lectureId), firstIncompleteLectureId, 1)
 
@@ -89,7 +93,7 @@ export function useLectures() {
     userLectures = filter(flatMap(sortedLectures, 'users'), (userLecture) => userLecture.user.id === user.id)
     isFirstLecture = head(sortedLectures).id === Number(lectureId)
     isLastLecture = last(sortedLectures).id === Number(lectureId)
-    blockedLectureIds = getIncompleteLectureIds(userLectures)
+    blockedLectureIds = _getIncompleteLectureIds(userLectures)
     firstIncompleteLectureId = _getFirstIncompleteLectureId(sortedLectures)
     nextAvailableLectureLink = _getNextAvailableLecture(sortedLectures, firstIncompleteLectureId)
     previousAvailableLectureLink = _getPreviousLecture(sortedLectures)

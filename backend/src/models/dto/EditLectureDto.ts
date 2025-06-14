@@ -1,22 +1,46 @@
-import { User } from "../User";
-import { UserLecture } from "../UserLecture";
-import { CreateLectureMaterialsDto } from "./CreateLectureMaterialsDto";
-import { EditLectureMaterialsDto } from "./EditLectureMaterialsDto";
+import {
+  IsInt,
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsDate,
+  ValidateNested,
+  IsArray,
+  IsDefined,
+} from 'class-validator'
+import { Type } from 'class-transformer'
+import { UserLecture } from '../UserLecture'
+import { EditLectureMaterialsDto } from './EditLectureMaterialsDto'
 
 export class EditLectureDto {
+  @IsOptional()
+  @IsInt()
   id: number
 
-  title: string;
+  @IsString()
+  title: string
 
-  description: string;
+  @IsString()
+  description: string
 
-  price: number;
+  @IsNumber()
+  price: number
 
-  startTime: Date;
+  @Type(() => Date)
+  @IsDate()
+  startTime: Date
 
-  endTime: Date;
+  @Type(() => Date)
+  @IsDate()
+  endTime: Date
 
+  @ValidateNested()
+  @Type(() => EditLectureMaterialsDto)
+  @IsDefined()
   materials: EditLectureMaterialsDto
 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UserLecture)
   users: UserLecture[]
 }
