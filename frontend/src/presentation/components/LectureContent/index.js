@@ -11,16 +11,20 @@ import RichTextViewer from '../RichTextViewer'
 import LectureTest from './LectureTest'
 
 import '../RichTextEditor/editor-styles.css'
+import { useLectures } from '../../../hooks'
 
-const LectureContent = ({ lecture, isFirstLecture = false, isLastLecture = false }) => {
-  const { description, title, materials, startTime, endTime } = lecture
+const LectureContent = () => {
+  const { currentLecture } = useLectures()
+
+  const { description, title, materials, startTime, endTime } = currentLecture
   const { user } = useAuth()
   const { i18n } = useTranslation()
+  const { isFirstLecture, isLastLecture } = useLectures()
 
   const currentLang = i18n.language
 
   const isAvailable = !isEmpty(materials)
-  const isPurchased = some(lecture.users, (userLecture) => userLecture.user.id === user?.id)
+  const isPurchased = some(currentLecture.users, (userLecture) => userLecture.user.id === user?.id)
   const isStartInFuture = dayjs(startTime).isAfter(dayjs(), 'day')
   const isStartToday = dayjs(startTime).isSame(dayjs(), 'day')
   const isEndInPast = dayjs(endTime).isBefore(dayjs(), 'day')

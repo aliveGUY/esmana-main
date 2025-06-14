@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Box, Grid2, Paper, Stack, Typography } from '@mui/material'
 import { serveStaticImage } from '../../state/asynchronous'
 import EmptyImage from '../../static/images/no-image.jpg'
-import { useCourses } from '../../hooks'
+import { useLectures } from '../../hooks'
 
 export const getTotalHours = (lectures) => {
   return lectures.reduce((sum, lecture) => {
@@ -20,7 +20,7 @@ export const getTotalHours = (lectures) => {
 }
 
 const OwnedCourseCard = ({ course }) => {
-  const { getFirstIncompleteLectureId } = useCourses()
+  const { getFirstIncompleteLectureId } = useLectures()
   const navigate = useNavigate()
 
   const { title, description, lectures, thumbnailUrl, id } = course

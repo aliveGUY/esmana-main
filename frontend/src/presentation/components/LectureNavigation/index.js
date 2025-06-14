@@ -7,14 +7,16 @@ import LectureItem from './LectureItem'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { useCourses } from '../../../hooks'
+import { useLectures } from '../../../hooks'
 
-const LectureNavigation = ({ lectures }) => {
+const LectureNavigation = () => {
+  const { sortedLectures } = useLectures()
+
   const theme = useTheme()
   const { lectureId } = useParams()
   const [isExpanded, setIsExpanded] = useState(false)
-  const lecture = find(lectures, (lecture) => lecture.id === Number(lectureId))
-  const { blockedLectureIds } = useCourses()
+  const lecture = find(sortedLectures, (lecture) => lecture.id === Number(lectureId))
+  const { blockedLectureIds } = useLectures()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleToggle = useCallback(() => {
@@ -54,7 +56,7 @@ const LectureNavigation = ({ lectures }) => {
 
       <Collapse in={!isMobile || isExpanded}>
         <Stack spacing={1} sx={{ pb: 2 }}>
-          {map(lectures, (lecture) => (
+          {map(sortedLectures, (lecture) => (
             <LectureItem lecture={lecture} isIncomplete={blockedLectureIds.includes(lecture.id)} />
           ))}
         </Stack>

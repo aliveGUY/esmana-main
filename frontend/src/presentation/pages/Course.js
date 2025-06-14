@@ -9,20 +9,14 @@ import SectionWrapper from '../common/SectionWrapper'
 import LectureContent from '../components/LectureContent'
 import LectureNavigation from '../components/LectureNavigation'
 import LectureTopControls from '../components/LectureTopControls'
+import { useLectures } from '../../hooks'
 
 const Course = () => {
   const { lectureId, courseId } = useParams()
-  const {
-    ownedCourses,
-    blockedLectureIds,
-    firstIncompleteLectureId,
-    sortedLectures,
-    isFirstLecture,
-    isLastLecture,
-    currentLecture,
-  } = useCourses()
   const [getCourseById] = useGetCourseByIdMutation()
   const navigate = useNavigate()
+  const { ownedCourses } = useCourses()
+  const { blockedLectureIds, firstIncompleteLectureId } = useLectures()
 
   useEffect(() => {
     getCourseById(courseId)
@@ -51,10 +45,10 @@ const Course = () => {
         }}
       >
         <Box sx={{ gridColumn: '1 / -1' }} pt={2}>
-          <LectureTopControls lecture={currentLecture} />
+          <LectureTopControls />
         </Box>
-        <LectureNavigation lectures={sortedLectures} />
-        <LectureContent lecture={currentLecture} isFirstLecture={isFirstLecture} isLastLecture={isLastLecture} />
+        <LectureNavigation />
+        <LectureContent />
       </Box>
     </SectionWrapper>
   )

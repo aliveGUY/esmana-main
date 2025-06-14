@@ -6,7 +6,7 @@ import { isEmpty, map } from 'lodash'
 import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import { convertLectureDatesStorageToInterface } from '../../../utils/lectureDates'
 import SectionWrapper from '../../common/SectionWrapper'
-import { useCourses } from '../../../hooks'
+import { useLectures } from '../../../hooks'
 
 const LectureItem = ({ lecture, isEdit = false }) => {
   const { courseId } = useParams()
@@ -42,7 +42,7 @@ const LectureItem = ({ lecture, isEdit = false }) => {
 const LecturesSection = ({ isEdit = false }) => {
   const { courseId } = useParams()
   const data = useSelector((state) => state.courseForm.lectures)
-  const { sortLectures } = useCourses()
+  const { sortLectures } = useLectures()
   const sortedLectures = sortLectures(data)
 
   const redirect = isEdit ? `/dashboard/course/edit/${courseId}/lecture/new` : '/dashboard/course/new/lecture/new'
