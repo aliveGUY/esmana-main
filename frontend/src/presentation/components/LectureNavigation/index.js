@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { find, map } from 'lodash'
 import { useParams } from 'react-router'
 
-import { Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Collapse, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useLectures } from '../../../hooks'
 import LectureItem from './LectureItem'
 
@@ -24,44 +24,48 @@ const LectureNavigation = () => {
   }, [])
 
   return (
-    <Stack
-      sx={{
-        backgroundColor: 'snowFog.main',
-        borderRadius: '12px',
-        height: 'min-content',
-        px: 1,
-        pt: { xs: 2, md: 1 },
-        pb: { md: 1 },
-      }}
-    >
+    <Box sx={{ height: '100%' }}>
       <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
         sx={{
-          display: { xs: 'grid', md: 'none' },
-          gridTemplateColumns: '1fr auto',
-          gap: 1,
-          mb: 2,
+          backgroundColor: 'snowFog.main',
+          borderRadius: '12px',
+          height: 'min-content',
+          position: 'sticky',
+          top: 64,
           px: 1,
+          pt: { xs: 2, md: 1 },
+          pb: { md: 1 },
         }}
       >
-        <Typography fontWeight="bold" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
-          {lecture.title}
-        </Typography>
-        <IconButton variant="outlined" onClick={handleToggle}>
-          {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
-      </Stack>
-
-      <Collapse in={!isMobile || isExpanded}>
-        <Stack spacing={1} sx={{ pb: 2 }}>
-          {map(sortedLectures, (lecture) => (
-            <LectureItem lecture={lecture} isIncomplete={blockedLectureIds.includes(lecture.id)} />
-          ))}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            display: { xs: 'grid', md: 'none' },
+            gridTemplateColumns: '1fr auto',
+            gap: 1,
+            mb: 2,
+            px: 1,
+          }}
+        >
+          <Typography fontWeight="bold" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+            {lecture.title}
+          </Typography>
+          <IconButton variant="outlined" onClick={handleToggle}>
+            {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </Stack>
-      </Collapse>
-    </Stack>
+
+        <Collapse in={!isMobile || isExpanded}>
+          <Stack spacing={1} sx={{ pb: 2 }}>
+            {map(sortedLectures, (lecture) => (
+              <LectureItem lecture={lecture} isIncomplete={blockedLectureIds.includes(lecture.id)} />
+            ))}
+          </Stack>
+        </Collapse>
+      </Stack>
+    </Box>
   )
 }
 
