@@ -23,10 +23,7 @@ export class LectureRepository implements ILectureRepository {
   }
 
   async editLecture(lecture: Partial<Lecture>): Promise<Lecture> {
-    // Use save with cascade to properly handle the one-to-one relationship
     const savedLecture = await this.lectureRepository.save(lecture);
-    
-    // Return the lecture with all relations loaded
     return await this.getLectureById(savedLecture.id);
   }
 
@@ -35,11 +32,11 @@ export class LectureRepository implements ILectureRepository {
       where: { id },
       relations: ['materials', 'materials.evaluation']
     });
-    
+
     if (!lecture) {
       throw new Error(`Lecture with id ${id} not found`);
     }
-    
+
     return lecture;
   }
 

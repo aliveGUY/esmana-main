@@ -5,7 +5,6 @@ import { EditCourseDto } from "src/models/dto/EditCourseDto";
 import { StrippedCourseDto } from "src/models/dto/StrippedCourseDto";
 import { ERoles } from "src/models/enums/ERoles";
 import { ICourseRepository } from "src/repositories/CourseRepository";
-import { ITokenRepository } from "src/repositories/TokenRepository";
 import { Request, Express } from 'express';
 import { IEvaluationQuestionRepository } from "src/repositories/EvaluationQuestionRepository";
 import { Course } from "src/models/Course";
@@ -32,7 +31,6 @@ export interface ICourseService {
 export class CourseService implements ICourseService {
   constructor(
     @Inject('ICourseRepository') private readonly courseRepository: ICourseRepository,
-    @Inject('ITokenRepository') private readonly tokenRepository: ITokenRepository,
     @Inject('IEvaluationQuestionRepository') private readonly evaluationQuestionRepository: IEvaluationQuestionRepository,
     @Inject('ILectureService') private readonly lectureService: ILectureService,
     @Inject('IGoogleClient') private readonly googleClient: IGoogleClient,
@@ -140,11 +138,9 @@ export class CourseService implements ICourseService {
 
       if (has(lectureDto, 'id')) {
         lecture.id = lectureDto.id
-        console.log("SHOULD EDIT LECTURE", {})
         return this.lectureService.editLecture(lecture as EditLectureDto)
       }
 
-      console.log("SHOULD CREATE LECTURE")
       return this.lectureService.createLecture(lecture)
     })
 

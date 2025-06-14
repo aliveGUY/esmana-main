@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { usersEndpoints } from '../asynchronous'
+import { find } from 'lodash'
 
 const coursesSlice = createSlice({
   name: 'courses',
@@ -29,6 +30,14 @@ const coursesSlice = createSlice({
       } else {
         state.collection.push(payload)
       }
+    })
+
+    builder.addMatcher(usersEndpoints.evaluateLectureCompletion.matchFulfilled, (state, { payload }) => {
+      const { isPassed, lectureId, userId } = payload
+      const course = state.collection.find((course) => find(course.lectures, (lecture) => lecture.id === lectureId))
+      const lecture = find(course.lectures, (lecture) => lecture.id === lectureId)
+      const userLecture = find(lecture.users, (userLecture) => userLecture.user.id === userId)
+      userLecture.isCompleted = isPassed
     })
   },
 })

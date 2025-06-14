@@ -25,10 +25,10 @@ const CheckboxCollection = ({ name, label, options }) => {
 
   const collection = getValues('collection') || []
 
-  const findGroupIndex = () => collection.findIndex((item) => item.id === name)
+  const findGroupIndex = () => collection.findIndex((item) => item.questionId === name)
 
   const addValue = (option) => {
-    append({ id: name, answers: [option] })
+    append({ questionId: name, answers: [option] })
   }
 
   const editValue = (option) => {
@@ -67,7 +67,7 @@ const CheckboxCollection = ({ name, label, options }) => {
     }
   }
 
-  const selectedOptions = collection.find((item) => item.id === name)?.answers || []
+  const selectedOptions = collection.find((item) => item.questionId === name)?.answers || []
 
   return (
     <FormControl component="fieldset" variant="standard" error={Boolean(errors[name])}>

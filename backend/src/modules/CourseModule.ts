@@ -14,13 +14,15 @@ import { CourseService } from "src/services/CourseService";
 import { LectureService } from "src/services/LectureService";
 import { AuthModule } from "./AuthModule";
 import { CoursesController } from "src/controllers/CoursesController";
+import { EvaluationController } from "src/controllers/EvaluationController";
+import { EvaluationService } from "src/services/EvaluationService";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Course, EvaluationQuestion, Lecture, LectureMaterials, UserLecture]),
     AuthModule
   ],
-  controllers: [CoursesController],
+  controllers: [CoursesController, EvaluationController],
   providers: [
     {
       provide: 'ICourseRepository',
@@ -49,6 +51,10 @@ import { CoursesController } from "src/controllers/CoursesController";
     {
       provide: 'ILectureService',
       useClass: LectureService
+    },
+    {
+      provide: 'IEvaluationService',
+      useClass: EvaluationService
     }
   ],
   exports: ['ICourseService', 'IUserLectureRepository'],

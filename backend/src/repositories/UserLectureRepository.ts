@@ -6,8 +6,8 @@ import { Repository } from "typeorm";
 
 export interface IUserLectureRepository {
   createUserLecture(userLecture: Partial<UserLecture>): Promise<UserLecture>
-  createUserLectureWithLectureId(lectureId: number, userLectureData: CreateUserLectureDto): Promise<UserLecture>
   updateUserLecture(userLecture: Partial<UserLecture>): Promise<UserLecture>
+  setIsCompletedByUserAndLecture(userId: number, lectureId: number, isCompleted: boolean): Promise<void>
   deleteUserLecture(userId: number, lectureId: number): Promise<void>
   getUserLecturesByLectureId(lectureId: number): Promise<UserLecture[]>
 }
@@ -23,20 +23,19 @@ export class UserLectureRepository implements IUserLectureRepository {
     return await this.userLectureRepository.save(userLecture);
   }
 
-  async createUserLectureWithLectureId(lectureId: number, userLectureData: CreateUserLectureDto): Promise<UserLecture> {
-    const userLecture = {
-      ...userLectureData,
-      lecture: { id: lectureId }
-    };
-    return await this.userLectureRepository.save(userLecture);
-  }
-
   async updateUserLecture(userLecture: Partial<UserLecture>): Promise<UserLecture> {
     return await this.userLectureRepository.save(userLecture);
   }
 
   async deleteUserLecture(userId: number, lectureId: number): Promise<void> {
     await this.userLectureRepository.delete({ user: { id: userId }, lecture: { id: lectureId } });
+  }
+
+  async setIsCompletedByUserAndLecture(userId: number, lectureId: number, isCompleted: boolean): Promise<void> {
+    await this.userLectureRepository.update(
+      { user: { id: userId }, lecture: { id: lectureId } },
+      { isCompleted }
+    )
   }
 
   async getUserLecturesByLectureId(lectureId: number): Promise<UserLecture[]> {

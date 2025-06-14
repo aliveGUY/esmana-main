@@ -168,6 +168,14 @@ const usersApi = createApi({
         body,
       }),
     }),
+
+    evaluateLectureCompletion: builder.mutation({
+      query: (body) => ({
+        url: 'evaluation/lecture',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 })
 
@@ -193,6 +201,7 @@ export const {
   useConnectGoogleAccountMutation,
   useLogoutMutation,
   useRefreshMutation,
+  useEvaluateLectureCompletionMutation,
 } = usersApi
 
 export const authMiddleware = (store) => (next) => (action) => {

@@ -1,25 +1,25 @@
-import React from 'react'
-import { useLectures } from '../../../hooks'
+import React, { useCallback, useEffect } from 'react'
+import { useAuth, useLectures } from '../../../hooks'
 import { useFormContext } from 'react-hook-form'
 import { Button } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
+import { useEvaluateLectureCompletionMutation } from '../../../state/asynchronous'
 
-const AnswerButton = () => {
-  const { isLastLecture, currentLecture } = useLectures()
+const AnswerButton = ({ onSubmit, isLoading }) => {
   const { getValues } = useFormContext()
+  const { isLastLecture, currentLecture } = useLectures()
+
   const state = getValues('collection')
   const evaluation = currentLecture?.materials?.evaluation || []
-
   const isAnsweredAllQuestions = !isEmpty(state) && state.length === evaluation.length
 
-  const handleAnswerSubmit = () => {
-    console.log({ state })
-  }
+  const actionText = isLastLecture ? 'Finish' : 'Answer'
+  const stateText = isLoading ? 'Loading...' : actionText
 
   return (
-    <Button variant="primary" disabled={!isAnsweredAllQuestions} onClick={handleAnswerSubmit}>
-      {isLastLecture ? 'Finish' : 'Answer'}
+    <Button variant="primary" disabled={isLoading || !isAnsweredAllQuestions} onClick={onSubmit}>
+      {stateText}
     </Button>
   )
 }
@@ -34,13 +34,35 @@ const NextButton = () => {
 }
 
 const SubmitButtonFactory = () => {
-  const { currentUserLecture } = useLectures()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const { getValues } = useFormContext()
+  const { lectureId, courseId } = useParams()
+  const { currentUserLecture, firstIncompleteLectureId } = useLectures()
+  const [evaluateLectureCompletion, { isLoading, data }] = useEvaluateLectureCompletionMutation()
+
+  const state = getValues('collection')
+
+  useEffect(() => {
+    if (data?.isPassed && firstIncompleteLectureId && firstIncompleteLectureId !== Number(lectureId)) {
+      navigate(`/dashboard/course/${courseId}/${firstIncompleteLectureId}`)
+    }
+  }, [data?.isPassed, firstIncompleteLectureId])
+
+  const handleAnswerSubmit = useCallback(() => {
+    const payload = {
+      lectureId: Number(lectureId),
+      userId: user.id,
+      answers: state,
+    }
+    evaluateLectureCompletion(payload)
+  }, [state])
 
   if (!currentUserLecture || currentUserLecture.isCompleted) {
     return <NextButton />
   }
 
-  return <AnswerButton />
+  return <AnswerButton onSubmit={handleAnswerSubmit} isLoading={isLoading} />
 }
 
 export default SubmitButtonFactory

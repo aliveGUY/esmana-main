@@ -51,11 +51,13 @@ export function useLectures() {
   }
 
   const _getFirstIncompleteLectureId = (sortedLectures) => {
-    return find(sortedLectures, (lecture) =>
+    const firstIncompleteLecture = find(sortedLectures, (lecture) =>
       lecture.users?.some((userLecture) => {
         return userLecture.user.id === user?.id && !userLecture.isCompleted
       }),
-    ).id
+    )
+    if (!firstIncompleteLecture) return null
+    return firstIncompleteLecture.id
   }
   const _getNextAvailableLecture = (sortedLectures, firstIncompleteLectureId) => {
     const nextLectures = getSubarrayBetweenIds(sortedLectures, Number(lectureId), firstIncompleteLectureId, 1)
