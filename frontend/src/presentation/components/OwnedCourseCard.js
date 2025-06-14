@@ -28,6 +28,8 @@ const OwnedCourseCard = ({ course }) => {
   const hoursCount = getTotalHours(lectures)
   const firstOwnedLectureId = getFirstIncompleteLectureId(lectures)
 
+  console.log({ firstOwnedLectureId })
+
   const redirect = useCallback(() => {
     navigate(`/dashboard/course/${id}/${firstOwnedLectureId}`)
   }, [navigate])

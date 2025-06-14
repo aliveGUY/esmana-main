@@ -43,7 +43,14 @@ export function useLectures() {
         return userLecture.user.id === user?.id && !userLecture.isCompleted
       }),
     )
-    if (!firstIncompleteLecture) return null
+
+    if (!firstIncompleteLecture)
+      return find(sortedLectures, (lecture) =>
+        lecture.users?.some((userLecture) => {
+          return userLecture.user.id === user?.id
+        }),
+      ).id
+
     return firstIncompleteLecture.id
   }
 
