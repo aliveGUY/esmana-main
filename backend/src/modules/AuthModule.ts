@@ -23,13 +23,14 @@ import { User } from '../models/User';
 import { LectorDetails } from '../models/LectorDetails';
 import { RedisModule } from './RedisModule';
 import { CertificateService } from 'src/services/CertificateService';
+import { GoogleModule } from './GoogleModule';
 
 @Module({
   imports: [
     ConfigModule.forFeature(googleConfig),
     TypeOrmModule.forFeature([User, LectorDetails]),
     RedisModule,
-
+    GoogleModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -52,10 +53,6 @@ import { CertificateService } from 'src/services/CertificateService';
       useClass: AuthService,
     },
     {
-      provide: 'IGoogleClient',
-      useClass: GoogleClient
-    },
-    {
       provide: 'ICertificateService',
       useClass: CertificateService
     },
@@ -67,7 +64,6 @@ import { CertificateService } from 'src/services/CertificateService';
     'IAuthService',
     'ITokenRepository',
     TokenAuthGuard,
-    'IGoogleClient',
   ],
 })
 export class AuthModule { }

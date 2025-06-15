@@ -18,11 +18,15 @@ import { EvaluationController } from "src/controllers/EvaluationController";
 import { EvaluationService } from "src/services/EvaluationService";
 import { EvaluationQuestionService } from "src/services/EvaluationQuestionService";
 import { UserLectureService } from "src/services/UserLectureService";
+import { MailModule } from "./MailModule";
+import { GoogleModule } from "./GoogleModule";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Course, EvaluationQuestion, Lecture, LectureMaterials, UserLecture]),
-    AuthModule
+    AuthModule,
+    MailModule,
+    GoogleModule
   ],
   controllers: [CoursesController, EvaluationController],
   providers: [

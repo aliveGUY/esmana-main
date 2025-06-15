@@ -30,6 +30,6 @@ export class StaticFilesController {
   @AdminOnly()
   @Get('certificate')
   async getCertificate() {
-    return await this.certificateService.getCertificateHtml()
+    return await this.certificateService.getAllCertificates()
   }
 }

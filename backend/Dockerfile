@@ -1,24 +1,24 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# Install dependencies including Chromium and fonts
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    bash \
-    yarn \
-    procps \
-    udev \
-    dumb-init \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-
-# Set Puppeteer environment to use system-installed Chromium
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    NODE_ENV=production
+# Install dependencies for PhantomJS
+RUN apt-get update && apt-get install -y \
+  curl \
+  fontconfig \
+  libfreetype6 \
+  libjpeg62-turbo \
+  libpng-dev \
+  libx11-6 \
+  libxext6 \
+  bzip2 \
+  libxrender1 \
+  dumb-init \
+  fonts-freefont-ttf \
+  bash \
+  yarn \
+  procps \
+  udev \
+  ca-certificates \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -30,11 +30,11 @@ RUN yarn install --frozen-lockfile
 # Copy application source code
 COPY . .
 
-# Expose port if applicable (e.g., for a web server)
-# EXPOSE 3000
+# Build the application
+RUN yarn build
 
-# Use dumb-init to handle signals properly (avoids zombie processes)
+# Use dumb-init to handle signals properly
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Start the application
-CMD ["node", "index.js"]
+CMD ["node", "dist/main.js"]

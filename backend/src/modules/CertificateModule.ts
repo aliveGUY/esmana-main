@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CertificateService } from '../services/CertificateService';
-import { AuthModule } from './AuthModule';
+import { GoogleModule } from './GoogleModule';
 
 @Module({
-  imports: [AuthModule],
+  imports: [GoogleModule],
   providers: [
     {
       provide: 'ICertificateService',

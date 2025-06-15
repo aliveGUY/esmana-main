@@ -4,6 +4,7 @@ import { ILectureRepository } from "src/repositories/LectureRepository";
 import { IUserLectureRepository } from "src/repositories/UserLectureRepository";
 import { isEqual } from 'lodash'
 import { EvaluationResultDto } from "src/models/dto/EvaluationResultDto";
+import { IMailService } from "./MailService";
 
 export interface IEvaluationService {
   evaluateLectureCompletion(lectureCompletion: LectureEvaluationDto): Promise<EvaluationResultDto>
@@ -14,6 +15,7 @@ export class EvaluationService implements IEvaluationService {
   constructor(
     @Inject('IUserLectureRepository') private readonly userLectureRepository: IUserLectureRepository,
     @Inject('ILectureRepository') private readonly lectureRepository: ILectureRepository,
+    @Inject('IMailService') private readonly mailService: IMailService,
   ) { }
 
   async evaluateLectureCompletion(lectureCompletion: LectureEvaluationDto): Promise<EvaluationResultDto> {
@@ -38,6 +40,7 @@ export class EvaluationService implements IEvaluationService {
     const isPassed = !isPassedArray.includes(false)
 
     if (isPassed) {
+      await this.mailService.sendWelcomeEmail('illia.dubrovin@dreamhost.com', 'Customer')
       await this.userLectureRepository.setIsCompletedByUserAndLecture(userId, lectureId, isPassed)
       result.isPassed = isPassed
     }

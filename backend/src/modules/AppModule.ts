@@ -8,6 +8,7 @@ import redisConfig from '../config/redis.config';
 import googleConfig from '../config/google.config';
 import databaseConfig from '../config/database.config';
 import wayForPayConfig from '../config/wayForPay.config';
+import mailerConfig from 'src/config/mailer.config';
 import { User } from '../models/User';
 import { UserLecture } from '../models/UserLecture';
 import { Course } from '../models/Course';
@@ -21,11 +22,12 @@ import { UserModule } from './UserModule';
 import { CheckoutModule } from './CheckoutModule';
 import { CertificateModule } from './CertificateModule';
 import { Certificate } from 'src/models/Certificate';
+import { GoogleModule } from './GoogleModule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [redisConfig, googleConfig, databaseConfig, wayForPayConfig],
+      load: [redisConfig, googleConfig, databaseConfig, wayForPayConfig, mailerConfig],
       isGlobal: true,
       envFilePath: '.env',
 
@@ -51,7 +53,8 @@ import { Certificate } from 'src/models/Certificate';
     CourseModule,
     UserModule,
     CheckoutModule,
-    CertificateModule
+    CertificateModule,
+    GoogleModule
   ],
   controllers: [StaticFilesController],
   providers: [

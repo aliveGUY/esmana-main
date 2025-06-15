@@ -1,14 +1,19 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
+import { join } from 'path';
 import { AppModule } from './modules/AppModule';
 
 const DEVELOP_ORIGINS = ['http://localhost:3000', 'http://localhost:4834']
 const PRODUCTION_ORIGINS = ['https://esmana-main.org', 'https://portal.esmana-main.org', 'https://school.esmana-main.org']
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  
+  // Serve static files from public folder
+  app.useStaticAssets(join(__dirname, '..', 'public'));
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', 1);
 
