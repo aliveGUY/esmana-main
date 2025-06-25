@@ -1,7 +1,7 @@
 import { IsString, IsBoolean, IsOptional, IsArray, ValidateNested, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateEvaluationQuestionDto } from "./CreateEvaluationQuestionDto";
-import { CreateLectureDto } from "./CreateLectureDto";
+import { Lecture } from '../Lecture';
 
 export class CreateCourseDto {
   @IsString()
@@ -29,8 +29,8 @@ export class CreateCourseDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateLectureDto)
-  lectures: CreateLectureDto[];
+  @Type(() => Lecture)
+  lectures: Partial<Lecture>[]
 
   @IsArray()
   @ValidateNested({ each: true })

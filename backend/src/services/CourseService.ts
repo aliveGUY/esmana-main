@@ -63,6 +63,7 @@ export class CourseService implements ICourseService {
         endTime: lectureDto.endTime,
         users: lectureDto.users as UserLecture[],
         course: newCourse,
+        materials: lectureDto.materials
       }
 
       return this.lectureService.createLecture(lecture)
